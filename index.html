@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0b0c0f">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Tatami">
+<title>Tatami BJJ</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111214'/%3E%3Crect x='8' y='27' width='48' height='10' rx='2' fill='%23f4f1ea'/%3E%3Crect x='40' y='27' width='10' height='10' fill='%23d7263d'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="icon-180.png"><link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: entrenador de academia, directo y cercano
+   IDEA: un cinturón blanco con su barra roja, la ficha de un alumno del tatami
+   PICTURE: monito 3D que ejecuta cada ejercicio sobre un tatami
+   COLOUR and TYPE: tinta casi negra, papel crudo, rojo de cinturón; Barlow Condensed + Barlow
+   LAYOUT: app de una columna, barra de pestañas abajo, visor 3D arriba en Ejercicios */
+:root{color-scheme:dark;--bg:#0b0c0f;--card:#15171c;--card2:#1d2027;--ink:#f4f2ec;--mut:#9599a3;--line:#262a33;--red:#ff3b4e;--redbg:#3a1419;--blue:#7aa0ff;--bluebg:#18213a;--green:#3ddc97;--mat:#1a1d24;--r:18px;--ease:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Barlow,system-ui,sans-serif;overflow-x:clip}
+body{padding:env(safe-area-inset-top) 0 calc(78px + env(safe-area-inset-bottom))}
+h1,h2,h3{font-family:"Barlow Condensed",sans-serif;font-weight:700;line-height:1.05;margin:0;text-wrap:balance}
+h1{font-size:36px}h2{font-size:26px;margin:28px 0 10px}h3{font-size:20px}
+.wrap{max-width:640px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-left))}
+.belt{height:6px;border-radius:3px;background:linear-gradient(90deg,var(--line) 0 70%,var(--red) 70% 84%,var(--line) 84%);margin:10px 0 16px}
+.ex.cur b{color:var(--red)}
+.mut{color:var(--mut)}.sm{font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin:0 0 12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:4px 10px;border-radius:99px;background:var(--bluebg);color:var(--blue)}
+.pill.r{background:var(--redbg);color:var(--red)}
+button,.btn{font:600 15px Barlow,sans-serif;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;min-height:44px;padding:0 14px;cursor:pointer;touch-action:manipulation;user-select:none;transition:transform .15s var(--ease),background .15s}
+button:active{transform:scale(.97)}button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.chips button{flex:none}
+.day{display:grid;grid-template-columns:54px minmax(0,1fr);gap:12px;align-items:start}
+.dn{font-family:"Barlow Condensed";font-size:30px;font-weight:700;line-height:1}.dn small{display:block;font-size:13px;color:var(--mut);font-family:Barlow;font-weight:500}
+.today{border-color:var(--red);box-shadow:inset 4px 0 0 var(--red)}
+.ex{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:10px 0;border-top:1px solid var(--line);cursor:pointer}
+.ex:first-of-type{border-top:0}.ex b{font-weight:600}.ex .k{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:14px;color:var(--mut)}
+.stage{margin:0 -16px;padding:0 16px 8px}#fig{height:clamp(220px,34vh,300px)}
+.dots{display:flex;gap:8px;margin-bottom:10px}.dots span{flex:1;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:600;background:var(--bg);color:var(--mut)}.dots span.ok{background:var(--red);color:#fff}
+button.go{width:100%;min-height:54px;font-size:17px;background:var(--ink);color:var(--bg);border-color:var(--ink);margin-bottom:10px}
+.restbox{display:flex;gap:12px;align-items:center;background:var(--bluebg);color:var(--blue);border-radius:12px;padding:10px 12px;margin-bottom:10px}.restbox b{display:block;font:700 28px/1 "Barlow Condensed";font-variant-numeric:tabular-nums}.restbox .bar{flex:1;height:6px;border-radius:3px;background:color-mix(in srgb,var(--blue) 20%,transparent);overflow:hidden}.restbox .bar i{display:block;height:100%;background:var(--blue);transition:width .25s linear}
+.fig{position:relative;height:clamp(250px,42vh,360px);border-radius:var(--r);overflow:hidden;background:radial-gradient(120% 90% at 50% 20%,var(--card),var(--mat));border:1px solid var(--line);touch-action:none}
+.fig canvas{position:absolute;inset:0;width:100%;height:100%}
+.hud{position:absolute;left:10px;right:10px;bottom:10px;display:flex;gap:6px;justify-content:space-between;align-items:end;pointer-events:none}
+.hud .row{pointer-events:auto}.hud button{min-height:36px;font-size:13px;padding:0 10px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(6px)}
+.tag{position:absolute;top:10px;left:12px;font:700 22px "Barlow Condensed";pointer-events:none}
+.tag small{display:block;font:500 13px Barlow;color:var(--mut)}
+.err{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;color:var(--mut)}
+ul.c{margin:6px 0 0;padding:0;list-style:none}ul.c li{padding:4px 0 4px 22px;position:relative;font-size:15px}
+ul.c li::before{content:"";position:absolute;left:4px;top:12px;width:9px;height:9px;border-radius:2px;background:var(--red)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}.stats div{background:var(--bg);border-radius:12px;padding:10px 8px;text-align:center}.stats b{display:block;font:700 26px/1.1 "Barlow Condensed";font-variant-numeric:tabular-nums}.stats span{font-size:13px;color:var(--mut)}
+.log{display:flex;gap:8px;margin-top:12px}.log input{width:100%;font:16px Barlow;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:15px}td,th{padding:8px 6px;border-top:1px solid var(--line);text-align:left;vertical-align:top}th{font-size:13px;color:var(--mut);font-weight:600;border-top:0}td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.chk{display:flex;gap:12px;align-items:center;padding:9px 0;border-top:1px solid var(--line);cursor:pointer;user-select:none}
+.chk input{width:22px;height:22px;accent-color:var(--red);flex:none}.chk.done span{text-decoration:line-through;color:var(--mut)}
+.ladder{display:grid;gap:6px}.ladder div{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;background:var(--bluebg);color:var(--blue);font-weight:600}
+.ladder div:nth-child(1){background:var(--redbg);color:var(--red)}
+details{border-top:1px solid var(--line);padding:10px 0}details summary{font-weight:600;cursor:pointer;list-style:none;min-height:32px;display:flex;justify-content:space-between;align-items:center}
+details summary::after{content:"+";font-size:22px;color:var(--mut)}details[open] summary::after{content:"–"}
+details p{margin:6px 0 0;color:var(--mut)}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:9;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+nav button{border:0;background:none;flex-direction:column;display:flex;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--mut);min-height:54px}
+nav button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8}nav button.on{background:none;color:var(--red)}
+.view{display:none;animation:in .25s var(--ease)}.view.on{display:block}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translate(-50%,20px);opacity:0;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600;transition:.25s var(--ease);z-index:10;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+.appbar{display:flex;justify-content:space-between;align-items:center;margin:4px 0 18px}
+.logo{display:flex;align-items:center;gap:10px}.logo svg{width:34px;height:34px}.logo b{font:700 26px "Barlow Condensed"}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;margin-bottom:12px}
+.hero h1{font-size:40px}#ring{width:128px;height:128px}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.kpis div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px}.kpis b{display:block;font:700 28px/1 "Barlow Condensed";font-variant-numeric:tabular-nums}.kpis span{font-size:13px;color:var(--mut)}
+#hoy{background:var(--red);border-color:var(--red);box-shadow:none;color:#fff}#hoy .mut{color:rgba(255,255,255,.85)}#hoy h3{font-size:28px}#hoy button{background:rgba(0,0,0,.22);color:#fff;border-color:transparent}#hoy button.go{background:#fff;color:#111}
+#splash{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:var(--bg);animation:spl .5s var(--ease) .9s forwards}
+.logo.big svg{width:84px;height:84px;animation:pop .7s var(--ease)}.logo.big{flex-direction:column}.logo.big b{font-size:40px;animation:in .6s var(--ease) .15s both}
+@keyframes spl{to{opacity:0;visibility:hidden}}@keyframes pop{from{transform:scale(.6) rotate(-8deg);opacity:0}}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin-top:10px}
+.badge{text-align:center;padding:12px 6px;border-radius:16px;background:var(--card2);font-size:13px;line-height:1.25}.badge i{display:grid;place-items:center;width:46px;height:46px;margin:0 auto 6px;border-radius:50%;font:700 18px "Barlow Condensed";font-style:normal;background:var(--line);color:var(--mut)}
+.badge.on i{background:var(--red);color:#fff;box-shadow:0 0 0 4px var(--redbg)}.badge:not(.on){color:var(--mut)}
+.celeb{text-align:center;padding:22px 10px}.celeb .big{font:700 46px/1 "Barlow Condensed";margin:8px 0}.celeb .kpis{margin:16px 0}
+@media(min-width:900px){.wrap{max-width:1100px;padding:24px 32px}
+#v-ejercicios .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:24px;align-items:start}#v-ejercicios .stage{grid-row:1/span 4;position:sticky;top:20px}#v-ejercicios .wrap>*:not(.stage){grid-column:2}#fig{height:min(72vh,620px)}
+#fig2{height:min(60vh,520px)}#week{display:grid;grid-template-columns:1fr 1fr;gap:12px}#week .card{margin:0}
+nav{left:50%;right:auto;transform:translateX(-50%);width:min(620px,92vw);bottom:14px;border:1px solid var(--line);border-radius:22px;padding:6px}body{padding-bottom:110px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="splash" aria-hidden="true"><div class="logo big"><svg viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#15171c"/><rect x="8" y="27" width="48" height="10" rx="3" fill="#f4f2ec"/><rect x="40" y="27" width="10" height="10" fill="#ff3b4e"/></svg><b>Tatami</b></div></div>
+<section class="view" id="v-semana"><div class="wrap">
+<header class="appbar"><div class="logo"><svg viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#15171c"/><rect x="8" y="27" width="48" height="10" rx="3" fill="#f4f2ec"/><rect x="40" y="27" width="10" height="10" fill="#ff3b4e"/></svg><b>Tatami</b></div><span class="sm mut" id="dateTxt"></span></header>
+<div class="hero"><div><span class="sm mut">Hola, Héctor</span><h1>Tu semana</h1><p class="sm mut" id="heroS" style="margin:6px 0 0"></p></div><svg id="ring" viewBox="0 0 120 120" aria-label="Sesiones de la semana"></svg></div>
+<div class="kpis" id="kpis"></div>
+
+<div class="card today" id="hoy"></div>
+<div id="week"></div>
+<div class="card"><h3>Cómo leer "3 × 12 · 90 s"</h3><p style="margin:6px 0 0"><b>3</b> series de <b>12</b> repeticiones, descansando <b>90 segundos</b> entre cada serie. Haces la serie 1, descansas, la serie 2, descansas, la serie 3 y pasas al siguiente ejercicio. Si dice "30 s", en vez de repeticiones mantienes la posición 30 segundos.</p></div>
+<div class="card"><h3>Reglas de la semana</h3><ul class="c">
+<li>Deja 2 repeticiones en reserva (RIR 2). Las semanas 1–2, deja 3.</li>
+<li>Si dormiste menos de 5 h por el turno: una serie menos y RIR 3–4.</li>
+<li>No rolees si estás somnoliento por la medicación.</li>
+<li>Semana 6: descarga, con la mitad de las series.</li></ul></div>
+</div></section>
+
+<section class="view" id="v-ejercicios"><div class="wrap">
+<div class="stage">
+<div class="fig" id="fig"><div class="tag" id="tag"></div>
+<div class="hud"><div class="row"><button id="vSide">Lado</button><button id="vFront">Frente</button><button id="v34">3/4</button></div><div class="row"><button id="vPlay">Pausa</button></div></div></div>
+<p class="sm mut" style="margin:6px 2px 0">Arrastra para girar la cámara</p>
+</div>
+<div class="chips" id="filt" style="margin-top:8px"></div>
+<div id="detail"></div>
+<div class="card" id="exlist"></div>
+</div></section>
+
+<section class="view" id="v-progreso"><div class="wrap">
+<h1>Tu progreso</h1>
+<div class="belt" aria-hidden="true"></div>
+<div class="stats" id="pstats"></div>
+<div class="card"><div class="row" style="justify-content:space-between"><button id="dPrev" aria-label="Día anterior">‹</button><h3 id="dTitle" style="text-align:center;flex:1"></h3><button id="dNext" aria-label="Día siguiente">›</button></div>
+<p class="sm mut" style="margin:10px 0 6px">¿Qué hiciste?</p><div class="chips" id="acts" style="flex-wrap:wrap"></div>
+<p class="sm mut" style="margin:12px 0 6px">Hábitos</p><div id="habs"></div>
+<div class="log"><input id="pkg" inputmode="decimal" enterkeyhint="next" placeholder="Peso (kg)" aria-label="Peso en kg"><input id="pcm" inputmode="decimal" enterkeyhint="next" placeholder="Cintura (cm)" aria-label="Cintura en cm"></div>
+<div class="log"><input id="pnote" enterkeyhint="done" placeholder="Nota: técnica que viste, cómo te sentiste" aria-label="Nota"></div>
+<p class="sm mut" style="margin:8px 0 0">Pésate en ayunas 3 veces por semana. Cintura los domingos, a la altura del ombligo. Se guarda solo en este teléfono.</p></div>
+<div class="card"><h3>Logros</h3><div class="badges" id="badges"></div></div>
+<div class="card"><h3>Esta semana</h3><div id="wk" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:10px"></div><p class="sm mut" id="wksum" style="margin:10px 0 0"></p></div>
+<div class="card"><h3>Peso e IMC</h3><div class="fig" style="min-height:220px;height:220px;background:none;border:0;border-radius:0;margin-top:8px"><svg id="chart" style="position:absolute;inset:0;width:100%;height:100%"></svg></div><p class="sm mut" id="proj" style="margin:8px 0 0"></p></div>
+<div class="card"><h3>Proyección realista</h3><table><thead><tr><th>Semana</th><th style="text-align:right">Peso</th><th style="text-align:right">IMC</th></tr></thead><tbody id="ptab"></tbody></table><p class="sm mut" style="margin:8px 0 0">A ~0,5 kg por semana, que es lo esperable con la dieta + entrenamiento. La quetiapina y las fiestas pueden hacerlo más lento.</p></div>
+<div class="card"><h3>Historial</h3><div id="hist2"></div></div>
+</div></section>
+
+<section class="view" id="v-comida"><div class="wrap">
+<h1>Comida barata, rinde en el tatami</h1>
+<div class="belt" aria-hidden="true"></div>
+<div class="row" style="gap:8px;margin-bottom:12px"><span class="pill r">~2.200 kcal</span><span class="pill">~145 g proteína</span><span class="pill">1 cdta aceite por comida</span></div>
+<div class="chips" id="mfilt"></div>
+<div class="card" id="menu"></div>
+<h2>Meal prep: cocinas 1 vez, comes 7 días</h2>
+<div class="card"><h3>Lo que sale de una cocinada</h3><div class="ladder" id="yield" style="margin-top:8px"></div><p class="sm mut" style="margin:10px 0 0">Necesitas ~12 táperes aptos para freezer o bolsas con cierre, y un plumón para la fecha.</p></div>
+<div class="card"><div class="row" style="justify-content:space-between"><h3>Domingo de cocina · paso a paso</h3><button id="clr2" class="sm">Reiniciar</button></div><p class="sm mut" style="margin:4px 0 6px">~2 horas. Ve marcando a medida que avanzas. Usa 3 ollas + horno al mismo tiempo.</p><div id="cook"></div></div>
+<div class="card"><h3>Mapa de la semana</h3><p class="sm mut" style="margin:4px 0 8px">Refri = lo que comes lunes a miércoles. Freezer = jueves a domingo. Cada noche pasa la porción del día siguiente del freezer a la refri.</p><table><thead><tr><th>Día</th><th>Almuerzo</th><th>Comida</th></tr></thead><tbody id="wmap"></tbody></table></div>
+<div class="card"><h3>Recetas base</h3><div id="rec"></div></div>
+<div class="card"><h3>Comodines de proteína</h3><p class="sm mut" style="margin:4px 0 8px">Cada opción aporta ~20 g de proteína. Alterna atún y huevo: no conviene atún todos los días.</p><div id="swap"></div></div>
+<div class="card"><h3>¿Qué dura y qué se congela?</h3><table><thead><tr><th>Alimento</th><th>Refri</th><th>Congelar</th></tr></thead><tbody id="prep"></tbody></table>
+<ul class="c" style="margin-top:10px"><li>Enfría rápido: a la refri antes de 2 horas, sobre todo el arroz.</li><li>Descongela en la refri la noche anterior. Recalienta hasta que humee por dentro, nunca dos veces.</li><li>Para el turno: lleva la porción congelada en el bento; sirve de gel refrigerante y llega descongelada a la hora de comer.</li></ul></div>
+<div class="card"><div class="row" style="justify-content:space-between"><h3>Lista de compras semanal</h3><button id="clr" class="sm">Reiniciar</button></div><div id="shop"></div></div>
+</div></section>
+
+<section class="view" id="v-aprender"><div class="wrap">
+<h1>Jiu-jitsu desde cero</h1>
+<div class="belt" aria-hidden="true"></div>
+<p class="mut" style="margin-top:0">Lo que necesitas saber antes de tu primera clase y durante los primeros 3 meses. Esto no reemplaza a tu profesor: es para que llegues entendiendo qué estás viendo.</p>
+<div class="fig" id="fig2"><div class="tag" id="tag2"></div><div class="hud"><div class="row"><button id="lPrev" aria-label="Paso anterior">‹</button><button id="lPlay">Pausa</button><button id="lNext" aria-label="Paso siguiente">›</button></div></div></div>
+<div class="row sm mut" style="gap:14px;margin:8px 2px"><span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#f2f0ea;border:1px solid var(--line);vertical-align:-1px"></span> Tú: gi blanco, cinturón blanco</span><span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#1f3f8f;vertical-align:-1px"></span> Compañero: gi azul, cinturón morado</span></div>
+<div class="card" id="lstep"></div>
+<div class="chips" id="lchips" style="margin-bottom:8px"></div>
+<p class="sm mut" style="margin:0 2px">Arrastra para girar. Toca ‹ › para ver paso a paso.</p>
+<h2>La idea central</h2>
+<div class="card"><p style="margin:0">El BJJ es un ajedrez de posiciones: primero <b>controlas</b>, después <b>avanzas</b> a una posición mejor y recién entonces <b>finalizas</b> con una luxación o un estrangulamiento. Como principiante, tu prioridad es al revés: <b>sobrevivir, escapar y no lesionarte</b>.</p></div>
+<h2>Historia en 1 minuto</h2>
+<div class="card" id="hist"></div>
+<h2>Jerarquía de posiciones</h2>
+<div class="card"><div class="ladder" id="ladder"></div><p class="sm mut" style="margin:10px 0 0">De arriba abajo: de la mejor a la peor para quien está arriba. Si estás abajo, tu meta es subir por esta escalera. Toca una posición para verla en 3D.</p></div>
+<h2>Plan de 90 días</h2>
+<div id="plan"></div>
+<h2>Tus primeras técnicas</h2>
+<div class="card" id="tech"></div>
+<h2>Primera clase</h2>
+<div class="card"><ul class="c" id="first"></ul></div>
+<h2>Higiene en el tatami</h2>
+<div class="card"><ul class="c" id="hyg"></ul></div>
+<h2>Glosario</h2>
+<div class="card" id="glos"></div>
+<h2>Cinturones</h2>
+<div class="card"><div class="ladder" id="belts"></div><p class="sm mut" style="margin:10px 0 0">Los tiempos varían mucho según la academia y la constancia. El azul suele tomar 2 años o más entrenando 2–3 veces por semana.</p></div>
+</div></section>
+
+<nav aria-label="Secciones">
+<button data-v="semana"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/></svg>Inicio</button>
+<button data-v="ejercicios"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v7M7 11l5-2 5 2M9 21l3-6 3 6"/></svg>Ejercicios</button>
+<button data-v="progreso"><svg viewBox="0 0 24 24"><path d="M3 20h18M6 16l4-5 3 3 5-7"/></svg>Progreso</button>
+<button data-v="comida"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M3 14h18M8 8V5h8v3"/></svg>Comida</button>
+<button data-v="aprender"><svg viewBox="0 0 24 24"><path d="M3 12h18"/><rect x="3" y="9" width="18" height="6" rx="2"/><path d="M14 9v6M17 9v6"/></svg>Aprender</button>
+</nav>
+<div class="toast" id="toast"></div>
+
+<script src="three.min.js"></script>
+<script>
+{
+const $=s=>document.querySelector(s);
+const st={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const toast=t=>{const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1800);try{navigator.vibrate&&navigator.vibrate(10)}catch(e){}};
+const S={h:[90,30],n:[90,42],hp:[90,76],k:[90,100],f:[90,125]};const X=(o,p)=>Object.assign({},o,p);
+
+const EX={
+goblet:{t:"Sentadilla goblet",g:"A",d:"3 × 12–15",r:"90 s",load:"1 mancuerna de 12–15 kg",why:"Piernas y postura para levantarte desde la guardia y pasar.",a:X(S,{e:[100,62],w:[104,50]}),b:{h:[96,52],n:[92,64],hp:[66,94],k:[104,98],f:[96,125],e:[106,82],w:[110,72]},one:1,ax:"spine",c:["Mancuerna pegada al pecho, codos adentro","Rodillas siguen la punta del pie","Baja en 3 segundos, sube en 1"]},
+rdl:{t:"Peso muerto rumano",g:"A",d:"3 × 10–12",r:"90 s",load:"2 mancuernas de 10–12 kg",why:"Cadena posterior: postura en guardia y fuerza para levantar al rival.",a:X(S,{e:[92,60],w:[92,80]}),b:{h:[134,58],n:[122,62],hp:[80,74],k:[86,100],f:[90,125],e:[120,82],w:[118,100]},ax:"spine",c:["Cadera hacia atrás, espalda recta sobre el eje","Mancuernas rozando las piernas","Para cuando pasen la rodilla"]},
+flex:{t:"Flexiones en soportes",g:"A",d:"3 × máximo − 2",r:"90 s",load:"Peso corporal",why:"Empuje para enmarcar y crear espacio desde abajo.",a:{h:[150,78],n:[136,84],hp:[86,100],k:[58,110],f:[30,123],e:[136,102],w:[136,120]},b:{h:[152,100],n:[136,104],hp:[86,110],k:[58,117],f:[30,123],e:[122,110],w:[136,120]},ax:"plank",c:["Cuerpo en una sola línea","Codos a 45°, no abiertos","Glúteo y abdomen apretados"]},
+toalla:{t:"Remo con toalla",g:"A",d:"3 × 10 por lado",r:"60 s",load:"1 mancuerna de 12–15 kg con toalla en el mango",why:"Agarre de solapa y manga: lo que más se cansa en el BJJ con gi.",a:{h:[138,62],n:[124,66],hp:[64,76],k:[66,100],f:[66,125],e:[114,84],w:[114,104],e2:[140,80],w2:[150,92]},b:{h:[138,62],n:[124,66],hp:[64,76],k:[66,100],f:[66,125],e:[96,56],w:[106,74],e2:[140,80],w2:[150,92]},arm1:1,bench:[140,92,36,33],ax:"spine",c:["Enrolla una toalla en el mango y agárrala","Espalda plana y quieta","Codo hacia la cadera"]},
+hollow:{t:"Hollow hold",g:"A",d:"3 × 20–30 s",r:"45 s",load:"Peso corporal",why:"Core en forma de \"banana\": la base de la guardia y del control.",a:{h:[40,108],n:[52,112],hp:[95,122],k:[130,116],f:[162,110],e:[34,104],w:[18,100]},b:{h:[40,111],n:[52,114],hp:[95,122],k:[130,118],f:[162,113],e:[34,107],w:[18,103]},c:["Zona lumbar pegada al suelo","Si te cuesta, dobla las rodillas","Respira corto, no aguantes el aire"]},
+agarre:{t:"Agarre colgando",g:"A",d:"3 × 40–45 s",r:"45 s",load:"2 mancuernas de 15 kg (lo máximo)",why:"Resistencia de agarre para no soltar en los últimos minutos del roleo.",a:X(S,{e:[92,58],w:[92,80]}),b:X(S,{e:[92,58],w:[92,81]}),ax:"spine",c:["Cuerpo vertical","Hombros abajo y atrás","Aprieta hasta el final"]},
+bulgara:{t:"Sentadilla búlgara",g:"B",d:"3 × 10 por pierna",r:"90 s",load:"2 mancuernas de 5–8 kg",why:"Fuerza de una pierna: entradas, derribos y levantarte con equilibrio.",a:{h:[96,32],n:[96,44],hp:[94,78],k:[110,100],f:[112,125],k2:[78,100],f2:[50,95],e:[96,62],w:[96,88]},b:{h:[94,50],n:[94,62],hp:[90,96],k:[118,98],f:[112,125],k2:[80,120],f2:[50,95],e:[94,80],w:[94,104]},bench:[20,95,40,30],ax:"spine",c:["Pie trasero sobre una silla","Baja vertical","Peso en el talón de adelante"]},
+puente:{t:"Puente sobre hombros (upa)",g:"B",d:"3 × 10 explosivos",r:"60 s",load:"Peso corporal → 1 mancuerna de 10–15 kg en la cadera",why:"Es literalmente el movimiento del escape de montada.",a:{h:[28,114],n:[42,119],hp:[90,121],k:[116,94],f:[124,123],e:[60,123],w:[80,123]},b:{h:[26,116],n:[42,120],hp:[92,92],k:[118,84],f:[124,123],e:[60,123],w:[80,123]},ax:"bridge",c:["Empuja con los talones, explosivo","Arriba: hombro, cadera y rodilla en línea","Baja controlado"]},
+press:{t:"Press militar de pie",g:"B",d:"3 × 10–12",r:"90 s",load:"2 mancuernas de 6–8 kg",why:"Hombros fuertes y estables para enmarcar y proteger la articulación.",a:X(S,{e:[100,58],w:[100,42]}),b:X(S,{e:[100,20],w:[94,6]}),ax:"spine",c:["Tronco quieto, sin arquear la espalda","Sube vertical","Baja hasta la altura de la oreja"]},
+inclinado:{t:"Remo inclinado",g:"B",d:"3 × 12",r:"60 s",load:"2 mancuernas de 10–12 kg",why:"Tirón: romper la postura del rival y mantenerlo pegado.",a:{h:[136,56],n:[122,62],hp:[72,74],k:[78,100],f:[82,125],e:[120,80],w:[120,100]},b:{h:[136,56],n:[122,62],hp:[72,74],k:[78,100],f:[82,125],e:[98,58],w:[108,76]},ax:"spine",c:["Tronco fijo a 45°","Junta las escápulas arriba","Baja lento"]},
+camaron:{t:"Camarones",fx:-1,g:"B",d:"4 × 30 s",r:"30 s",load:"Peso corporal",why:"Escape de cadera: el movimiento más importante del BJJ.",a:{h:[150,114],n:[136,119],hp:[90,121],k:[70,96],f:[56,123],e:[118,108],w:[104,100]},b:{h:[150,113],n:[134,117],hp:[106,120],k:[80,108],f:[52,123],e:[118,104],w:[98,96]},c:["De lado, empuja el suelo con un pie","Saca la cadera hacia atrás","Las manos empujan, como enmarcando"]},
+pallof:{t:"Pallof press",g:"B",d:"3 × 10 por lado",r:"45 s",load:"Banda media",why:"Core anti-rotación: no dejar que te giren en la guardia ni en los 100 kg.",a:X(S,{e:[96,62],w:[104,58]}),b:X(S,{e:[118,56],w:[142,56]}),band:1,ax:"spine",c:["Banda anclada al costado","Empuja al frente","El tronco no gira"]},
+cuello:{t:"Cuello isométrico",g:"B",d:"2 × 15 s por dirección",r:"30 s",load:"Tu mano, al 30–50 % de fuerza",why:"Un cuello fuerte protege en guardias cerradas y estrangulamientos.",a:X(S,{e:[104,40],w:[100,28]}),b:X(S,{e:[104,41],w:[100,29]}),ax:"spine",c:["Empuja con la mano: adelante, atrás y a los lados","Sin mover la cabeza","Suave: nunca al máximo"]},
+zancada:{t:"Zancada hacia atrás",g:"Extra",d:"3 × 10 por pierna",r:"90 s",load:"2 mancuernas de 6–8 kg",why:"Alternativa a la búlgara si no tienes silla firme.",a:X(S,{e:[92,58],w:[92,80]}),b:{h:[90,48],n:[90,60],hp:[88,94],k:[114,98],f:[112,125],k2:[70,120],f2:[44,122],e:[90,76],w:[90,98]},ax:"spine",c:["Paso largo hacia atrás","Tronco vertical","Empuja con el pie de adelante"]}
+};
+const SES={A:["goblet","rdl","flex","toalla","hollow","agarre"],B:["bulgara","puente","press","inclinado","camaron","pallof","cuello"]};
+const WEEK=[
+{d:"Lun",t:"BJJ en la academia",k:"bjj",x:"Llega 10 min antes. Calienta con camarones y puentes."},
+{d:"Mar",t:"Fuerza A + agarre",k:"A",x:"Final: bicicleta 8 × (20 s fuerte + 70 s suave)."},
+{d:"Mié",t:"Descanso activo",k:"r",x:"Camina. 5 min de movilidad de cadera 90/90."},
+{d:"Jue",t:"BJJ en la academia",k:"bjj",x:"Enfócate en una sola técnica de la clase."},
+{d:"Vie",t:"Fuerza B + cuello y core",k:"B",x:"Final: 10 min de bicicleta suave."},
+{d:"Sáb",t:"Rondas de bicicleta",k:"c",x:"5 rondas de 5 min a ritmo de roleo, 1 min de pausa. Luego 4 × 30 s de camarones."},
+{d:"Dom",t:"Descanso",k:"r",x:"Prepara la comida de la semana."}];
+
+/* ---------- navegación ---------- */
+const views=["semana","ejercicios","progreso","comida","aprender"];
+function go(v){if(!views.includes(v))v="semana";document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);if(v==='ejercicios')requestAnimationFrame(()=>{ES&&ES.resize()});if(v==='aprender')requestAnimationFrame(()=>{LS&&LS.resize()});window.scrollTo(0,0)}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.v));
+window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+
+/* ---------- semana ---------- */
+const todayIdx=(new Date().getDay()+6)%7;
+$('#week').innerHTML=WEEK.map((w,i)=>{const list=SES[w.k]?SES[w.k].map(id=>{const e=EX[id];return `<div class="ex" data-id="${id}"><div><b>${e.t}</b><div class="sm mut">${e.load}</div></div><span class="k">${e.d}<br>desc. ${e.r}</span></div>`}).join(''):'';
+const pill=w.k==='bjj'?'<span class="pill r">Tatami</span>':SES[w.k]?'<span class="pill">Casa</span>':'';
+return `<div class="card ${i===todayIdx?'today':''}"><div class="day"><div class="dn">${w.d}${i===todayIdx?'<small>hoy</small>':''}</div><div><div class="row" style="justify-content:space-between"><h3>${w.t}</h3>${pill}</div><p class="sm mut" style="margin:4px 0 0">${w.x}</p>${list?`<button data-ses="${w.k}" class="go" style="margin:10px 0 4px">Empezar sesión</button><div style="margin-top:6px">${list}</div>`:''}</div></div></div>`}).join('');
+document.addEventListener('click',e=>{const sb=e.target.closest('[data-ses]');if(sb){const k=sb.dataset.ses;sess={k,i:0,set:0,t0:Date.now()};go('ejercicios');sel(SES[k][0]);return}const x=e.target.closest('.ex[data-id]');if(x){sess=null;sel(x.dataset.id);go('ejercicios')}});
+
+/* ---------- ejercicios ---------- */
+let filt='Todos',cur=st.get('bjj_cur','goblet');if(!EX[cur])cur='goblet';
+const logs=st.get('bjj_logs',{});
+function renderList(){const ids=Object.keys(EX).filter(id=>filt==='Todos'||EX[id].g===filt);
+$('#exlist').innerHTML=ids.map(id=>{const e=EX[id],l=logs[id];return `<div class="ex ${id===cur?'cur':''}" data-id="${id}"><div><b>${e.t}</b><div class="sm mut">${e.g==='Extra'?'Extra':'Día '+e.g} · ${e.d} · ${e.load}</div></div><span class="k">${l?l.kg+' kg × '+l.reps:'—'}</span></div>`}).join('')}
+$('#filt').innerHTML=["Todos","A","B","Extra"].map(f=>`<button data-f="${f}">${f.length===1?'Día '+f:f}</button>`).join('');
+$('#filt').onclick=e=>{const b=e.target.closest('button');if(!b)return;filt=b.dataset.f;$('#filt').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));renderList()};
+$('#filt').querySelector('button').classList.add('on');
+let sess=null,restI=null;
+function chipsFor(e){const [se,rp]=e.d.split('×').map(s=>s.trim());return `<div class="row" style="gap:6px"><span class="pill">${se} series</span><span class="pill">${rp}</span><span class="pill">desc. ${e.r}</span><span class="pill r">${e.load}</span></div>`}
+function stopRest(){clearInterval(restI);restI=null}
+function startRest(sec){stopRest();const end=Date.now()+sec*1000,box=$('#rest');if(!box)return;const tick=()=>{const left=Math.max(0,Math.ceil((end-Date.now())/1000));box.innerHTML=`<div class="restbox"><div><span class="sm mut">Descansa</span><b>${Math.floor(left/60)}:${String(left%60).padStart(2,'0')}</b></div><div class="bar"><i style="width:${100-left/sec*100}%"></i></div><button id="skip" class="sm">Saltar</button></div>`;$('#skip').onclick=()=>{stopRest();box.innerHTML=''};if(!left){stopRest();box.innerHTML='';toast('¡A la siguiente serie!');try{navigator.vibrate&&navigator.vibrate([80,40,80])}catch(e){}}};tick();restI=setInterval(tick,250)}
+function renderDetail(){const e=EX[cur],l=logs[cur];stopRest();$('#filt').style.display=$('#exlist').style.display=sess?'none':'';
+$('#tag').innerHTML=sess?`<small>Día ${sess.k} · ${sess.i+1} de ${SES[sess.k].length}</small>${e.t}`:e.t;
+let top='';if(sess){const n=parseInt(e.d),tot=SES[sess.k].length;
+top=`<div class="row" style="justify-content:space-between;margin-bottom:10px"><span class="sm mut">Sesión Día ${sess.k} · ejercicio ${sess.i+1} de ${tot}</span><button id="sesExit" class="sm" style="min-height:36px">Salir</button></div>
+<div class="dots">${Array.from({length:n},(_,k)=>`<span class="${k<sess.set?'ok':''}">${k+1}</span>`).join('')}</div>
+<button id="setDone" class="go">${sess.set>=n?(sess.i<tot-1?'Siguiente ejercicio →':'Terminar sesión ✓'):'Serie '+(sess.set+1)+' hecha ✓'}</button><div id="rest"></div>`}
+$('#detail').innerHTML=`<div class="card">${top}${chipsFor(e)}
+<details style="border:0;padding:8px 0 0"><summary>Técnica y para qué sirve</summary><p>${e.why}</p><ul class="c">${e.c.map(c=>`<li>${c}</li>`).join('')}</ul></details>
+<div class="log"><input id="lkg" inputmode="decimal" enterkeyhint="next" placeholder="kg usados" value="${l?l.kg:''}" aria-label="Carga en kg"><input id="lreps" inputmode="numeric" enterkeyhint="done" placeholder="reps" value="${l?l.reps:''}" aria-label="Repeticiones"><button id="lsave" style="flex:none">Guardar</button></div>
+<p class="sm mut" style="margin:6px 0 0">${l?'Última vez: '+l.kg+' kg × '+l.reps+' · '+l.date:'Anota la carga para verla la próxima vez.'}</p></div>`;
+$('#lsave').onclick=()=>{const kg=$('#lkg').value.replace(',','.').trim(),reps=$('#lreps').value.trim();if(!kg||!reps){toast('Anota kg y reps');return}
+{const d=getD(dk(new Date()));const g=EX[cur].g;if(g==='A')d.fa=true;if(g==='B')d.fb=true;saveD();renderHoy();renderDay()}logs[cur]={kg,reps,date:new Date().toLocaleDateString('es-CL',{day:'numeric',month:'short'})};st.set('bjj_logs',logs);renderDetail();renderList();toast('Guardado')};
+if(sess){$('#sesExit').onclick=()=>{sess=null;renderDetail()};
+$('#setDone').onclick=()=>{const n=parseInt(e.d),ids=SES[sess.k];try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}
+if(sess.set<n){sess.set++;const restS=parseInt(e.r);renderDetail();if(sess.set<n)startRest(restS);return}
+if(sess.i<ids.length-1){sess.i++;sess.set=0;sel(ids[sess.i]);window.scrollTo({top:0,behavior:'smooth'});return}
+const d=getD(dk(new Date()));d[sess.k==='A'?'fa':'fb']=true;saveD();renderHoy();renderDay();const mins=Math.max(1,Math.round((Date.now()-(sess.t0||Date.now()))/6e4)),sets=ids.reduce((a,id)=>a+parseInt(EX[id].d),0),k=sess.k;sess=null;renderDetail();$('#detail').innerHTML=`<div class="card celeb"><span class="pill r">Día ${k} completado</span><div class="big">¡Sesión lista!</div><p class="mut" style="margin:0">Quedó registrada en tu progreso.</p><div class="kpis"><div><b>${ids.length}</b><span>ejercicios</span></div><div><b>${sets}</b><span>series</span></div><div><b>${mins}</b><span>minutos</span></div></div><button class="go" id="toProg">Ver mi progreso</button></div>`;$('#toProg').onclick=()=>go('progreso');try{navigator.vibrate&&navigator.vibrate([30,60,30,60,120])}catch(x){}}}}
+function sel(id){if(lastP){prevP=lastP;swT=performance.now();t0=performance.now()}cur=id;st.set('bjj_cur',id);renderDetail();renderList();build()}
+
+/* ---------- 3D ---------- */
+const PAL_ME={top:0xe4dfd0,bot:0xe4dfd0,belt:0xffffff,bar:0x111111,skin:0xd9a27a,hair:0x2a1d14};
+const PAL_RIVAL={top:0x1f3f8f,bot:0x1f3f8f,belt:0x6b2fa3,bar:0x111111,skin:0xb97d55,hair:0x111111};
+const M=(c,r)=>new THREE.MeshStandardMaterial({color:c,roughness:r||.7});
+const V=(p,z)=>new THREE.Vector3((p[0]-90)/50,(125-p[1])/50,z||0);
+const lerp=(A,B,t)=>[A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t];
+const norm=p=>{const o=Object.assign({zl:.11,za:.2,fx:1},p);o.k2=o.k2||o.k;o.f2=o.f2||o.f;o.e2=o.e2||o.e;o.w2=o.w2||o.w;return o};
+const mixP=(A,B,t)=>{A=norm(A);B=norm(B);const o={};for(const k in A){o[k]=Array.isArray(A[k])?lerp(A[k],B[k]||A[k],t):A[k]+(((B[k]??A[k]))-A[k])*t}o.fx=t<.5?A.fx:B.fx;return o};
+let UP=null;
+function place(m,a,b){const d=b.clone().sub(a),l=d.length()||1e-3;m.position.copy(a).add(b).multiplyScalar(.5);m.scale.set(1,l,1);m.quaternion.setFromUnitVectors(UP,d.normalize())}
+function makeChar(parent,pal){const g=new THREE.Group();parent.add(g);
+const skin=M(pal.skin,.55),top=M(pal.top,.85),bot=M(pal.bot,.85),hairM=M(pal.hair,.9),beltM=M(pal.belt,.75),barM=M(pal.bar,.8);
+const limbs=[],joints=[],feet=[];const add=m=>{m.castShadow=true;g.add(m);return m};
+const seg=(k,rt,rb,m)=>limbs.push({k,m:add(new THREE.Mesh(new THREE.CylinderGeometry(rt,rb,1,16),m))});
+const ball=(k,r,m)=>joints.push({k,m:add(new THREE.Mesh(new THREE.SphereGeometry(r,16,12),m))});
+seg('torso',.215,.18,top);seg('neck',.06,.065,skin);
+['R','L'].forEach(s=>{seg('ua'+s,.078,.07,top);seg('fa'+s,.068,.06,top);seg('th'+s,.098,.085,bot);seg('sn'+s,.078,.068,bot);
+ball('s'+s,.092,top);ball('e'+s,.07,top);ball('w'+s,.052,skin);ball('k'+s,.085,bot);
+feet.push({s,m:add(new THREE.Mesh(new THREE.BoxGeometry(.22,.07,.1),skin))})});
+const pelvis=add(new THREE.Mesh(new THREE.SphereGeometry(.18,18,14),bot));pelvis.scale.set(1,.75,1.2);
+const belt=add(new THREE.Mesh(new THREE.TorusGeometry(.196,.03,8,30),beltM));
+const knot=add(new THREE.Mesh(new THREE.BoxGeometry(.08,.07,.08),beltM));
+const tails=[0,1].map(i=>{const t=new THREE.Group();const a=new THREE.Mesh(new THREE.BoxGeometry(.065,.22,.026),beltM);a.position.y=-.11;t.add(a);const b=new THREE.Mesh(new THREE.BoxGeometry(.067,.07,.03),barM);b.position.y=-.17;if(i===0)t.add(b);g.add(t);return t});
+const head=add(new THREE.Mesh(new THREE.SphereGeometry(.15,22,16),skin));
+const hair=add(new THREE.Mesh(new THREE.SphereGeometry(.158,22,16,0,Math.PI*2,0,Math.PI*.5),M(pal.hair,.9)));
+return{g,update(p0){const p=norm(p0),ZS=p.za,ZL=p.zl;
+const nk=V(p.n),hp=V(p.hp),hd=V(p.h),up=nk.clone().sub(hp).normalize();const front=new THREE.Vector3(up.y*p.fx,-up.x*p.fx,0);
+const S={R:{s:V(p.n,ZS).addScaledVector(up,-.07),e:V(p.e,ZS),w:V(p.w,ZS),h:V(p.hp,.1),k:V(p.k,ZL),f:V(p.f,ZL)},L:{s:V(p.n,-ZS).addScaledVector(up,-.07),e:V(p.e2,-ZS),w:V(p.w2,-ZS),h:V(p.hp,-.1),k:V(p.k2,-ZL),f:V(p.f2,-ZL)}};
+const P={torso:[hp,nk.clone().addScaledVector(up,-.06)],neck:[nk,hd.clone().lerp(nk,.45)]};
+['R','L'].forEach(s=>{const q=S[s];P['ua'+s]=[q.s,q.e];P['fa'+s]=[q.e,q.w];P['th'+s]=[q.h,q.k];P['sn'+s]=[q.k,q.f]});
+limbs.forEach(({k,m})=>place(m,P[k][0],P[k][1]));joints.forEach(({k,m})=>m.position.copy(S[k[1]][k[0]]));
+feet.forEach(({s,m})=>{const q=S[s],kf=q.f.clone().sub(q.k).normalize();m.position.copy(q.f);m.position.x+=.05*(kf.y<-.6?p.fx:Math.sign(-kf.x||1)*0);m.position.y=Math.max(.035,m.position.y);m.rotation.z=q.f.y<.2?0:Math.atan2(kf.y,kf.x)+Math.PI/2});
+pelvis.position.copy(hp);pelvis.quaternion.setFromUnitVectors(UP,up);
+const bp=hp.clone().addScaledVector(up,.13);belt.position.copy(bp);belt.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),up);
+knot.position.copy(bp).addScaledVector(front,.2);knot.quaternion.setFromUnitVectors(UP,up);
+tails.forEach((t,i)=>{t.position.copy(knot.position);t.position.z+=i?.035:-.035;t.quaternion.setFromUnitVectors(UP,up)});
+head.position.copy(hd);const back=hd.clone().sub(nk).normalize();hair.position.copy(hd).addScaledVector(front,-.02);hair.quaternion.setFromUnitVectors(UP,back);
+return S}}}
+function makeStage(el,o){if(!window.THREE)return null;let R;try{R=new THREE.WebGLRenderer({antialias:true,alpha:true})}catch(e){return null}
+UP=UP||new THREE.Vector3(0,1,0);R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;el.prepend(R.domElement);
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(36,1,.1,50);
+scene.add(new THREE.HemisphereLight(0xfff6ea,0x6a5a4a,.85));const dl=new THREE.DirectionalLight(0xffffff,.75);dl.position.set(2.5,5,3.5);dl.castShadow=true;dl.shadow.mapSize.set(1024,1024);Object.assign(dl.shadow.camera,{left:-3,right:3,top:3,bottom:-3});scene.add(dl);
+const mat=new THREE.Mesh(new THREE.BoxGeometry(o.mw||5.2,.06,o.md||2.6),M(0x2d3a5c,.95));mat.position.y=-.03;mat.receiveShadow=true;scene.add(mat);
+const gr=new THREE.GridHelper(o.mw||5.2,8,0x3d4b72,0x3d4b72);gr.scale.z=(o.md||2.6)/(o.mw||5.2);gr.position.y=.002;scene.add(gr);
+const root=new THREE.Group();scene.add(root);
+const S={R,cam,root,az:o.az,elv:o.el,r:o.r,ty:o.ty,tx:o.tx||0};
+S.resize=()=>{const w=el.clientWidth,h=el.clientHeight;if(!w||!h)return;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()};new ResizeObserver(S.resize).observe(el);S.resize();
+let drag=null;el.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;drag=[e.clientX,e.clientY,S.az,S.elv];el.setPointerCapture(e.pointerId)});
+el.addEventListener('pointermove',e=>{if(!drag)return;S.az=drag[2]-(e.clientX-drag[0])*.01;S.elv=Math.max(-.05,Math.min(1.2,drag[3]+(e.clientY-drag[1])*.006))});
+el.addEventListener('pointerup',()=>drag=null);el.addEventListener('pointercancel',()=>drag=null);
+S.render=(now,sway)=>{const sw=sway?Math.sin(now/2600)*.2:0;cam.position.set(S.tx+Math.sin(S.az+sw)*Math.cos(S.elv)*S.r,S.ty+Math.sin(S.elv)*S.r,Math.cos(S.az+sw)*Math.cos(S.elv)*S.r);cam.lookAt(S.tx,S.ty,0);R.render(scene,cam)};
+return S}
+const q2=v=>v<.5?2*v*v:1-Math.pow(-2*v+2,2)/2;
+/* ejercicios */
+const fig=$('#fig');let ES=null,ch=null,dbs=[],band=null,play=true,t0=performance.now();
+function build(){if(!ES)return;ES.root.clear();dbs=[];const e=EX[cur];ch=makeChar(ES.root,PAL_ME);
+const iron=M(0x3b3f46,.35),plate=M(0xd7263d,.5);
+if(!/Peso corporal|Banda|Tu mano/.test(e.load)){const n=e.one||e.arm1?1:2;for(let i=0;i<n;i++){const d=new THREE.Group();const bar=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,.34,8),iron);bar.rotation.x=Math.PI/2;d.add(bar);[-.15,.15].forEach(z=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,.08,18),plate);p.rotation.x=Math.PI/2;p.position.z=z;p.castShadow=true;d.add(p)});ES.root.add(d);dbs.push(d)}}
+if(e.bench){const b=e.bench,w=b[2]/50,h=b[3]/50;const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,.6),M(0x8a6f4e,.8));m.position.set((b[0]+b[2]/2-90)/50,h/2,e.arm1?-.25:0);m.castShadow=m.receiveShadow=true;ES.root.add(m)}
+band=null;if(e.band){band=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,1,6),new THREE.MeshBasicMaterial({color:0x1d9e75}));ES.root.add(band)}}
+function phase(ms){const T=3600,x=(((ms%T)+T)%T)/T;if(x<.4)return q2(x/.4);if(x<.5)return 1;if(x<.9)return 1-q2((x-.5)/.4);return 0}
+let prevP=null,lastP=null,swT=0;
+function draw(t){const e=EX[cur];let p=Object.assign(mixP(e.a,e.b||e.a,t),{fx:e.fx||1});const k=(performance.now()-swT)/700;if(prevP&&k<1){const u=.5-Math.cos(Math.PI*k)/2;p=mixP(prevP,p,u);p.fx=e.fx||1}lastP=p;const S=ch.update(p);
+dbs.forEach((d,i)=>{if(e.one){d.position.copy(V(p.w,0));return}d.position.copy(i===0?S.R.w:S.L.w)});
+if(band)place(band,V(p.w,0),new THREE.Vector3(-1.75,(125-58)/50,0))}
+$('#vSide').onclick=()=>{if(ES){ES.az=0;ES.elv=.12}};$('#vFront').onclick=()=>{if(ES){ES.az=Math.PI/2;ES.elv=.15}};$('#v34').onclick=()=>{if(ES){ES.az=.75;ES.elv=.3}};
+$('#vPlay').onclick=()=>{play=!play;$('#vPlay').textContent=play?'Pausa':'Animar';if(play)t0=performance.now()};
+/* biblioteca BJJ: A = tú (gi blanco), B = compañero (gi azul) */
+const P=(o,m)=>Object.assign({},o,m);const mir=o=>{const r={};for(const k in o)r[k]=Array.isArray(o[k])?[180-o[k][0],o[k][1]]:k==='fx'?-(o.fx||1):o[k];return r};
+const SUP={h:[30,113],n:[44,118],hp:[90,120],k:[112,100],f:[128,123],e:[54,104],w:[64,94]};
+const SUPF=P(SUP,{e:[50,121],w:[62,121],k:[112,103]});
+const MT={h:[84,50],n:[86,62],hp:[90,98],k:[66,118],f:[100,123],e:[74,80],w:[64,102],fx:-1,zl:.3};
+const GB={h:[30,113],n:[44,118],hp:[86,116],k:[104,92],f:[124,100],e:[62,100],w:[82,82],zl:.27};
+const GT={h:[98,52],n:[100,64],hp:[112,96],k:[100,121],f:[130,123],e:[88,84],w:[78,104],fx:-1,zl:.16};
+const KN={h:[96,36],n:[94,48],hp:[96,82],k:[88,108],f:[116,112],k2:[118,100],f2:[124,124],e:[80,66],w:[66,86],fx:-1,zl:.14};
+const BS={h:[100,70],n:[98,82],hp:[90,116],k:[118,100],f:[142,122],e:[108,98],w:[120,104]};
+const AB={h:[80,74],n:[76,86],hp:[64,118],k:[96,102],f:[114,110],e:[100,82],w:[106,84],e2:[92,104],w2:[104,96],zl:.27};
+const SD={h:[136,98],n:[122,96],hp:[86,96],k:[80,121],f:[56,123],e:[120,116],w:[104,120],e2:[128,116],w2:[146,120]};
+const LIB={
+esp:{ty:'pos',t:'Espalda tomada',d:'La mejor posición: estás detrás, con los ganchos (talones) metidos entre sus piernas y un brazo cruzado por su pecho (cinturón de seguridad). Él no te ve y no te alcanza.',f:[{A:AB,B:BS}]},
+mon:{ty:'pos',t:'Montada',d:'Sentado sobre su abdomen, rodillas pegadas a sus costados. Tienes la gravedad a favor y él casi no puede atacarte.',f:[{A:MT,B:SUP}]},
+rod:{ty:'pos',t:'Rodilla en el estómago',d:'Una rodilla sobre su abdomen y la otra pierna afuera como apoyo. Mucha presión y movilidad para pasar a montada o atacar.',f:[{A:KN,B:SUP}]},
+cien:{ty:'pos',t:'100 kg (control lateral)',d:'Cruzado sobre él, pecho contra pecho, controlando cabeza y cadera. Muy estable: desde aquí subes a montada o rodilla en el estómago.',tA:{x:-.55,z:.78,ry:Math.PI/2},f:[{A:SD,B:SUPF}]},
+gua:{ty:'pos',t:'Guardia cerrada',d:'Tú abajo, piernas cruzadas en su espalda. Es neutral: aunque estés de espalda, controlas su postura y puedes atacar o raspar.',f:[{A:GB,B:GT}]},
+upa:{ty:'tec',t:'Escape de montada (upa)',f:[{s:'Estás abajo y él te monta.',A:P(SUP,{e:[60,104],w:[78,100]}),B:MT},{s:'Atrapa su brazo y su pie del mismo lado.',A:P(SUP,{e:[52,108],w:[64,102],k:[104,100],f:[108,123]}),B:MT},{s:'Puente explosivo: la cadera sube y él cae hacia adelante.',A:P(SUP,{hp:[90,98],k:[110,96],f:[110,123],e:[52,108],w:[60,100]}),B:P(MT,{hp:[84,78],n:[64,58],h:[54,52],k:[70,100],f:[98,108],e:[54,84],w:[42,104]})},{s:'Rueda hacia el lado atrapado: quedas arriba, en su guardia.',A:GT,B:GB}]},
+codo:{ty:'tec',t:'Escape codo-rodilla',f:[{s:'Estás abajo y él te monta.',A:SUP,B:MT},{s:'Gira de lado y pega el codo a tu rodilla.',A:P(SUP,{hp:[96,118],k:[96,102],f:[114,122],e:[72,112],w:[78,104]}),B:MT},{s:'Camarón: saca la cadera y mete la rodilla bajo su pierna.',A:P(SUP,{hp:[100,118],k:[86,98],f:[96,108],k2:[118,104],f2:[132,123],e:[70,108],w:[84,100]}),B:P(MT,{hp:[94,98]})},{s:'Recupera la guardia.',A:GB,B:GT}]},
+rompe:{ty:'tec',t:'Guardia cerrada: romper la postura',f:[{s:'Guardia cerrada: piernas cruzadas en su espalda.',A:GB,B:GT},{s:'Tira con brazos y rodillas hacia tu pecho.',A:P(GB,{k:[98,88],f:[116,94],w:[68,96],e:[56,104]}),B:P(GT,{n:[76,86],h:[64,88],hp:[106,100],e:[64,108],w:[54,122]})},{s:'Con la postura rota no te puede atacar. Desde aquí atacas.',A:P(GB,{k:[98,88],f:[116,94],w:[68,96],e:[56,104]}),B:P(GT,{n:[76,86],h:[64,88],hp:[106,100],e:[64,108],w:[54,122]})}]},
+tij:{ty:'tec',t:'Raspado de tijera',f:[{s:'Desde la guardia: agarra manga y solapa.',A:GB,B:GT},{s:'Ponte de lado: una canilla cruza su abdomen y la otra pierna va al suelo, detrás de su rodilla.',A:P(GB,{hp:[88,118],k:[106,90],f:[106,108],k2:[106,118],f2:[130,121],w:[84,90],e:[64,100]}),B:GT},{s:'Corta con la pierna de abajo, empuja con la de arriba y tira de la manga.',A:P(GB,{hp:[88,116],k:[110,84],f:[128,92],k2:[112,120],f2:[128,118],w:[88,84]}),B:P(GT,{hp:[118,104],n:[124,74],h:[128,62],k:[110,121],f:[134,118],e:[108,86],w:[98,96]})},{s:'Él cae de espalda y terminas montado.',A:mir(MT),B:mir(SUP)}]},
+kim:{ty:'tec',t:'Kimura',f:[{s:'Desde la guardia, él apoya una mano en el suelo.',A:GB,B:P(GT,{n:[96,72],h:[90,62],e:[88,104],w:[84,122]})},{s:'Agarra su muñeca, siéntate y pasa tu otro brazo por encima de su hombro hasta tomar tu propia muñeca.',A:P(GB,{n:[58,98],h:[50,88],hp:[82,118],e:[72,110],w:[84,120],e2:[90,80],w2:[88,112]}),B:P(GT,{n:[96,72],h:[90,62],e:[88,104],w:[84,122]})},{s:'Cae de espalda y lleva su mano hacia su espalda. En práctica: lento y suelta cuando golpee.',A:P(GB,{e:[80,100],w:[100,96],e2:[84,90],w2:[98,98]}),B:P(GT,{n:[92,74],h:[84,66],e:[102,104],w:[104,92]})}]},
+arm:{ty:'tec',t:'Armlock desde la guardia',f:[{s:'Desde la guardia, controla uno de sus brazos.',A:P(GB,{w:[76,102],e:[60,108]}),B:GT},{s:'Pie en su cadera y gira el cuerpo hacia ese lado.',A:P(GB,{hp:[84,114],k:[104,90],f:[112,104],k2:[96,82],f2:[94,64],w:[76,100]}),B:GT},{s:'Pierna por encima de su cara, cadera arriba: el codo se extiende. Siempre lento.',A:P(GB,{hp:[84,108],k:[100,92],f:[112,104],k2:[96,80],f2:[70,84],e:[58,110],w:[66,98]}),B:P(GT,{n:[92,80],h:[84,80],hp:[110,98],e:[78,96],w:[66,96]})}]},
+mata:{ty:'tec',t:'Mata-leão',f:[{s:'Espalda tomada, con los ganchos puestos.',A:AB,B:BS},{s:'Un brazo rodea el cuello, con el codo bajo su mentón; la otra mano va detrás de su cabeza.',A:P(AB,{e:[104,80],w:[94,72],e2:[84,66],w2:[94,64]}),B:P(BS,{e:[108,88],w:[104,80]})},{s:'Aprieta suave y suelta apenas golpee.',A:P(AB,{n:[72,88],h:[76,76],e:[104,82],w:[92,72],e2:[82,66],w2:[94,62]}),B:P(BS,{h:[100,72],e:[108,88],w:[104,80],e2:[118,100],w2:[112,112]})}]}};
+const F2=$('#fig2');let LS=null,cA=null,cB=null,li='mon',lplay=true,lt0=performance.now(),lstep=0,lastI=-1;
+function buildL(){const it=LIB[li];lastI=-1;$('#tag2').innerHTML=`${it.t}<small>${it.ty==='pos'?'Posición':'Técnica · '+it.f.length+' pasos'}</small>`;
+$('#lchips').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.l===li));
+['lPrev','lNext','lPlay'].forEach(id=>$('#'+id).style.display=it.f.length>1?'':'none');
+if(it.ty==='pos')$('#lstep').innerHTML=`<b>${it.t}</b><p class="mut" style="margin:4px 0 0">${it.d}</p>`;
+if(!LS)return;LS.root.clear();cA=makeChar(LS.root,PAL_ME);cB=makeChar(LS.root,PAL_RIVAL);const ta=it.tA||{};cA.g.position.set(ta.x||0,0,ta.z||0);cA.g.rotation.y=ta.ry||0}
+let prevA=null,prevB=null,lsw=0,curA=null,curB=null;
+function selL(id){if(curA){prevA=curA;prevB=curB;lsw=performance.now()}li=id;lstep=0;lplay=true;lt0=performance.now();$('#lPlay').textContent='Pausa';buildL()}
+function lframe(now){const F=LIB[li].f,n=F.length;if(n===1)return{i:0,j:0,t:0};const H=1200,MV=1500,C=H+MV,T=n*C;const x=lplay?(((now-lt0)%T)+T)%T:lstep*C;const i=Math.floor(x/C),r=x-i*C;return{i,j:(i+1)%n,t:r<H?0:.5-Math.cos(Math.PI*(r-H)/MV)/2}}
+function drawL(now){const it=LIB[li],F=it.f,{i,j,t}=lframe(now);if(cA){let a=mixP(F[i].A,F[j].A,t),b=mixP(F[i].B,F[j].B,t);const k=(performance.now()-lsw)/800;if(prevA&&k<1&&!LIB[li].tA){const u=.5-Math.cos(Math.PI*k)/2;a=mixP(prevA,a,u);b=mixP(prevB,b,u)}curA=a;curB=b;cA.update(a);cB.update(b)}
+if(it.ty==='tec'&&i!==lastI){lastI=i;$('#lstep').innerHTML=`<div class="row" style="gap:6px;margin-bottom:6px">${F.map((_,k)=>`<span style="width:${k===i?22:8}px;height:8px;border-radius:4px;background:${k===i?'var(--red)':'var(--line)'};transition:.2s"></span>`).join('')}<span class="sm mut" style="margin-left:6px">Paso ${i+1} de ${F.length}</span></div><b>${F[i].s}</b>`}}
+$('#lPrev').onclick=()=>{const n=LIB[li].f.length;lplay=false;lstep=(lframe(performance.now()).i-1+n)%n;$('#lPlay').textContent='Animar'};
+$('#lNext').onclick=()=>{const n=LIB[li].f.length;lplay=false;lstep=(lframe(performance.now()).i+1)%n;$('#lPlay').textContent='Animar'};
+$('#lPlay').onclick=()=>{lplay=!lplay;if(lplay)lt0=performance.now()-lstep*2500;$('#lPlay').textContent=lplay?'Pausa':'Animar'};
+$('#lchips').innerHTML=Object.keys(LIB).map(k=>`<button data-l="${k}">${LIB[k].t}</button>`).join('');
+$('#lchips').onclick=e=>{const b=e.target.closest('button');if(b)selL(b.dataset.l)};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-show]');if(b){selL(b.dataset.show);F2.scrollIntoView({behavior:'smooth',block:'center'})}});
+const vis=v=>document.getElementById('v-'+v).classList.contains('on');
+function loop(now){if(ES&&vis('ejercicios')){draw(play?phase(now-t0):.5);ES.render(now,play)}if(vis('aprender')){drawL(now);if(LS)LS.render(now,lplay)}requestAnimationFrame(loop)}
+function initGL(){ES=makeStage(fig,{az:.75,el:.18,r:5,ty:.85,tx:.1});if(!ES)fig.insertAdjacentHTML('beforeend','<div class="err">No se pudo cargar el visor 3D. Revisa tu conexión y vuelve a abrir.</div>');else build();
+LS=makeStage(F2,{az:.95,el:.42,r:5.4,ty:.55,tx:-.05,mw:6,md:3.4});if(!LS)F2.insertAdjacentHTML('beforeend','<div class="err">No se pudo cargar el visor 3D.</div>');buildL();requestAnimationFrame(loop)}
+
+/* ---------- comida ---------- */
+const ONCE="½ marraqueta con 1 lata chica de atún al agua, o atún con lechuga y limón, o 2 huevos a la copa, pochados o revueltos. En días de BJJ, mantén el pan";
+const MENUS={
+"Día normal":[["Desayuno","6 cdas de avena con 1 taza de leche + 1 plátano + 2 huevos","29 g"],["Almuerzo","Táper del meal prep: 1 taza de legumbres + ½ taza de arroz + 1 trutro. Lun, mié y vie: + lechuga o repollo","50 g"],["Once",ONCE,"25 g"],["Comida","Táper del meal prep: soya boloñesa o pollo desmenuzado + puré. Sáb y dom: huevos frescos + papa","34 g"],["Colación","1 quesillo o 1 taza de leche + 1 manzana","10 g"]],
+"Día de BJJ":[["Desayuno","Avena con leche + 2 huevos","26 g"],["Almuerzo","Táper del meal prep (legumbres + arroz + trutro)","50 g"],["60–90 min antes","1 plátano + 1 taza de leche: energía rápida y liviana","8 g"],["Post clase","Táper de comida (soya o pollo + puré) o 3 huevos revueltos + papa. Agua: 500 ml a 1 L","34 g"],["Once",ONCE,"25 g"]],
+"Turno de madrugada":[["Antes del turno","Táper de almuerzo (legumbres + arroz + trutro)","50 g"],["En el turno","Bento 2: 2 huevos duros del domingo + quesillo + pan con atún + fruta. Lleva el táper congelado de mañana como gel frío","35 g"],["Al salir","Leche con avena, liviano, y a dormir","16 g"],["Al despertar","Táper de comida (soya o pollo + puré)","34 g"],["Colación","1 manzana + 1 taza de leche","8 g"]]};
+let mk="Día normal";
+$('#mfilt').innerHTML=Object.keys(MENUS).map(k=>`<button data-m="${k}">${k}</button>`).join('');
+$('#mfilt').onclick=e=>{const b=e.target.closest('button');if(!b)return;mk=b.dataset.m;renderMenu()};
+function renderMenu(){$('#mfilt').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.m===mk));
+$('#menu').innerHTML=`<table><thead><tr><th>Momento</th><th>Qué comer</th><th style="text-align:right">Prot.</th></tr></thead><tbody>${MENUS[mk].map(r=>`<tr><td style="font-weight:600;width:28%">${r[0]}</td><td>${r[1]}</td><td class="n">${r[2]}</td></tr>`).join('')}</tbody></table>`}
+const SHOP=["Huevos · bandeja de 30","Pollo trozado o trutros · ~2,5 kg (9–10 presas)","Lentejas o porotos · 500 g","Soya texturizada · 150 g","Salsa de tomate · 1 caja","Arroz · 1 kg (dura 2 semanas)","Papas · 2 kg","Cebolla · 1 kg","Zanahoria · 1 kg","Zapallo · 1 trozo (~500 g)","Lechuga · 1 y repollo · ½","Atún al agua · 3–4 latas chicas (lomitos o desmenuzado)","Quesillo · 3","Leche descremada · 4 L o 400 g en polvo","Avena · 1 kg (dura 2 semanas)","Marraquetas · 4","Plátanos 10 + manzanas 7","Ajo, comino, orégano, merkén, sal"];
+let shop=st.get('bjj_shop',{});
+function renderShop(){$('#shop').innerHTML=SHOP.map((s,i)=>`<label class="chk ${shop[i]?'done':''}"><input type="checkbox" data-i="${i}" ${shop[i]?'checked':''}><span>${s}</span></label>`).join('')}
+$('#shop').onchange=e=>{const i=e.target.dataset.i;shop[i]=e.target.checked;st.set('bjj_shop',shop);renderShop()};
+$('#clr').onclick=()=>{shop={};st.set('bjj_shop',shop);renderShop();toast('Lista reiniciada')};
+
+/* ---------- aprender ---------- */
+$('#ladder').innerHTML=[["esp","Espalda tomada"],["mon","Montada"],["rod","Rodilla en el estómago"],["cien","100 kg (control lateral)"],["gua","Guardia cerrada (abajo)"]].map((r,i)=>`<div data-show="${r[0]}" style="cursor:pointer"><span>${i+1}. ${r[1]}</span><span class="sm">Ver ›</span></div>`).join('');
+$('#hist').innerHTML=[["1914","Mitsuyo Maeda, judoca japonés que recorría el mundo desafiando luchadores, llega a Brasil y se instala en Belém."],["~1917","Maeda enseña a Carlos Gracie. Sus hermanos aprenden con él, entre ellos Hélio, el menor y el más liviano."],["1920s–50s","Hélio adapta las técnicas para no depender de la fuerza: palanca, timing y pelear desde la espalda (la guardia). Los Gracie lo prueban en desafíos abiertos contra cualquier estilo."],["1993","Rorion Gracie co-crea el UFC en EE.UU. para demostrar qué arte marcial funciona. Su hermano Royce, flaco y en kimono, gana el UFC 1 finalizando a rivales mucho más grandes."],["Hoy","Todo peleador de MMA entrena BJJ. Sin defensa en el suelo, no se puede competir en el UFC."]].map(r=>`<div class="ex" style="cursor:default"><div><b>${r[0]}</b><div class="sm mut">${r[1]}</div></div></div>`).join('');
+const PREP=[["Legumbres guisadas","3–4 días","Sí · 3 meses","Congelan perfecto"],["Pollo al horno","3–4 días","Sí · 2–3 meses","En presas o desmenuzado"],["Soya boloñesa","3–4 días","Sí · 3 meses","Ideal en porciones"],["Arroz","3–4 días","Sí · 1 mes","Enfriar rápido; recalentar bien"],["Puré de papas","3 días","Sí · 1 mes","Las papas enteras no: quedan aguachentas"],["Huevos duros","1 semana","No","Con cáscara; pélalos el mismo día"],["Huevos a la copa / pochados","Al momento","No","Se hacen en 4–6 min"],["Lechuga lavada y seca","3–4 días","No","Táper con papel absorbente"],["Repollo picado","4–5 días","No","Aliña solo lo que vas a comer"],["Atún abierto","1–2 días","No","Pásalo a un táper, no en la lata"]];
+const YIELD=[["7 almuerzos","legumbres + arroz + trutro"],["5 comidas","3 soya boloñesa + 2 pollo, con puré"],["8 huevos duros","colaciones y turnos"],["Lechuga y repollo","para 3 días de ensalada"]];
+$('#yield').innerHTML=YIELD.map(r=>`<div><span>${r[0]}</span><span class="sm">${r[1]}</span></div>`).join('');
+const COOK=[["Sábado noche","Si usas porotos, déjalos remojando en agua. Lentejas no necesitan. Pasa el pollo del freezer a la refri."],["0:00 · Horno","Prende el horno a 200 °C. Aliña los trutros con ajo, comino, merkén, orégano, sal y 1 cda de aceite. Al horno 50 min."],["0:05 · Olla 1: legumbres","Sofríe 1 cebolla y 2 dientes de ajo. Agrega las legumbres, 2 zanahorias y el zapallo rallados (así comes verdura sin ensalada) y agua hasta cubrir 3 dedos. Lentejas: 40 min. Porotos: 60–90 min, o 25 min en olla a presión."],["0:10 · Olla 2: papas","1,5 kg de papas peladas en trozos, 20 min en agua con sal."],["0:15 · Sartén: soya boloñesa","Hidrata 150 g de soya 10 min en agua caliente y estrújala. Sofríe 1 cebolla y 1 zanahoria rallada, agrega la soya, la salsa de tomate y orégano. 15 min."],["0:30 · Huevos duros","8 huevos en agua hirviendo 10 min y luego a agua fría."],["0:35 · Olla 3: arroz","1½ tazas de arroz con 3 tazas de agua y sal, 18–20 min a fuego bajo con tapa."],["0:50 · Verduras","Lava y seca la lechuga; pica el repollo. Guárdalos en táper con papel absorbente."],["1:00 · Saca el pollo","Debe estar dorado y sin jugo rosado. Desmenuza 2 trutros para las comidas. Haz puré con las papas, un chorro de leche y sal."],["1:10 · Enfría","Extiende todo en fuentes para que se enfríe rápido. Máximo 2 horas fuera de la refri."],["1:40 · Arma los táperes","7 almuerzos: 1 taza de legumbres + ½ de arroz + 1 trutro. 5 comidas: soya o pollo + puré. Escribe el día en cada uno."],["1:55 · Guarda","Refri: almuerzos lun, mar y mié + comidas lun y mar. Freezer: todo lo demás. Huevos con cáscara a la refri."]];
+let cook=st.get('bjj_cook',{});
+function renderCook(){$('#cook').innerHTML=COOK.map((c,i)=>`<label class="chk ${cook[i]?'done':''}" style="align-items:flex-start"><input type="checkbox" data-i="${i}" ${cook[i]?'checked':''} style="margin-top:2px"><span><b style="font-weight:600">${c[0]}</b><br><span class="sm">${c[1]}</span></span></label>`).join('')}
+$('#cook').onchange=e=>{const i=e.target.dataset.i;cook[i]=e.target.checked;st.set('bjj_cook',cook);renderCook()};
+$('#clr2').onclick=()=>{cook={};st.set('bjj_cook',cook);renderCook();toast('Checklist reiniciada')};
+const WMAP=[["Lun","Refri + lechuga","Soya + puré (refri)"],["Mar","Refri","Pollo + puré (refri)"],["Mié","Refri + repollo","Soya + puré (freezer)"],["Jue","Freezer","Pollo + puré (freezer)"],["Vie","Freezer + lechuga","Soya + puré (freezer)"],["Sáb","Freezer","Huevos frescos + papa"],["Dom","Freezer o fresco","Huevos frescos + papa · ¡cocinas de nuevo!"]];
+$('#wmap').innerHTML=WMAP.map(r=>`<tr><td style="font-weight:600">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+const REC=[["Legumbres guisadas (7 porciones)","500 g de lentejas o porotos, 1 cebolla, 2 dientes de ajo, 2 zanahorias, 1 trozo de zapallo, 1 cdta de comino, sal y 1 cda de aceite. Sofríe, agrega todo con agua y cocina hasta que estén blandas. Si quedan aguadas, destapa los últimos 10 min."],["Pollo al horno (9–10 presas)","2,5 kg de trutros sin piel (o quítasela al comer). Aliño: ajo, comino, merkén, orégano, sal y 1 cda de aceite. 200 °C por 45–50 min, dándolos vuelta a la mitad."],["Soya boloñesa (3 porciones)","150 g de soya hidratada y estrujada, 1 cebolla, 1 zanahoria rallada, 1 caja de salsa de tomate, orégano y sal. 15 min en sartén."],["Arroz (7 porciones de ½ taza)","1½ tazas de arroz + 3 tazas de agua + sal. Hierve, baja el fuego, tapa y 18–20 min sin destapar."],["Puré (5 porciones)","1,5 kg de papas cocidas, aplastadas con ½ taza de leche y sal. Sin mantequilla."],["Huevos a tu gusto","A la copa: 4–5 min en agua hirviendo. Pochados (a la agüita): agua apenas hirviendo con un chorrito de vinagre, el huevo adentro 3–4 min. Revueltos en taza: 2 huevos batidos, 1 min en microondas, revuelve y 30 s más. Duros: 10 min."]];
+$('#rec').innerHTML=REC.map((r,i)=>`<details ${i===0?'open':''}><summary>${r[0]}</summary><p>${r[1]}</p></details>`).join('');
+const SWAP=["1 lata chica de atún al agua","2 huevos (a la copa, pochados, revueltos o duros) + 1 taza de leche","½ lata de jurel","1 quesillo grande + 1 huevo","1 porción de pollo desmenuzado del meal prep"];
+$('#swap').innerHTML=SWAP.map((x,i)=>`<div class="chk" style="cursor:default"><span class="pill ${i?'':'r'}" style="flex:none">${i?'o':'='}</span><span>${x}</span></div>`).join('');
+$('#prep').innerHTML=PREP.map(r=>`<tr><td><b style="font-weight:600">${r[0]}</b><div class="sm mut">${r[3]}</div></td><td style="white-space:nowrap">${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+const PLAN=[["Mes 1 · Sobrevivir","Aprende los nombres de las posiciones y la etiqueta. En los roleos, tu única meta es no quedar plano de espalda y respirar. Golpea (tap) temprano."],["Mes 2 · Escapar","Escape de montada con puente (upa) y escape codo-rodilla. Escape de 100 kg con camarón y reposición de guardia. Pide a tu profe que te corrija estos dos."],["Mes 3 · Atacar","Desde guardia cerrada: romper la postura, raspado de tijera y una sumisión (armlock o kimura). Desde arriba: mantener la montada sin que te volteen."]];
+$('#plan').innerHTML=PLAN.map(p=>`<div class="card"><h3>${p[0]}</h3><p class="mut" style="margin:6px 0 0">${p[1]}</p></div>`).join('');
+const TECH=[["Escape de montada con puente (upa)","Atrapas un brazo y el pie del mismo lado del rival, haces un puente explosivo hacia ese lado y lo volteas. Es el ejercicio \"Puente sobre hombros\" aplicado."],["Escape codo-rodilla","Enmarcas, haces camarón y metes la rodilla entre tú y el rival para recuperar la media guardia o la guardia."],["Guardia cerrada","Piernas cruzadas en la espalda del rival. Controlas su postura tirándolo hacia ti: un rival con la postura rota no te puede atacar."],["Raspado de tijera","Desde guardia, una pierna atraviesa el abdomen y la otra barre la rodilla del rival mientras tiras de manga y solapa. Terminas montado."],["Kimura","Llave al hombro: atrapas la muñeca del rival y pasas tu brazo por detrás del suyo para agarrar tu propia muñeca. En práctica se aplica lento."],["Armlock desde guardia","Controlas un brazo, giras la cadera, pasas la pierna por la cara del rival y extiendes el codo con la cadera. Siempre lento y controlado."],["Mata-leão (estrangulamiento por la espalda)","Desde la espalda tomada, el brazo rodea el cuello y comprime los lados del cuello. Se aplica con suavidad y se suelta apenas el compañero golpea."]];
+const TK=['upa','codo','rompe','tij','kim','arm','mata'];$('#tech').innerHTML=TECH.map((t,i)=>`<details ${i===0?'open':''}><summary>${t[0]}</summary><p>${t[1]}</p><button data-show="${TK[i]}" style="margin-top:8px">Ver animación</button></details>`).join('')+'<p class="sm mut" style="margin:10px 0 0">Las técnicas se aprenden en clase con un compañero y un profesor. Estas descripciones son para que reconozcas lo que te enseñen.</p>';
+$('#first').innerHTML=["Polera ajustada o rashguard y short sin bolsillos ni cierres (para No-Gi). Pregunta si prestan gi.","Uñas de manos y pies cortas. Sin anillos, cadenas ni aros.","Chalas para fuera del tatami: nunca pises el tatami con zapatos ni camines descalzo fuera de él.","Botella de agua y llegar 10 minutos antes.","Avísale al profe que eres nuevo y que no tienes lesiones. Así te empareja con alguien con experiencia.","Golpea (tap) con la mano en el compañero o el suelo, o di \"tap\", apenas sientas presión en una articulación o el cuello."].map(x=>`<li>${x}</li>`).join('');
+$('#hyg').innerHTML=["Lava el gi o la ropa después de CADA clase. Nunca la uses dos veces.","Dúchate apenas termines, con jabón, en especial cuello, axilas e ingle.","Revisa tu piel: tiña, impétigo, herpes o cualquier lesión húmeda = no entrenas hasta que esté tratada.","Cubre heridas abiertas. Como enfermero ya sabes que el tatami es un contacto piel con piel continuo."].map(x=>`<li>${x}</li>`).join('');
+const GL=[["Tatami","El piso de colchonetas donde se entrena."],["Rolar / rolear","Combate de práctica (sparring) al final de la clase."],["Tap / golpear","Rendirse dando golpecitos. Detiene la técnica al instante."],["Guardia","Estar de espalda con las piernas entre tú y el rival."],["Pasar la guardia","Superar las piernas del rival para llegar a 100 kg o montada."],["Raspado (sweep)","Voltear al rival desde la guardia y quedar arriba."],["Montada","Sentado sobre el abdomen del rival."],["100 kg","Control lateral, pecho contra pecho, cruzado."],["Finalización","Luxación o estrangulamiento que obliga a golpear."],["Gi / No-Gi","Con kimono / sin kimono (polera y short)."],["Drill","Repetir una técnica con un compañero que no se resiste."],["Oss","Saludo y respuesta de \"entendido\" en muchas academias."]];
+$('#glos').innerHTML=GL.map(g=>`<details><summary>${g[0]}</summary><p>${g[1]}</p></details>`).join('');
+$('#belts').innerHTML=[["Blanco","Inicio, 4 grados"],["Azul","~2 años o más"],["Morado","~2–3 años más"],["Marrón","~1–2 años más"],["Negro","~8–12 años en total"]].map(b=>`<div><span>${b[0]}</span><span class="sm">${b[1]}</span></div>`).join('');
+
+/* ---------- progreso ---------- */
+const H_M=1.72,START={kg:78,date:'2026-11-18'},GOAL=73.9;
+const dk=d=>d.toLocaleDateString('sv-SE');let days=st.get('bjj_days',{}),dsel=new Date();
+const ACTS=[["fa","Fuerza A"],["fb","Fuerza B"],["bjj","BJJ"],["bici","Bicicleta"],["mov","Movilidad"]];
+const HABS=[["plan","Comí según el plan"],["sleep","Dormí 7 h o más"],["steps","Cumplí los pasos"]];
+const getD=k=>days[k]||(days[k]={});const saveD=()=>st.set('bjj_days',days);
+const imc=kg=>(kg/(H_M*H_M)).toFixed(1);
+function weights(){return Object.keys(days).filter(k=>days[k].kg).sort().map(k=>({k,kg:+days[k].kg}))}
+function renderDay(){const k=dk(dsel),d=getD(k),isT=k===dk(new Date());
+$('#dTitle').textContent=isT?'Hoy':dsel.toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'short'});
+$('#acts').innerHTML=ACTS.map(a=>`<button data-a="${a[0]}" class="${d[a[0]]?'on':''}">${a[1]}</button>`).join('');
+$('#habs').innerHTML=HABS.map(h=>`<label class="chk ${d[h[0]]?'done':''}" style="text-decoration:none"><input type="checkbox" data-h="${h[0]}" ${d[h[0]]?'checked':''}><span style="text-decoration:none;color:var(--ink)">${h[1]}</span></label>`).join('');
+$('#pkg').value=d.kg||'';$('#pcm').value=d.cm||'';$('#pnote').value=d.note||'';renderProg()}
+$('#acts').onclick=e=>{const b=e.target.closest('button');if(!b)return;const d=getD(dk(dsel));d[b.dataset.a]=!d[b.dataset.a];saveD();renderDay();if(d[b.dataset.a])toast('¡Bien! Registrado')};
+$('#habs').onchange=e=>{const d=getD(dk(dsel));d[e.target.dataset.h]=e.target.checked;saveD();renderProg()};
+[['#pkg','kg'],['#pcm','cm'],['#pnote','note']].forEach(([id,f])=>$(id).onchange=()=>{const d=getD(dk(dsel));const v=$(id).value.replace(',','.').trim();if(f!=='note'&&v&&isNaN(+v)){toast('Escribe solo números');return}d[f]=v;saveD();renderProg();toast('Guardado')});
+$('#dPrev').onclick=()=>{dsel=new Date(dsel.getTime()-864e5);renderDay()};$('#dNext').onclick=()=>{const n=new Date(dsel.getTime()+864e5);if(dk(n)<=dk(new Date())){dsel=n;renderDay()}};
+function streak(){let n=0,d=new Date();for(;;){const x=days[dk(d)];if(x&&ACTS.some(a=>x[a[0]]))n++;else if(dk(d)!==dk(new Date()))break;d=new Date(d.getTime()-864e5);if(n>365)break}return n}
+function renderProg(){const W=weights(),last=W.length?W[W.length-1].kg:START.kg;
+$('#pstats').innerHTML=`<div><b>${last}</b><span>kg actual</span></div><div><b>${imc(last)}</b><span>IMC</span></div><div><b>${Math.max(0,last-GOAL).toFixed(1)}</b><span>kg para IMC 25</span></div>`;
+const mon=new Date();mon.setDate(mon.getDate()-((mon.getDay()+6)%7));let ses=0,habs=0;
+$('#wk').innerHTML=['L','M','M','J','V','S','D'].map((l,i)=>{const d=new Date(mon.getTime()+i*864e5),x=days[dk(d)]||{},a=ACTS.filter(z=>x[z[0]]).length;ses+=a;habs+=HABS.filter(h=>x[h[0]]).length;const today=dk(d)===dk(new Date());
+return `<div style="text-align:center"><div class="sm mut">${l}</div><div style="height:34px;border-radius:10px;margin-top:4px;display:grid;place-items:center;font-weight:600;background:${a?'var(--red)':'var(--bg)'};color:${a?'#fff':'var(--mut)'};${today?'outline:2px solid var(--ink);outline-offset:1px':''}">${a||''}</div></div>`}).join('');
+$('#wksum').textContent=`${ses} de 5 sesiones planificadas · ${habs} hábitos cumplidos · racha: ${streak()} ${streak()===1?'día':'días'}`;
+const rate=(()=>{if(W.length<2)return .5;const a=W[0],b=W[W.length-1],dd=(new Date(b.k)-new Date(a.k))/6048e5;return dd>=1.5?Math.max(.1,(a.kg-b.kg)/dd):.5})();
+const wl=Math.max(0,(last-GOAL)/rate),eta=new Date(Date.now()+wl*6048e5);
+$('#proj').textContent=last<=GOAL?'¡Llegaste a IMC bajo 25! Ahora el objetivo es mantener y ganar fuerza.':`A tu ritmo ${W.length>=2?'actual':'esperado'} (~${rate.toFixed(1)} kg/semana) llegarías a IMC 25 cerca del ${eta.toLocaleDateString('es-CL',{day:'numeric',month:'long'})}.`;
+$('#ptab').innerHTML=[0,4,8,12].map(w=>{const kg=Math.max(66,last-.5*w);return `<tr><td>${w?'+'+w+' semanas':'Hoy'}</td><td class="n">${kg.toFixed(1)} kg</td><td class="n">${imc(kg)}</td></tr>`}).join('');
+const H=Object.keys(days).sort().reverse().filter(k=>Object.keys(days[k]).some(f=>days[k][f])).slice(0,14);
+$('#hist2').innerHTML=H.length?H.map(k=>{const x=days[k];const a=ACTS.filter(z=>x[z[0]]).map(z=>z[1]).join(', ');return `<div class="ex" style="cursor:default"><div><b>${new Date(k+'T12:00').toLocaleDateString('es-CL',{weekday:'short',day:'numeric',month:'short'})}</b><div class="sm mut">${a||'Descanso'}${x.note?' · '+x.note:''}</div></div><span class="k">${x.kg?x.kg+' kg':''}${x.cm?'<br>'+x.cm+' cm':''}</span></div>`}).join(''):'<p class="mut" style="margin:6px 0 0">Aún no hay registros. Marca lo que hiciste hoy arriba.</p>';
+drawChart();if(typeof renderHero==='function'){renderHero();renderBadges()}}
+const ch2=$('#chart');function drawChart(){const W=ch2.clientWidth,Hh=ch2.clientHeight;if(!W)return;const pts=[{k:START.date,kg:START.kg},...weights().filter(w=>w.k>START.date)];
+const t0c=new Date(pts[0].k).getTime(),t1=Math.max(new Date(pts[pts.length-1].k).getTime(),t0c+28*864e5);const lo=Math.min(GOAL-1,...pts.map(p=>p.kg))-.5,hi=Math.max(...pts.map(p=>p.kg))+.8;
+const X=t=>36+(W-46)*(t-t0c)/(t1-t0c),Y=v=>10+(Hh-34)*(hi-v)/(hi-lo);let g='';
+for(let v=Math.ceil(lo);v<=hi;v+=Math.max(1,Math.round((hi-lo)/4))){g+=`<line x1="36" x2="${W-10}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="30" y="${Y(v)+4}" text-anchor="end" font-size="12" fill="var(--mut)">${v}</text>`}
+g+=`<line x1="36" x2="${W-10}" y1="${Y(GOAL)}" y2="${Y(GOAL)}" stroke="#1d9e75" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W-12}" y="${Y(GOAL)-6}" text-anchor="end" font-size="12" fill="#1d9e75">IMC 25</text>`;
+g+=`<polyline fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linejoin="round" points="${pts.map(p=>X(new Date(p.k).getTime())+','+Y(p.kg)).join(' ')}"/>`+pts.map(p=>`<circle cx="${X(new Date(p.k).getTime())}" cy="${Y(p.kg)}" r="4" fill="var(--red)"/>`).join('');
+g+=`<text x="36" y="${Hh-6}" font-size="12" fill="var(--mut)">18 nov · 78 kg</text>`;ch2.innerHTML=g}
+const roC=new ResizeObserver(drawChart);roC.observe(ch2);
+/* hoy te toca */
+function renderHoy(){const w=WEEK[todayIdx],x=days[dk(new Date())]||{};const key={A:'fa',B:'fb',bjj:'bjj',c:'bici',r:'mov'}[w.k];const done=x[key];
+$('#hoy').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Hoy te toca</span><h3>${w.t}</h3></div><button id="hoyBtn" class="${done?'on':''}">${done?'Hecho ✓':'Marcar hecho'}</button></div><p class="sm mut" style="margin:6px 0 0">${w.x}</p>${SES[w.k]&&!done?`<button data-ses="${w.k}" class="go" style="margin:10px 0 0">Empezar sesión</button>`:''}`;
+$('#hoyBtn').onclick=()=>{const d=getD(dk(new Date()));d[key]=!d[key];saveD();renderHoy();renderDay();if(d[key])toast('¡Bien! Registrado')}}
+/* ---------- inicio ---------- */
+function totals(){let ses=0;for(const k in days)ses+=ACTS.filter(a=>days[k][a[0]]).length;return ses}
+function weekSes(){const mon=new Date();mon.setDate(mon.getDate()-((mon.getDay()+6)%7));let n=0;for(let i=0;i<7;i++){const x=days[dk(new Date(mon.getTime()+i*864e5))]||{};n+=ACTS.filter(a=>x[a[0]]).length}return n}
+function renderHero(){const n=weekSes(),g=5,p=Math.min(1,n/g),R=50,C=2*Math.PI*R;
+$('#ring').innerHTML=`<circle cx="60" cy="60" r="${R}" fill="none" stroke="#262a33" stroke-width="12"/><circle cx="60" cy="60" r="${R}" fill="none" stroke="#ff3b4e" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-p)}" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset .8s var(--ease)"/><text x="60" y="62" text-anchor="middle" font-family="Barlow Condensed" font-weight="700" font-size="34" fill="#f4f2ec">${n}/${g}</text><text x="60" y="82" text-anchor="middle" font-size="12" fill="#9599a3">sesiones</text>`;
+$('#heroS').textContent=n>=g?'¡Semana completa! Todo lo que sumes es extra.':`Te faltan ${g-n} para completar la semana.`;
+const W=weights(),last=W.length?W[W.length-1].kg:START.kg;
+$('#kpis').innerHTML=`<div><b>${streak()}</b><span>días de racha</span></div><div><b>${totals()}</b><span>sesiones en total</span></div><div><b>${(START.kg-last).toFixed(1)}</b><span>kg bajados</span></div>`;
+$('#dateTxt').textContent=new Date().toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'})}
+function renderBadges(){const W=weights(),last=W.length?W[W.length-1].kg:START.kg,t=totals(),done=COOK.every((_,i)=>cook[i]);
+const B=[["1","Primer paso",t>=1],["3","Racha de 3 días",streak()>=3],["5","Semana completa",weekSes()>=5],["10","10 sesiones",t>=10],["25","25 sesiones",t>=25],["−1","Primer kilo menos",last<=START.kg-1],["MP","Meal prep completo",done],["25","IMC bajo 25",last<=GOAL]];
+$('#badges').innerHTML=B.map(b=>`<div class="badge ${b[2]?'on':''}"><i>${b[0]}</i>${b[1]}</div>`).join('')}
+/* ---------- init ---------- */
+renderList();renderDetail();renderMenu();renderShop();renderCook();renderDay();renderHoy();renderHero();renderBadges();try{if(sessionStorage.getItem('spl'))$('#splash').remove();sessionStorage.setItem('spl',1)}catch(e){}setTimeout(()=>{const s=$('#splash');s&&s.remove()},1600);initGL();go(location.hash.slice(1)||'semana');
+}
+</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
+</body>
+</html>
