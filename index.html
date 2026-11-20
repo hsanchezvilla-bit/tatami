@@ -110,6 +110,8 @@ select{font:600 15px Barlow;color:var(--ink);background:var(--card2);border:1px 
 .heat{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;margin-top:10px}.heat i{aspect-ratio:1;border-radius:4px;display:block}
 body.ses nav{display:none}body.ses{padding-bottom:20px}body.ses #fig{height:clamp(280px,46vh,520px)}body.ses .stage p{display:none}
 .btn{display:inline-flex;align-items:center;justify-content:center}.btn.yt{gap:8px;text-decoration:none;color:#fff;background:#d4202f;border-color:#d4202f;font-weight:600;margin-top:8px}.btn.yt svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8}
+.vid{position:absolute;inset:0;z-index:2;background:#000}.vid iframe{width:100%;height:100%;border:0;display:block}
+.vtog{position:absolute;top:10px;right:10px;z-index:4;min-height:36px;font-size:13px;font-weight:500;padding:0 12px;border-radius:99px;background:color-mix(in srgb,var(--card) 80%,transparent);backdrop-filter:blur(8px)}.vtog b{color:var(--red);font-weight:700}
 @media(min-width:900px){.wrap{max-width:1100px;padding:24px 32px}
 #v-ejercicios .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:24px;align-items:start}#v-ejercicios .stage{grid-row:1/span 4;position:sticky;top:20px}#v-ejercicios .wrap>*:not(.stage){grid-column:2}#fig{height:min(72vh,620px)}
 #fig2{height:min(60vh,520px)}#week{display:grid;grid-template-columns:1fr 1fr;gap:12px}#week .card{margin:0}
@@ -142,7 +144,7 @@ nav{left:50%;right:auto;transform:translateX(-50%);width:min(620px,92vw);bottom:
 
 <section class="view" id="v-ejercicios"><div class="wrap">
 <div class="stage">
-<div class="fig" id="fig"><div class="tag" id="tag"></div>
+<div class="fig" id="fig"><div class="tag" id="tag"></div><button class="vtog" id="vTog"></button>
 <div class="hud"><div class="row"><button id="vSide">Lado</button><button id="vFront">Frente</button><button id="v34">3/4</button></div><div class="row"><button id="vPlay">Pausa</button></div></div></div>
 <p class="sm mut" style="margin:6px 2px 0">Arrastra para girar la cámara</p>
 </div>
@@ -203,7 +205,7 @@ nav{left:50%;right:auto;transform:translateX(-50%);width:min(620px,92vw);bottom:
 <h1>Jiu-jitsu desde cero</h1>
 <div class="belt" aria-hidden="true"></div>
 <p class="mut" style="margin-top:0">Lo que necesitas saber antes de tu primera clase y durante los primeros 3 meses. Esto no reemplaza a tu profesor: es para que llegues entendiendo qué estás viendo.</p>
-<div class="fig" id="fig2"><div class="tag" id="tag2"></div><div class="hud"><div class="row"><button id="lPrev" aria-label="Paso anterior">‹</button><button id="lPlay">Pausa</button><button id="lNext" aria-label="Paso siguiente">›</button></div></div></div>
+<div class="fig" id="fig2"><div class="tag" id="tag2"></div><button class="vtog" id="lTog"></button><div class="hud"><div class="row"><button id="lPrev" aria-label="Paso anterior">‹</button><button id="lPlay">Pausa</button><button id="lNext" aria-label="Paso siguiente">›</button></div></div></div>
 <div class="row sm mut" style="gap:14px;margin:8px 2px"><span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#f2f0ea;border:1px solid var(--line);vertical-align:-1px"></span> Tú: gi blanco, cinturón blanco</span><span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#1f3f8f;vertical-align:-1px"></span> Compañero: gi azul, cinturón morado</span></div>
 <div class="card" id="lstep"></div>
 <div id="lyt" style="margin:0 0 12px"></div>
@@ -303,7 +305,11 @@ $('#lvlCard').innerHTML=`<div class="row" style="justify-content:space-between">
 document.addEventListener('click',e=>{const b=e.target.closest('[data-lv]');if(!b)return;level=+b.dataset.lv;st.set('bjj_level',level);renderLevel();renderWeek();renderList();renderDetail();build();renderCoach();renderHoy();toast('Nivel '+(level+1)+': '+LV[level].n)});
 const YQ={goblet:'sentadilla goblet mancuerna',rdl:'peso muerto rumano mancuernas',flex:'flexiones de brazos',toalla:'remo con toalla agarre bjj',hollow:'hollow hold',agarre:'farmer hold agarre',bulgara:'sentadilla búlgara mancuernas',puente:'puente de glúteo',press:'press militar mancuernas de pie',inclinado:'remo inclinado mancuernas',camaron:'camarón escape de cadera bjj',pallof:'pallof press banda',cuello:'isométricos de cuello',zancada:'zancada hacia atrás'};
 const ytUrl=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
-const ytBtn=(q,lbl)=>`<a class="btn yt" href="${ytUrl(q)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>${lbl||'Ver video real'}</a>`;
+const ytBtn=(q,lbl)=>`<a class="btn yt" href="${ytUrl(q)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>${lbl||'Abrir en YouTube'}</a>`;
+const VID={goblet:'5HHITKuLxUs',rdl:'9j_L1KgpK8Y',flex:'e_EKkqoHxns',toalla:'RmAK-WA1H4E',hollow:'HAfUt2Cco74',agarre:'_69HX08E1aI',bulgara:'l5c49YVRYjM',puente:'18LJ3J-TvJU',press:'WeCyPErNDxo',inclinado:'GA9651iQJuM',camaron:'3hROB_XHTRo',pallof:'MhE7vbPs6g4',cuello:'brkZW0fdc5k',zancada:'IpSouV9cPxQ',
+esp:'XUfMdJL5b6o',mon:'ASNacVR79s8',rod:'m1wVnwzqjW4',cien:'Y2FwQgjtDhE',gua:'g4ijKxFKO8A',upa:'UyxNPnR24hE',codo:'7FdN70-BUfU',rompe:'KJ5zWkGROM0',tij:'63LRiI9Qn2o',kim:'ZLsg4M0lHzA',arm:'E5ujDFTDZsg',mata:'T6KFE37K07s'};
+let vMode=st.get('bjj_vmode',false),lvMode=false;
+function setVid(el,id,on){const old=el.querySelector('.vid');if(old)old.remove();if(on&&VID[id])el.insertAdjacentHTML('beforeend',`<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${VID[id]}?playsinline=1&rel=0&modestbranding=1" title="Video del ejercicio" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`);const b=el.querySelector('.vtog');if(b)b.innerHTML=on?'<b>3D</b> · ver animación':'<b>▶ Video</b> real'}
 /* ---------- navegación ---------- */
 const views=["semana","ejercicios","progreso","comida","aprender"];
 function go(v){if(!views.includes(v))v="semana";document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);if(v==='ejercicios')requestAnimationFrame(()=>{ES&&ES.resize()});if(v==='aprender')requestAnimationFrame(()=>{LS&&LS.resize()});window.scrollTo(0,0)}
@@ -347,7 +353,7 @@ const goNext=()=>{sess.i++;sess.set=0;sel(ids[sess.i]);window.scrollTo({top:0,be
 if(sess.set<n){sess.set++;const restS=parseInt(e.r);renderDetail();if(sess.set<n)startRest(restS,'Descansa · luego serie '+(sess.set+1));else if(sess.i<ids.length-1)startRest(45,'Siguiente: '+LX(ids[sess.i+1]).t,goNext);return}
 if(sess.i<ids.length-1){goNext();return}
 const d=getD(dk(new Date()));d[sess.k==='A'?'fa':'fb']=true;saveD();renderHoy();renderDay();const mins=Math.max(1,Math.round((Date.now()-(sess.t0||Date.now()))/6e4)),sets=ids.reduce((a,id)=>a+parseInt(LX(id).d),0),k=sess.k;sess=null;renderDetail();$('#detail').innerHTML=`<div class="card celeb"><span class="pill r">Día ${k} completado</span><div class="big">¡Sesión lista!</div><p class="mut" style="margin:0">Quedó registrada en tu progreso.</p><div class="kpis"><div><b>${ids.length}</b><span>ejercicios</span></div><div><b>${sets}</b><span>series</span></div><div><b>${mins}</b><span>minutos</span></div></div><button class="go" id="toProg">Ver mi progreso</button></div>`;$('#toProg').onclick=()=>go('progreso');try{navigator.vibrate&&navigator.vibrate([30,60,30,60,120])}catch(x){}}}}
-function sel(id){if(lastP){prevP=lastP;swT=performance.now();t0=performance.now()}cur=id;st.set('bjj_cur',id);renderDetail();renderList();build()}
+function sel(id){setTimeout(()=>setVid($('#fig'),cur,vMode));if(lastP){prevP=lastP;swT=performance.now();t0=performance.now()}cur=id;st.set('bjj_cur',id);renderDetail();renderList();build()}
 
 /* ---------- 3D ---------- */
 const PAL_ME={top:0xe4dfd0,bot:0xe4dfd0,belt:0xffffff,bar:0x111111,skin:0xd9a27a,hair:0x2a1d14};
@@ -444,10 +450,10 @@ const F2=$('#fig2');let LS=null,cA=null,cB=null,li='mon',lplay=true,lt0=performa
 function buildL(){const it=LIB[li];lastI=-1;$('#tag2').innerHTML=`${it.t}<small>${it.ty==='pos'?'Posición':'Técnica · '+it.f.length+' pasos'}</small>`;
 $('#lchips').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.l===li));
 ['lPrev','lNext','lPlay'].forEach(id=>$('#'+id).style.display=it.f.length>1?'':'none');
-$('#lyt').innerHTML=ytBtn('bjj '+it.t+' tutorial español','Ver video real: '+it.t);if(it.ty==='pos')$('#lstep').innerHTML=`<b>${it.t}</b><p class="mut" style="margin:4px 0 0">${it.d}</p>`;
+$('#lyt').innerHTML=ytBtn('bjj '+it.t+' tutorial español','Más videos: '+it.t);if(it.ty==='pos')$('#lstep').innerHTML=`<b>${it.t}</b><p class="mut" style="margin:4px 0 0">${it.d}</p>`;
 if(!LS)return;LS.root.clear();cA=makeChar(LS.root,meP());cB=makeChar(LS.root,PAL_RIVAL);const ta=it.tA||{};cA.g.position.set(ta.x||0,0,ta.z||0);cA.g.rotation.y=ta.ry||0}
 let prevA=null,prevB=null,lsw=0,curA=null,curB=null;
-function selL(id){if(curA){prevA=curA;prevB=curB;lsw=performance.now()}li=id;lstep=0;lplay=true;lt0=performance.now();$('#lPlay').textContent='Pausa';buildL()}
+function selL(id){if(curA){prevA=curA;prevB=curB;lsw=performance.now()}li=id;lstep=0;lplay=true;lt0=performance.now();$('#lPlay').textContent='Pausa';buildL();setVid(F2,li,lvMode)}
 function lframe(now){const F=LIB[li].f,n=F.length;if(n===1)return{i:0,j:0,t:0};const H=1200,MV=1500,C=H+MV,T=n*C;const x=lplay?(((now-lt0)%T)+T)%T:lstep*C;const i=Math.floor(x/C),r=x-i*C;return{i,j:(i+1)%n,t:r<H?0:.5-Math.cos(Math.PI*(r-H)/MV)/2}}
 function drawL(now){const it=LIB[li],F=it.f,{i,j,t}=lframe(now);if(cA){let a=mixP(F[i].A,F[j].A,t),b=mixP(F[i].B,F[j].B,t);const k=(performance.now()-lsw)/800;if(prevA&&k<1&&!LIB[li].tA){const u=.5-Math.cos(Math.PI*k)/2;a=mixP(prevA,a,u);b=mixP(prevB,b,u)}curA=a;curB=b;cA.update(a);cB.update(b)}
 if(it.ty==='tec'&&i!==lastI){lastI=i;$('#lstep').innerHTML=`<div class="row" style="gap:6px;margin-bottom:6px">${F.map((_,k)=>`<span style="width:${k===i?22:8}px;height:8px;border-radius:4px;background:${k===i?'var(--red)':'var(--line)'};transition:.2s"></span>`).join('')}<span class="sm mut" style="margin-left:6px">Paso ${i+1} de ${F.length}</span></div><b>${F[i].s}</b>`}}
@@ -704,8 +710,9 @@ $('#dateTxt').textContent=new Date().toLocaleDateString('es-CL',{weekday:'long',
 function renderBadges(){const W=weights(),last=W.length?W[W.length-1].kg:START.kg,t=totals(),done=COOK.every((_,i)=>cook[i]);
 const B=[["1","Primer paso",t>=1],["3","Racha de 3 días",streak()>=3],["5","Semana completa",weekSes()>=5],["10","10 sesiones",t>=10],["25","25 sesiones",t>=25],["−1","Primer kilo menos",last<=START.kg-1],["MP","Meal prep completo",done],["25","IMC bajo 25",last<=GOAL]];
 $('#badges').innerHTML=B.map(b=>`<div class="badge ${b[2]?'on':''}"><i>${b[0]}</i>${b[1]}</div>`).join('')}
+$('#vTog').onclick=()=>{vMode=!vMode;st.set('bjj_vmode',vMode);setVid($('#fig'),cur,vMode)};$('#lTog').onclick=()=>{lvMode=!lvMode;setVid(F2,li,lvMode)};
 /* ---------- init ---------- */
-renderWeek();renderLevel();renderList();renderDetail();renderMenu();renderShop();renderCook();renderDay();renderHoy();renderHero();renderBadges();renderPlan();renderRecs();renderBelt();renderCoach();renderAv();renderQuick();renderHeat();try{if(sessionStorage.getItem('spl'))$('#splash').remove();sessionStorage.setItem('spl',1)}catch(e){}setTimeout(()=>{const s=$('#splash');s&&s.remove()},1600);initGL();go(location.hash.slice(1)||'semana');
+renderWeek();renderLevel();renderList();renderDetail();renderMenu();renderShop();renderCook();renderDay();renderHoy();renderHero();renderBadges();renderPlan();renderRecs();renderBelt();renderCoach();renderAv();renderQuick();renderHeat();setVid($('#fig'),cur,vMode);setVid(F2,li,false);try{if(sessionStorage.getItem('spl'))$('#splash').remove();sessionStorage.setItem('spl',1)}catch(e){}setTimeout(()=>{const s=$('#splash');s&&s.remove()},1600);initGL();go(location.hash.slice(1)||'semana');
 }
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
