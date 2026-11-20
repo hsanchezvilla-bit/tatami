@@ -85,6 +85,19 @@ nav button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width
 .badge{text-align:center;padding:12px 6px;border-radius:16px;background:var(--card2);font-size:13px;line-height:1.25}.badge i{display:grid;place-items:center;width:46px;height:46px;margin:0 auto 6px;border-radius:50%;font:700 18px "Barlow Condensed";font-style:normal;background:var(--line);color:var(--mut)}
 .badge.on i{background:var(--red);color:#fff;box-shadow:0 0 0 4px var(--redbg)}.badge:not(.on){color:var(--mut)}
 .celeb{text-align:center;padding:22px 10px}.celeb .big{font:700 46px/1 "Barlow Condensed";margin:8px 0}.celeb .kpis{margin:16px 0}
+.seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:14px;position:sticky;top:calc(6px + env(safe-area-inset-top));z-index:5}
+.seg button{min-height:40px;border:0;background:none;font-size:14px;color:var(--mut);padding:0 4px}.seg button.on{background:var(--ink);color:var(--bg)}
+.sub{display:none}.sub.on{display:block;animation:in .25s var(--ease)}
+select{font:600 15px Barlow;color:var(--ink);background:var(--card2);border:1px solid var(--line);border-radius:12px;min-height:44px;padding:0 10px;max-width:60%}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.rcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;cursor:pointer;display:grid;gap:8px;transition:transform .15s var(--ease)}.rcard:active{transform:scale(.98)}.rcard>b{font:700 21px/1.1 "Barlow Condensed"}
+.mac{display:flex;gap:12px;font-size:13px;color:var(--mut)}.mac b{color:var(--ink);font-size:15px}
+.tg{font-size:12px;padding:3px 8px;border-radius:99px;background:var(--card2);color:var(--mut)}
+#sheet{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;transition:.25s var(--ease)}#sheet.on{opacity:1;visibility:visible}
+.sheetIn{background:var(--card);width:min(640px,100%);max-height:88vh;overflow:auto;border-radius:24px 24px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(30px);transition:transform .3s var(--ease)}#sheet.on .sheetIn{transform:none}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 12px}
+.bbelt{position:relative;height:30px;border-radius:6px;background:#f4f2ec;margin-top:12px;overflow:hidden}.bbelt .bar{position:absolute;right:14%;top:0;bottom:0;width:26%;background:#111;display:flex;gap:6px;align-items:center;justify-content:center;cursor:pointer}
+.bbelt .bar span{width:7px;height:20px;border-radius:2px;background:#3a3a3a}.bbelt .bar span.on{background:#f4f2ec}
 @media(min-width:900px){.wrap{max-width:1100px;padding:24px 32px}
 #v-ejercicios .wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);column-gap:24px;align-items:start}#v-ejercicios .stage{grid-row:1/span 4;position:sticky;top:20px}#v-ejercicios .wrap>*:not(.stage){grid-column:2}#fig{height:min(72vh,620px)}
 #fig2{height:min(60vh,520px)}#week{display:grid;grid-template-columns:1fr 1fr;gap:12px}#week .card{margin:0}
@@ -99,6 +112,7 @@ nav{left:50%;right:auto;transform:translateX(-50%);width:min(620px,92vw);bottom:
 <header class="appbar"><div class="logo"><svg viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#15171c"/><rect x="8" y="27" width="48" height="10" rx="3" fill="#f4f2ec"/><rect x="40" y="27" width="10" height="10" fill="#ff3b4e"/></svg><b>Tatami</b></div><span class="sm mut" id="dateTxt"></span></header>
 <div class="hero"><div><span class="sm mut">Hola, Héctor</span><h1>Tu semana</h1><p class="sm mut" id="heroS" style="margin:6px 0 0"></p></div><svg id="ring" viewBox="0 0 120 120" aria-label="Sesiones de la semana"></svg></div>
 <div class="kpis" id="kpis"></div>
+<div class="card" id="beltCard"></div>
 
 <div class="card today" id="hoy"></div>
 <div id="week"></div>
@@ -139,10 +153,20 @@ nav{left:50%;right:auto;transform:translateX(-50%);width:min(620px,92vw);bottom:
 </div></section>
 
 <section class="view" id="v-comida"><div class="wrap">
-<h1>Comida barata, rinde en el tatami</h1>
+<h1>Nutrición para el tatami</h1>
 <div class="belt" aria-hidden="true"></div>
+<div class="seg" id="nseg"><button data-s="plan" class="on">Mi plan</button><button data-s="rec">Recetas</button><button data-s="prep">Meal prep</button><button data-s="shop">Compras</button></div>
+<div class="sub on" id="s-plan">
+<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><h3>Tu meta</h3><select id="goalSel" aria-label="Objetivo"><option value="grasa">Bajar grasa e IMC</option><option value="recompo">Recomposición (grasa ↓, músculo ↑)</option><option value="rend">Rendimiento en BJJ</option></select></div>
+<p class="sm mut" style="margin:10px 0 6px">¿Qué día es hoy?</p><div class="seg" id="dtypes" style="grid-template-columns:repeat(3,1fr);position:static"></div>
+<div class="kpis" id="tgt" style="margin:12px 0 0"></div>
+<p class="sm mut" style="margin:8px 0 0">Calculado con tu último peso, 1,72 m y 29 años. Proteína a 2 g por kilo para cuidar el músculo mientras bajas grasa.</p></div>
+<div class="card"><div class="row" style="justify-content:space-between"><h3>Tu menú de hoy</h3><button id="regen" class="sm">Otro menú ↻</button></div><div id="dayList" style="margin-top:6px"></div><div id="dayMacros" style="margin-top:6px"></div></div>
+</div>
+<div class="sub" id="s-rec"><div class="chips" id="rfilt" style="margin-bottom:12px"></div><div id="rlist" class="rgrid"></div></div>
+<div class="sub" id="s-prep">
 <div class="row" style="gap:8px;margin-bottom:12px"><span class="pill r">~2.200 kcal</span><span class="pill">~145 g proteína</span><span class="pill">1 cdta aceite por comida</span></div>
-<div class="chips" id="mfilt"></div>
+<h2 style="margin-top:4px">Menú base de la semana</h2><div class="chips" id="mfilt"></div>
 <div class="card" id="menu"></div>
 <h2>Meal prep: cocinas 1 vez, comes 7 días</h2>
 <div class="card"><h3>Lo que sale de una cocinada</h3><div class="ladder" id="yield" style="margin-top:8px"></div><p class="sm mut" style="margin:10px 0 0">Necesitas ~12 táperes aptos para freezer o bolsas con cierre, y un plumón para la fecha.</p></div>
@@ -152,8 +176,9 @@ nav{left:50%;right:auto;transform:translateX(-50%);width:min(620px,92vw);bottom:
 <div class="card"><h3>Comodines de proteína</h3><p class="sm mut" style="margin:4px 0 8px">Cada opción aporta ~20 g de proteína. Alterna atún y huevo: no conviene atún todos los días.</p><div id="swap"></div></div>
 <div class="card"><h3>¿Qué dura y qué se congela?</h3><table><thead><tr><th>Alimento</th><th>Refri</th><th>Congelar</th></tr></thead><tbody id="prep"></tbody></table>
 <ul class="c" style="margin-top:10px"><li>Enfría rápido: a la refri antes de 2 horas, sobre todo el arroz.</li><li>Descongela en la refri la noche anterior. Recalienta hasta que humee por dentro, nunca dos veces.</li><li>Para el turno: lleva la porción congelada en el bento; sirve de gel refrigerante y llega descongelada a la hora de comer.</li></ul></div>
-<div class="card"><div class="row" style="justify-content:space-between"><h3>Lista de compras semanal</h3><button id="clr" class="sm">Reiniciar</button></div><div id="shop"></div></div>
-</div></section>
+</div>
+<div class="sub" id="s-shop"><div class="card"><div class="row" style="justify-content:space-between"><h3>Lista de compras semanal</h3><button id="clr" class="sm">Reiniciar</button></div><div id="shop"></div></div>
+</div></div></section>
 
 <section class="view" id="v-aprender"><div class="wrap">
 <h1>Jiu-jitsu desde cero</h1>
@@ -188,10 +213,11 @@ nav{left:50%;right:auto;transform:translateX(-50%);width:min(620px,92vw);bottom:
 <button data-v="semana"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/></svg>Inicio</button>
 <button data-v="ejercicios"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v7M7 11l5-2 5 2M9 21l3-6 3 6"/></svg>Ejercicios</button>
 <button data-v="progreso"><svg viewBox="0 0 24 24"><path d="M3 20h18M6 16l4-5 3 3 5-7"/></svg>Progreso</button>
-<button data-v="comida"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M3 14h18M8 8V5h8v3"/></svg>Comida</button>
+<button data-v="comida"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="3"/><path d="M3 14h18M8 8V5h8v3"/></svg>Nutrición</button>
 <button data-v="aprender"><svg viewBox="0 0 24 24"><path d="M3 12h18"/><rect x="3" y="9" width="18" height="6" rx="2"/><path d="M14 9v6M17 9v6"/></svg>Aprender</button>
 </nav>
 <div class="toast" id="toast"></div>
+<div id="sheet" role="dialog" aria-modal="true"><div class="sheetIn"><div class="grab"></div><div id="sheetBody"></div></div></div>
 
 <script src="three.min.js"></script>
 <script>
@@ -472,6 +498,78 @@ const roC=new ResizeObserver(drawChart);roC.observe(ch2);
 function renderHoy(){const w=WEEK[todayIdx],x=days[dk(new Date())]||{};const key={A:'fa',B:'fb',bjj:'bjj',c:'bici',r:'mov'}[w.k];const done=x[key];
 $('#hoy').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Hoy te toca</span><h3>${w.t}</h3></div><button id="hoyBtn" class="${done?'on':''}">${done?'Hecho ✓':'Marcar hecho'}</button></div><p class="sm mut" style="margin:6px 0 0">${w.x}</p>${SES[w.k]&&!done?`<button data-ses="${w.k}" class="go" style="margin:10px 0 0">Empezar sesión</button>`:''}`;
 $('#hoyBtn').onclick=()=>{const d=getD(dk(new Date()));d[key]=!d[key];saveD();renderHoy();renderDay();if(d[key])toast('¡Bien! Registrado')}}
+/* ---------- nutrición ---------- */
+const R=[
+{id:'avena',t:'Avena con leche y plátano',m:'des',k:380,p:16,c:72,f:4,tg:['pre','turno'],i:['50 g de avena (5 cdas)','250 ml de leche descremada','1 plátano'],s:['Calienta la leche con la avena 2–3 min revolviendo.','Agrega el plátano en rodajas.','Opcional: canela, sin azúcar.']},
+{id:'revuelto',t:'Huevos revueltos con pan y tomate',m:'des',k:365,p:23,c:31,f:15,tg:[],i:['3 huevos','½ marraqueta','1 tomate','Sal y orégano'],s:['Bate los huevos con sal.','Cocina a fuego bajo revolviendo, sin aceite en sartén antiadherente.','Sirve con el pan y el tomate en rodajas.']},
+{id:'panque',t:'Panqueque de avena y huevo',m:'des',k:340,p:18,c:40,f:13,tg:['pre'],i:['2 huevos','40 g de avena','½ plátano molido'],s:['Mezcla todo con un tenedor.','Sartén antiadherente a fuego medio, 2–3 min por lado.','Sirve con el resto del plátano.']},
+{id:'lecheav',t:'Leche con avena (post turno)',m:'des',k:215,p:14,c:35,f:2,tg:['turno'],i:['300 ml de leche descremada','30 g de avena'],s:['Calienta y mezcla. Liviano para dormir después del turno.']},
+{id:'lentejas',t:'Lentejas con arroz y trutro',m:'alm',k:570,p:50,c:62,f:14,tg:['mp','frz','turno','post'],i:['1 taza de lentejas guisadas (con zanahoria y zapallo)','½ taza de arroz','1 trutro al horno sin piel'],s:['Sale del meal prep del domingo.','Recalienta hasta que humee.','Opcional: lechuga o repollo al lado.']},
+{id:'porotos',t:'Porotos con zapallo y huevo',m:'alm',k:440,p:27,c:46,f:15,tg:['mp','frz'],i:['1 taza de porotos guisados con zapallo','2 huevos duros o a la copa','1 cdta de aceite'],s:['Porotos del meal prep (remojados el sábado).','Agrega los huevos al servir.']},
+{id:'garbanzos',t:'Garbanzos guisados con atún',m:'alm',k:400,p:37,c:50,f:5,tg:['mp','turno'],i:['1 taza de garbanzos cocidos','1 lata chica de atún al agua','Cebolla, zanahoria y comino'],s:['Sofríe cebolla y zanahoria rallada.','Agrega los garbanzos y un poco de agua, 10 min.','Al final el atún desmenuzado.']},
+{id:'pollopure',t:'Pollo al horno con puré y repollo',m:'alm',k:440,p:36,c:42,f:13,tg:['mp','frz','post'],i:['1 trutro al horno sin piel','1 taza de puré (papa y leche)','Repollo picado con limón'],s:['Pollo y puré del meal prep.','Repollo fresco al momento con limón y sal.']},
+{id:'arrozpollo',t:'Arroz salteado con pollo y huevo',m:'alm',k:505,p:41,c:51,f:14,tg:['mp','turno','post'],i:['1 taza de arroz cocido','100 g de pollo desmenuzado','1 huevo','1 zanahoria rallada','1 cdta de aceite'],s:['Saltea la zanahoria en el aceite.','Agrega arroz y pollo, 3–4 min.','Haz espacio, revuelve el huevo y mezcla todo.']},
+{id:'fideos',t:'Fideos con boloñesa de soya',m:'alm',k:515,p:36,c:83,f:8,tg:['mp','frz','pre'],i:['80 g de fideos (crudos)','1 porción de soya boloñesa','Orégano'],s:['Cuece los fideos 8–10 min.','Calienta la boloñesa del meal prep.','Ideal 3–4 h antes del BJJ: mucha energía.']},
+{id:'charqui',t:'Charquicán de soya',m:'alm',k:470,p:31,c:58,f:10,tg:['mp','frz'],i:['2 papas medianas','1 trozo de zapallo','40 g de soya texturizada','Cebolla, zanahoria, ajo','1 huevo a la copa','1 cdta de aceite'],s:['Hidrata la soya 10 min y estrújala.','Sofríe cebolla y ajo, agrega la soya.','Agrega papa y zapallo en cubos con agua, 20 min.','Aplasta un poco y sirve con el huevo encima.']},
+{id:'cazuela',t:'Cazuela de pollo',m:'alm',k:420,p:34,c:44,f:9,tg:['mp','frz','turno'],i:['1 trutro sin piel','1 papa','1 trozo de zapallo','½ zanahoria','2 cdas de arroz'],s:['Hierve el pollo con sal y comino 20 min.','Agrega papa, zapallo y zanahoria, 15 min.','El arroz los últimos 12 min.']},
+{id:'higado',t:'Hígado encebollado con puré',m:'cena',k:440,p:31,c:51,f:10,tg:['post'],i:['120 g de hígado de vacuno','1 cebolla en pluma','1 taza de puré'],s:['Sofríe la cebolla hasta dorar.','Agrega el hígado en tiras, 3–4 min (no más o queda duro).','Mucho hierro: bueno 1 vez por semana.']},
+{id:'tortilla',t:'Tortilla de papa y cebolla',m:'cena',k:370,p:21,c:28,f:20,tg:[],i:['3 huevos','1 papa mediana en láminas','½ cebolla','1 cdta de aceite'],s:['Cuece la papa en láminas 8 min.','Mezcla con los huevos batidos y la cebolla.','Sartén tapada a fuego bajo 8 min, da vuelta con un plato.']},
+{id:'salteado',t:'Salteado de pollo con repollo',m:'cena',k:290,p:38,c:10,f:9,tg:['low'],i:['120 g de pollo','2 tazas de repollo en tiras','1 zanahoria','1 cdta de aceite','Merkén'],s:['Saltea el pollo en tiras 5 min.','Agrega repollo y zanahoria, 4 min a fuego alto.','Ideal en días de descanso.']},
+{id:'omelette',t:'Omelette de tomate con papa',m:'cena',k:360,p:21,c:30,f:15,tg:[],i:['3 huevos','1 tomate','1 papa cocida'],s:['Bate los huevos, agrega tomate picado.','Cocina tapado a fuego bajo.','Acompaña con la papa.']},
+{id:'ensatun',t:'Ensalada de atún, huevo y papa',m:'cena',k:300,p:30,c:19,f:10,tg:['low','turno'],i:['1 lata chica de atún al agua','1 huevo duro','1 papa chica cocida','Lechuga','1 cdta de aceite y limón'],s:['Pica todo y mezcla.','Aliña al momento de comer.']},
+{id:'panatun',t:'Pan con atún y tomate',m:'once',k:255,p:27,c:29,f:2,tg:['turno'],i:['½ marraqueta','1 lata chica de atún al agua','Tomate'],s:['Arma y listo.']},
+{id:'atunlech',t:'Atún con lechuga y limón',m:'once',k:150,p:24,c:3,f:3,tg:['low','turno'],i:['1 lata chica de atún al agua','Lechuga picada','Limón, sal, merkén'],s:['Mezcla y aliña.','Sin pan: para días de descanso.']},
+{id:'copa',t:'Huevos a la copa con pan',m:'once',k:275,p:17,c:28,f:11,tg:[],i:['2 huevos','½ marraqueta'],s:['Huevos en agua hirviendo 4–5 min.','Pásalos a agua fría 30 s y abre.']},
+{id:'quesillo',t:'Pan con quesillo y tomate',m:'once',k:235,p:17,c:31,f:6,tg:[],i:['½ marraqueta','100 g de quesillo','Tomate y orégano'],s:['Arma con orégano encima.']},
+{id:'batido',t:'Batido post BJJ',m:'col',k:350,p:21,c:65,f:2,tg:['post','pre'],i:['300 ml de leche descremada','2 cdas de leche en polvo descremada','1 plátano','20 g de avena'],s:['Licúa todo.','Tómalo dentro de 1 h después de entrenar.']},
+{id:'huevman',t:'2 huevos duros + manzana',m:'col',k:220,p:12,c:21,f:10,tg:['turno','low'],i:['2 huevos duros del domingo','1 manzana'],s:['Para el bento del turno.']},
+{id:'platleche',t:'Plátano + 1 taza de leche',m:'col',k:190,p:9,c:39,f:0,tg:['pre'],i:['1 plátano','250 ml de leche descremada'],s:['60–90 min antes de la clase.']}];
+const MEALN={des:'Desayuno',alm:'Almuerzo',once:'Once',cena:'Comida',col:'Colación'};
+const TAGN={pre:'Pre BJJ',post:'Post BJJ',mp:'Meal prep',frz:'Congelable',turno:'Para el turno',low:'Bajo en carbohidratos'};
+let prof=Object.assign({kg:78,cm:172,age:29,goal:'grasa'},st.get('bjj_prof',{}));let dtype=st.get('bjj_dtype','fuerza');let fav=st.get('bjj_fav',{});
+function targets(t){const W=weights(),kg=W.length?W[W.length-1].kg:+prof.kg;const bmr=10*kg+6.25*prof.cm-5*prof.age+5;const tdee=bmr*1.45+({descanso:0,fuerza:250,bjj:600}[t]);
+const def={grasa:Math.min(.2*tdee,500),recompo:Math.min(.1*tdee,250),rend:0}[prof.goal];const kcal=Math.max(1500,Math.round((tdee-def)/10)*10);
+const p=Math.round(kg*(prof.goal==='rend'?1.8:2.0)),f=Math.round(kg*.8),c=Math.max(80,Math.round((kcal-p*4-f*9)/4));return{kcal,p,c,f,kg}}
+function macroBar(lbl,v,tg,u,col){const pc=Math.min(100,Math.round(v/tg*100));return `<div style="margin:8px 0"><div class="row" style="justify-content:space-between"><span class="sm">${lbl}</span><span class="sm mut" style="font-variant-numeric:tabular-nums">${v} / ${tg} ${u}</span></div><div style="height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:4px"><i style="display:block;height:100%;width:${pc}%;background:${col};border-radius:4px;transition:width .5s var(--ease)"></i></div></div>`}
+let dayPlan=st.get('bjj_dayplan',null);
+function genDay(){const T=targets(dtype),pick=a=>a[Math.floor(Math.random()*a.length)];const by=m=>R.filter(r=>r.m===m&&(dtype!=='descanso'||!r.tg.includes('pre')));
+let best=null,bs=1e9;for(let n=0;n<400;n++){const d=[pick(by('des')),pick(by('alm')),pick(by('once')),pick(by('cena'))];
+if(dtype==='bjj'){d.splice(2,0,pick(R.filter(r=>r.tg.includes('pre')&&r.m==='col')));d.push(R.find(r=>r.id==='batido'))}else d.push(pick(by('col')));
+const k=d.reduce((a,r)=>a+r.k,0),p=d.reduce((a,r)=>a+r.p,0);const sc=Math.abs(k-T.kcal)+Math.max(0,T.p*.92-p)*12+(new Set(d.map(r=>r.id)).size<d.length?999:0);if(sc<bs){bs=sc;best=d}}
+let tot=best.reduce((a,r)=>a+r.k,0);const extra=R.filter(r=>(r.m==='col'||r.m==='once')&&!best.includes(r)&&!(dtype==='descanso'&&r.tg.includes('pre')));for(let n=0;n<2&&tot<T.kcal-180&&extra.length;n++){const x=extra.splice(Math.floor(Math.random()*extra.length),1)[0];best.push(x);tot+=x.k}
+dayPlan={t:dtype,ids:best.map(r=>r.id)};st.set('bjj_dayplan',dayPlan);renderPlan()}
+function renderPlan(){const T=targets(dtype);
+$('#dtypes').innerHTML=[['descanso','Descanso'],['fuerza','Fuerza'],['bjj','BJJ']].map(d=>`<button data-d="${d[0]}" class="${dtype===d[0]?'on':''}">${d[1]}</button>`).join('');
+$('#goalSel').value=prof.goal;$('#tgt').innerHTML=`<div><b>${T.kcal}</b><span>kcal</span></div><div><b>${T.p} g</b><span>proteína</span></div><div><b>${T.c} g</b><span>carbohidratos</span></div>`;
+if(!dayPlan||dayPlan.t!==dtype){genDay();return}
+const d=dayPlan.ids.map(id=>R.find(r=>r.id===id)).filter(Boolean);const s=k=>d.reduce((a,r)=>a+r[k],0);
+$('#dayList').innerHTML=d.map(r=>`<div class="ex" data-rec="${r.id}"><div><span class="sm mut">${r.id==='batido'&&dtype==='bjj'?'Post BJJ':r.tg.includes('pre')&&r.m==='col'&&dtype==='bjj'?'Pre BJJ':MEALN[r.m]}</span><br><b>${r.t}</b></div><span class="k">${r.k} kcal<br>${r.p} g prot.</span></div>`).join('');
+$('#dayMacros').innerHTML=macroBar('Calorías',s('k'),T.kcal,'kcal','var(--red)')+macroBar('Proteína',s('p'),T.p,'g','var(--blue)')+macroBar('Carbohidratos',s('c'),T.c,'g','#f5b942')+macroBar('Grasas',s('f'),T.f,'g','var(--green)')}
+$('#dtypes').onclick=e=>{const b=e.target.closest('button');if(!b)return;dtype=b.dataset.d;st.set('bjj_dtype',dtype);renderPlan()};
+$('#goalSel').onchange=e=>{prof.goal=e.target.value;st.set('bjj_prof',prof);dayPlan=null;renderPlan()};
+$('#regen').onclick=()=>{genDay();toast('Nuevo menú')};
+let rf='todas';
+function renderRecs(){const F=[['todas','Todas'],['fav','Favoritas'],['des','Desayuno'],['alm','Almuerzo'],['once','Once'],['cena','Comida'],['pre','Pre BJJ'],['post','Post BJJ'],['mp','Meal prep'],['turno','Turno'],['low','Bajo carbo']];
+$('#rfilt').innerHTML=F.map(f=>`<button data-r="${f[0]}" class="${rf===f[0]?'on':''}">${f[1]}</button>`).join('');
+const L=R.filter(r=>rf==='todas'||(rf==='fav'?fav[r.id]:r.m===rf||r.tg.includes(rf)));
+$('#rlist').innerHTML=L.length?L.map(r=>`<div class="rcard" data-rec="${r.id}"><div class="row" style="justify-content:space-between"><span class="sm mut">${MEALN[r.m]}</span>${fav[r.id]?'<span class="pill r">Favorita</span>':''}</div><b>${r.t}</b><div class="mac"><span><b>${r.k}</b> kcal</span><span><b>${r.p}</b> P</span><span><b>${r.c}</b> C</span><span><b>${r.f}</b> G</span></div><div class="row" style="gap:4px">${r.tg.slice(0,3).map(t=>`<span class="tg">${TAGN[t]}</span>`).join('')}</div></div>`).join(''):'<p class="mut">Aún no marcas favoritas. Abre una receta y toca "Favorita".</p>'}
+$('#rfilt').onclick=e=>{const b=e.target.closest('button');if(!b)return;rf=b.dataset.r;renderRecs()};
+function openRec(id){const r=R.find(x=>x.id===id);if(!r)return;
+$('#sheetBody').innerHTML=`<span class="sm mut">${MEALN[r.m]} · 1 porción</span><h2 style="margin:4px 0 12px">${r.t}</h2><div class="kpis"><div><b>${r.k}</b><span>kcal</span></div><div><b>${r.p} g</b><span>proteína</span></div><div><b>${r.c} g</b><span>carbos</span></div></div>
+<div class="row" style="gap:6px;margin-bottom:6px">${r.tg.map(t=>`<span class="tg">${TAGN[t]}</span>`).join('')}</div><h3 style="margin-top:14px">Ingredientes</h3><ul class="c">${r.i.map(x=>`<li>${x}</li>`).join('')}</ul><h3 style="margin-top:14px">Preparación</h3><ol style="padding-left:20px;margin:6px 0">${r.s.map(x=>`<li style="margin:4px 0">${x}</li>`).join('')}</ol>
+<div class="row" style="gap:8px;margin-top:14px"><button id="favBtn" class="${fav[r.id]?'on':''}" style="flex:1">${fav[r.id]?'Favorita ✓':'Favorita'}</button><button id="shClose" style="flex:1">Cerrar</button></div><p class="sm mut" style="margin:10px 0 0">Valores aproximados por porción.</p>`;
+$('#sheet').classList.add('on');$('#favBtn').onclick=()=>{fav[r.id]=!fav[r.id];st.set('bjj_fav',fav);openRec(id);renderRecs()};$('#shClose').onclick=closeRec}
+function closeRec(){$('#sheet').classList.remove('on')}
+$('#sheet').onclick=e=>{if(e.target.id==='sheet')closeRec()};
+document.addEventListener('click',e=>{const x=e.target.closest('[data-rec]');if(x)openRec(x.dataset.rec)});
+$('#nseg').onclick=e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#nseg button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('#v-comida .sub').forEach(s=>s.classList.toggle('on',s.id==='s-'+b.dataset.s))};
+/* cinturón */
+let beltSt=Object.assign({stripes:0},st.get('bjj_belt',{}));
+function bjjCount(){return Object.values(days).filter(d=>d.bjj).length}
+function renderBelt(){$('#beltCard').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Tu cinturón</span><h3>Blanco · ${beltSt.stripes} ${beltSt.stripes===1?'grado':'grados'}</h3></div><span class="sm mut" style="text-align:right">${bjjCount()} clases<br>registradas</span></div>
+<div class="bbelt"><i></i><div class="bar">${[0,1,2,3].map(k=>`<span class="${k<beltSt.stripes?'on':''}" data-st="${k}"></span>`).join('')}</div></div><p class="sm mut" style="margin:8px 0 0">Toca la barra negra para marcar los grados que te dé tu profe.</p>`}
+document.addEventListener('click',e=>{const s=e.target.closest('[data-st]');if(!s)return;const k=+s.dataset.st;beltSt.stripes=beltSt.stripes===k+1?k:k+1;st.set('bjj_belt',beltSt);renderBelt();toast('Grado actualizado')});
+
 /* ---------- inicio ---------- */
 function totals(){let ses=0;for(const k in days)ses+=ACTS.filter(a=>days[k][a[0]]).length;return ses}
 function weekSes(){const mon=new Date();mon.setDate(mon.getDate()-((mon.getDay()+6)%7));let n=0;for(let i=0;i<7;i++){const x=days[dk(new Date(mon.getTime()+i*864e5))]||{};n+=ACTS.filter(a=>x[a[0]]).length}return n}
@@ -485,7 +583,7 @@ function renderBadges(){const W=weights(),last=W.length?W[W.length-1].kg:START.k
 const B=[["1","Primer paso",t>=1],["3","Racha de 3 días",streak()>=3],["5","Semana completa",weekSes()>=5],["10","10 sesiones",t>=10],["25","25 sesiones",t>=25],["−1","Primer kilo menos",last<=START.kg-1],["MP","Meal prep completo",done],["25","IMC bajo 25",last<=GOAL]];
 $('#badges').innerHTML=B.map(b=>`<div class="badge ${b[2]?'on':''}"><i>${b[0]}</i>${b[1]}</div>`).join('')}
 /* ---------- init ---------- */
-renderList();renderDetail();renderMenu();renderShop();renderCook();renderDay();renderHoy();renderHero();renderBadges();try{if(sessionStorage.getItem('spl'))$('#splash').remove();sessionStorage.setItem('spl',1)}catch(e){}setTimeout(()=>{const s=$('#splash');s&&s.remove()},1600);initGL();go(location.hash.slice(1)||'semana');
+renderList();renderDetail();renderMenu();renderShop();renderCook();renderDay();renderHoy();renderHero();renderBadges();renderPlan();renderRecs();renderBelt();try{if(sessionStorage.getItem('spl'))$('#splash').remove();sessionStorage.setItem('spl',1)}catch(e){}setTimeout(()=>{const s=$('#splash');s&&s.remove()},1600);initGL();go(location.hash.slice(1)||'semana');
 }
 </script>
 <script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
