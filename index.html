@@ -272,7 +272,7 @@ const WEEK=[
 {d:"Mié",t:"Descanso activo",k:"r",x:"Camina. 5 min de movilidad de cadera 90/90."},
 {d:"Jue",t:"BJJ en la academia",k:"bjj",x:"Enfócate en una sola técnica de la clase."},
 {d:"Vie",t:"Fuerza B + cuello y core",k:"B",x:"Final: 10 min de bicicleta suave."},
-{d:"Sáb",t:"Bicicleta + drills en colchoneta",k:"c",x:"5 rondas de 5 min a ritmo de roleo, 1 min de pausa. Luego en tu colchoneta: 4 × 30 s de camarones, puentes y levantada técnica."},
+{d:"Sáb",t:"BJJ No-Gi en casa",k:"N",x:"Circuito en tu colchoneta: camarones, upa, levantada técnica, sprawl, sit-out y hollow."},
 {d:"Dom",t:"Descanso",k:"r",x:"Prepara la comida de la semana."}];
 
 /* ---------- niveles ---------- */
@@ -297,7 +297,7 @@ cuello:[{d:'1 × 10 s por dirección',r:'30 s',load:'Tu mano, al 20–30 % de fu
 zancada:[{d:'2 × 8 por pierna',r:'60 s',load:'Peso corporal'},null,{d:'4 × 10 por pierna',r:'90 s',load:'2 mancuernas de 10 kg'},{t:'Zancada con salto',d:'4 × 6 por pierna',r:'90 s',load:'Peso corporal, explosivo'}]};
 let level=st.get('bjj_level',0);
 function LX(id){return Object.assign({},EX[id],(LVX[id]&&LVX[id][level])||{})}
-function strCount(){try{return Object.values(days).filter(d=>d.fa||d.fb).length}catch(e){return 0}}
+function strCount(){try{return Object.values(days).filter(d=>d.fa||d.fb||d.nogi).length}catch(e){return 0}}
 function renderLevel(){const n=strCount(),nx=LV[level+1];
 $('#lvlCard').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Tu nivel</span><h3>Nivel ${level+1} · ${LV[level].n}</h3></div><span class="pill ${level>=2?'r':''}">${n} sesiones de fuerza</span></div>
 <div class="seg" style="grid-template-columns:repeat(4,1fr);position:static;margin:12px 0 8px">${LV.map((l,i)=>`<button data-lv="${i}" class="${i===level?'on':''}">${i+1} · ${l.n.slice(0,5)}.</button>`).join('')}</div>
@@ -310,6 +310,22 @@ const VID={goblet:'5HHITKuLxUs',rdl:'9j_L1KgpK8Y',flex:'e_EKkqoHxns',toalla:'RmA
 esp:'XUfMdJL5b6o',mon:'ASNacVR79s8',rod:'m1wVnwzqjW4',cien:'Y2FwQgjtDhE',gua:'g4ijKxFKO8A',upa:'UyxNPnR24hE',codo:'7FdN70-BUfU',rompe:'KJ5zWkGROM0',tij:'63LRiI9Qn2o',kim:'ZLsg4M0lHzA',arm:'E5ujDFTDZsg',mata:'T6KFE37K07s'};
 let vMode=st.get('bjj_vmode',false),lvMode=false;
 function setVid(el,id,on){const old=el.querySelector('.vid');if(old)old.remove();if(on&&VID[id])el.insertAdjacentHTML('beforeend',`<div class="vid"><iframe src="https://www.youtube-nocookie.com/embed/${VID[id]}?playsinline=1&rel=0&modestbranding=1" title="Video del ejercicio" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`);const b=el.querySelector('.vtog');if(b)b.innerHTML=on?'<b>3D</b> · ver animación':'<b>▶ Video</b> real'}
+
+/* ---------- No-Gi en casa ---------- */
+Object.assign(EX,{
+n_cam:Object.assign({},EX.camaron,{t:'Camarones',g:'N',d:'3 × 40 s',r:'20 s',load:'Peso corporal, en la colchoneta',why:'Escape de cadera: sin kimono no hay agarres que te salven, todo es movimiento de cadera.',c:['De lado, empuja con el pie y saca la cadera','Manos enmarcando, como contra el cuello del rival','Cambia de lado cada repetición']}),
+n_upa:Object.assign({},EX.puente,{t:'Upa (puente explosivo)',g:'N',d:'3 × 40 s',r:'20 s',load:'Peso corporal',why:'El escape de montada sin gi: puente explosivo y giro de hombro.',c:['Talones cerca del glúteo','Sube explosivo y gira mirando el hombro contrario','Baja controlado y repite al otro lado']}),
+standup:{t:'Levantada técnica',g:'N',d:'3 × 40 s',r:'20 s',load:'Peso corporal',why:'Pararte del suelo sin exponerte: clave en No-Gi y defensa personal.',a:{h:[100,72],n:[96,84],hp:[82,118],k:[104,98],f:[114,123],k2:[110,108],f2:[132,118],e:[76,104],w:[64,122],e2:[110,96],w2:[118,90]},b:{h:[96,38],n:[94,50],hp:[88,84],k:[104,104],f:[106,125],k2:[70,106],f2:[56,125],e:[106,66],w:[114,58],e2:[104,68],w2:[112,62]},c:['Sentado: una mano atrás en el suelo y el otro brazo protegiendo la cara','Levanta la cadera y pasa la pierna de atrás por debajo','Quedas de pie en base, alejado, con guardia arriba']},
+sprawl:{t:'Sprawl',g:'N',d:'3 × 40 s',r:'20 s',load:'Peso corporal, explosivo',why:'Defensa de derribos: en No-Gi los derribos a las piernas son muy comunes.',a:{h:[104,50],n:[98,60],hp:[84,88],k:[100,104],f:[96,125],k2:[70,106],f2:[66,125],e:[108,78],w:[116,70]},b:{h:[150,90],n:[136,96],hp:[92,114],k:[62,120],f:[32,123],e:[140,108],w:[142,122]},c:['Desde tu postura de lucha, tira las piernas hacia atrás','Cadera pegada al suelo, pecho pesado','Vuelve rápido a la postura de pie']},
+sitout:{t:'Sit-out',g:'N',d:'3 × 40 s',r:'20 s',load:'Peso corporal',why:'Salir de abajo cuando te tienen en tortuga o te giran: movimiento base del grappling.',a:{h:[136,92],n:[124,96],hp:[84,92],k:[84,121],f:[56,123],e:[124,110],w:[124,122]},b:{h:[132,86],n:[120,92],hp:[100,112],k:[128,116],f:[156,120],k2:[84,121],f2:[58,123],e:[122,108],w:[122,122],e2:[110,94],w2:[118,90]},c:['En cuatro apoyos, pasa una pierna por debajo hacia el otro lado','Mira hacia afuera y quédate apoyado en una mano','Vuelve a cuatro apoyos y repite al otro lado']},
+n_hol:Object.assign({},EX.hollow,{t:'Hollow hold',g:'N',d:'3 × 40 s',r:'20 s',load:'Peso corporal',why:'Core para la guardia y para no dejarte aplastar.'})});
+SES.N=['n_cam','n_upa','standup','sprawl','sitout','n_hol'];
+const NV=[{d:'2 × 30 s',r:'30 s'},null,{d:'4 × 45 s',r:'15 s'},{d:'5 × 60 s',r:'15 s'}];SES.N.forEach(id=>LVX[id]=NV);
+const NFIN=['Final: 5 min de bicicleta suave.','Final: 3 rondas de 3 min en bicicleta a ritmo de roleo.','Final: 4 rondas de 4 min en bicicleta a ritmo de roleo.','Final: 5 rondas de 5 min a ritmo de roleo + timer de rounds.'];
+Object.assign(VID,{n_cam:VID.camaron,n_upa:VID.upa,standup:'Ggnz7_9uQkY',sprawl:'YyA0JAnK5l8',sitout:'y8-pImQ2_-w',n_hol:VID.hollow});
+Object.assign(YQ,{n_cam:'camarón escape de cadera bjj',n_upa:'puente upa bjj',standup:'levantada técnica bjj',sprawl:'sprawl drill',sitout:'sit out drill bjj',n_hol:'hollow hold'});
+const SLBL=k=>k==='N'?'No-Gi':'Día '+k;
+const FIN=w=>SES[w.k]?(w.k==='N'?NFIN[level]:LV[level].fin):w.x;
 /* ---------- navegación ---------- */
 const views=["semana","ejercicios","progreso","comida","aprender"];
 function go(v){if(!views.includes(v))v="semana";document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);if(v==='ejercicios')requestAnimationFrame(()=>{ES&&ES.resize()});if(v==='aprender')requestAnimationFrame(()=>{LS&&LS.resize()});window.scrollTo(0,0)}
@@ -319,16 +335,16 @@ window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 /* ---------- semana ---------- */
 const todayIdx=(new Date().getDay()+6)%7;
 function renderWeek(){$('#week').innerHTML=WEEK.map((w,i)=>{const list=SES[w.k]?SES[w.k].map(id=>{const e=LX(id);return `<div class="ex" data-id="${id}"><div><b>${e.t}</b><div class="sm mut">${e.load}</div></div><span class="k">${e.d}<br>desc. ${e.r}</span></div>`}).join(''):'';
-const pill=w.k==='bjj'?'<span class="pill r">Tatami</span>':SES[w.k]?'<span class="pill">Casa</span>':'';
-return `<div class="card ${i===todayIdx?'today':''}"><div class="day"><div class="dn">${w.d}${i===todayIdx?'<small>hoy</small>':''}</div><div><div class="row" style="justify-content:space-between"><h3>${w.t}</h3>${pill}</div><p class="sm mut" style="margin:4px 0 0">${SES[w.k]?LV[level].fin:w.x}</p>${list?`<button data-ses="${w.k}" class="go" style="margin:10px 0 4px">Empezar sesión</button><div style="margin-top:6px">${list}</div>`:''}</div></div></div>`}).join('');}
+const pill=w.k==='bjj'?'<span class="pill r">Tatami</span>':w.k==='N'?'<span class="pill r">No-Gi</span>':SES[w.k]?'<span class="pill">Casa</span>':'';
+return `<div class="card ${i===todayIdx?'today':''}"><div class="day"><div class="dn">${w.d}${i===todayIdx?'<small>hoy</small>':''}</div><div><div class="row" style="justify-content:space-between"><h3>${w.t}</h3>${pill}</div><p class="sm mut" style="margin:4px 0 0">${FIN(w)}</p>${list?`<button data-ses="${w.k}" class="go" style="margin:10px 0 4px">Empezar sesión</button><div style="margin-top:6px">${list}</div>`:''}</div></div></div>`}).join('');}
 document.addEventListener('click',e=>{const sb=e.target.closest('[data-ses]');if(sb){const k=sb.dataset.ses;sess={k,i:0,set:0,t0:Date.now()};go('ejercicios');sel(SES[k][0]);return}const x=e.target.closest('.ex[data-id]');if(x){sess=null;sel(x.dataset.id);go('ejercicios')}});
 
 /* ---------- ejercicios ---------- */
 let filt='Todos',cur=st.get('bjj_cur','goblet');if(!EX[cur])cur='goblet';
 const logs=st.get('bjj_logs',{});
 function renderList(){const ids=Object.keys(EX).filter(id=>filt==='Todos'||EX[id].g===filt);
-$('#exlist').innerHTML=ids.map(id=>{const e=LX(id),l=logs[id];return `<div class="ex ${id===cur?'cur':''}" data-id="${id}"><div><b>${e.t}</b><div class="sm mut">${e.g==='Extra'?'Extra':'Día '+e.g} · ${e.d} · ${e.load}</div></div><span class="k">${l?l.kg+' kg × '+l.reps:'—'}</span></div>`}).join('')}
-$('#filt').innerHTML=["Todos","A","B","Extra"].map(f=>`<button data-f="${f}">${f.length===1?'Día '+f:f}</button>`).join('');
+$('#exlist').innerHTML=ids.map(id=>{const e=LX(id),l=logs[id];return `<div class="ex ${id===cur?'cur':''}" data-id="${id}"><div><b>${e.t}</b><div class="sm mut">${e.g==='Extra'?'Extra':SLBL(e.g)} · ${e.d} · ${e.load}</div></div><span class="k">${l?l.kg+' kg × '+l.reps:'—'}</span></div>`}).join('')}
+$('#filt').innerHTML=["Todos","A","B","N","Extra"].map(f=>`<button data-f="${f}">${f.length===1?SLBL(f):f}</button>`).join('');
 $('#filt').onclick=e=>{const b=e.target.closest('button');if(!b)return;filt=b.dataset.f;$('#filt').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));renderList()};
 $('#filt').querySelector('button').classList.add('on');
 let sess=null,restI=null;
@@ -336,9 +352,9 @@ function chipsFor(e){const [se,rp]=e.d.split('×').map(s=>s.trim());return `<div
 function stopRest(){clearInterval(restI);restI=null}
 function startRest(sec,label,onEnd){stopRest();const end=Date.now()+sec*1000,box=$('#rest');if(!box)return;const tick=()=>{const left=Math.max(0,Math.ceil((end-Date.now())/1000));if(left<=3&&left>0&&typeof beep==='function'&&tick.l!==left){tick.l=left;beep(880,80)}box.innerHTML=`<div class="restbox"><div><span class="sm mut">${label||'Descansa'}</span><b>${Math.floor(left/60)}:${String(left%60).padStart(2,'0')}</b></div><div class="bar"><i style="width:${100-left/sec*100}%"></i></div><button id="skip" class="sm">Saltar</button></div>`;$('#skip').onclick=()=>{stopRest();box.innerHTML='';onEnd&&onEnd()};if(!left){stopRest();box.innerHTML='';if(typeof beep==='function')beep(1320,250,2);if(onEnd)onEnd();else toast('¡Vamos, a la siguiente serie!')}};tick();restI=setInterval(tick,250)}
 function renderDetail(){const e=LX(cur),l=logs[cur];stopRest();document.body.classList.toggle('ses',!!sess);if(ES)requestAnimationFrame(()=>ES.resize());$('#filt').style.display=$('#exlist').style.display=sess?'none':'';
-$('#tag').innerHTML=sess?`<small>Día ${sess.k} · ${sess.i+1} de ${SES[sess.k].length}</small>${e.t}`:e.t;
+$('#tag').innerHTML=sess?`<small>${SLBL(sess.k)} · ${sess.i+1} de ${SES[sess.k].length}</small>${e.t}`:e.t;
 let top='';if(sess){const n=parseInt(e.d),tot=SES[sess.k].length;
-top=`<div class="row" style="justify-content:space-between;margin-bottom:10px;gap:6px"><button id="sesPrev" aria-label="Ejercicio anterior" style="min-height:36px" ${sess.i?'':'disabled'}>‹</button><span class="sm mut" style="flex:1;text-align:center">Día ${sess.k} · ${sess.i+1} de ${tot}<br><span style="color:var(--ink)">${sess.i<tot-1?'Luego: '+LX(SES[sess.k][sess.i+1]).t:'Último ejercicio'}</span></span><button id="sesNext" aria-label="Ejercicio siguiente" style="min-height:36px" ${sess.i<tot-1?'':'disabled'}>›</button><button id="sesExit" class="sm" style="min-height:36px">Salir</button></div>
+top=`<div class="row" style="justify-content:space-between;margin-bottom:10px;gap:6px"><button id="sesPrev" aria-label="Ejercicio anterior" style="min-height:36px" ${sess.i?'':'disabled'}>‹</button><span class="sm mut" style="flex:1;text-align:center">${SLBL(sess.k)} · ${sess.i+1} de ${tot}<br><span style="color:var(--ink)">${sess.i<tot-1?'Luego: '+LX(SES[sess.k][sess.i+1]).t:'Último ejercicio'}</span></span><button id="sesNext" aria-label="Ejercicio siguiente" style="min-height:36px" ${sess.i<tot-1?'':'disabled'}>›</button><button id="sesExit" class="sm" style="min-height:36px">Salir</button></div>
 <div class="dots">${Array.from({length:n},(_,k)=>`<span class="${k<sess.set?'ok':''}">${k+1}</span>`).join('')}</div>
 <button id="setDone" class="go">${sess.set>=n?(sess.i<tot-1?'Siguiente ejercicio →':'Terminar sesión ✓'):'Serie '+(sess.set+1)+' hecha ✓'}</button><div id="rest"></div>`}
 $('#detail').innerHTML=`<div class="card">${top}${chipsFor(e)}<div style="margin-top:10px">${ytBtn((LVX[cur]&&LVX[cur][level]&&LVX[cur][level].t?e.t:YQ[cur]||e.t)+' técnica correcta')}</div>
@@ -346,13 +362,13 @@ $('#detail').innerHTML=`<div class="card">${top}${chipsFor(e)}<div style="margin
 <div class="log"><input id="lkg" inputmode="decimal" enterkeyhint="next" placeholder="kg usados" value="${l?l.kg:''}" aria-label="Carga en kg"><input id="lreps" inputmode="numeric" enterkeyhint="done" placeholder="reps" value="${l?l.reps:''}" aria-label="Repeticiones"><button id="lsave" style="flex:none">Guardar</button></div>
 <p class="sm mut" style="margin:6px 0 0">${l?'Última vez: '+l.kg+' kg × '+l.reps+' · '+l.date:'Anota la carga para verla la próxima vez.'}</p>${l&&l.hist&&l.hist.length?`<div class="row" style="gap:6px;margin-top:8px"><span class="pill r">Récord ${Math.max(...l.hist.map(h=>+h.kg||0))} kg</span>${l.hist.slice(-4).map(h=>`<span class="tg">${h.kg} kg × ${h.reps}</span>`).join('')}</div>`:''}</div>`;
 $('#lsave').onclick=()=>{const kg=$('#lkg').value.replace(',','.').trim(),reps=$('#lreps').value.trim();if(!kg||!reps){toast('Anota kg y reps');return}
-{const d=getD(dk(new Date()));const g=EX[cur].g;if(g==='A')d.fa=true;if(g==='B')d.fb=true;saveD();renderHoy();renderDay()}{const prev=logs[cur]&&logs[cur].hist||[],mx=Math.max(0,...prev.map(h=>+h.kg||0));if(+kg>mx&&prev.length){setTimeout(()=>{toast('¡Récord personal! '+kg+' kg');beep(1320,150,3)},400)}var hist=prev.concat([{kg,reps,date:dk(new Date())}]).slice(-20)}logs[cur]={kg,reps,hist,date:new Date().toLocaleDateString('es-CL',{day:'numeric',month:'short'})};st.set('bjj_logs',logs);renderDetail();renderList();toast('Guardado')};
+{const d=getD(dk(new Date()));const g=EX[cur].g;if(g==='A')d.fa=true;if(g==='B')d.fb=true;if(g==='N')d.nogi=true;saveD();renderHoy();renderDay()}{const prev=logs[cur]&&logs[cur].hist||[],mx=Math.max(0,...prev.map(h=>+h.kg||0));if(+kg>mx&&prev.length){setTimeout(()=>{toast('¡Récord personal! '+kg+' kg');beep(1320,150,3)},400)}var hist=prev.concat([{kg,reps,date:dk(new Date())}]).slice(-20)}logs[cur]={kg,reps,hist,date:new Date().toLocaleDateString('es-CL',{day:'numeric',month:'short'})};st.set('bjj_logs',logs);renderDetail();renderList();toast('Guardado')};
 if(sess){$('#sesExit').onclick=()=>{sess=null;renderDetail()};$('#sesPrev').onclick=()=>{if(sess.i>0){sess.i--;sess.set=0;sel(SES[sess.k][sess.i])}};$('#sesNext').onclick=()=>{if(sess.i<SES[sess.k].length-1){sess.i++;sess.set=0;sel(SES[sess.k][sess.i])}};
 $('#setDone').onclick=()=>{const n=parseInt(e.d),ids=SES[sess.k];try{navigator.vibrate&&navigator.vibrate(10)}catch(x){}
 const goNext=()=>{sess.i++;sess.set=0;sel(ids[sess.i]);window.scrollTo({top:0,behavior:'smooth'})};
 if(sess.set<n){sess.set++;const restS=parseInt(e.r);renderDetail();if(sess.set<n)startRest(restS,'Descansa · luego serie '+(sess.set+1));else if(sess.i<ids.length-1)startRest(45,'Siguiente: '+LX(ids[sess.i+1]).t,goNext);return}
 if(sess.i<ids.length-1){goNext();return}
-const d=getD(dk(new Date()));d[sess.k==='A'?'fa':'fb']=true;saveD();renderHoy();renderDay();const mins=Math.max(1,Math.round((Date.now()-(sess.t0||Date.now()))/6e4)),sets=ids.reduce((a,id)=>a+parseInt(LX(id).d),0),k=sess.k;sess=null;renderDetail();$('#detail').innerHTML=`<div class="card celeb"><span class="pill r">Día ${k} completado</span><div class="big">¡Sesión lista!</div><p class="mut" style="margin:0">Quedó registrada en tu progreso.</p><div class="kpis"><div><b>${ids.length}</b><span>ejercicios</span></div><div><b>${sets}</b><span>series</span></div><div><b>${mins}</b><span>minutos</span></div></div><button class="go" id="toProg">Ver mi progreso</button></div>`;$('#toProg').onclick=()=>go('progreso');try{navigator.vibrate&&navigator.vibrate([30,60,30,60,120])}catch(x){}}}}
+const d=getD(dk(new Date()));d[{A:'fa',B:'fb',N:'nogi'}[sess.k]]=true;saveD();renderHoy();renderDay();const mins=Math.max(1,Math.round((Date.now()-(sess.t0||Date.now()))/6e4)),sets=ids.reduce((a,id)=>a+parseInt(LX(id).d),0),k=sess.k;sess=null;renderDetail();$('#detail').innerHTML=`<div class="card celeb"><span class="pill r">Día ${k} completado</span><div class="big">¡Sesión lista!</div><p class="mut" style="margin:0">Quedó registrada en tu progreso.</p><div class="kpis"><div><b>${ids.length}</b><span>ejercicios</span></div><div><b>${sets}</b><span>series</span></div><div><b>${mins}</b><span>minutos</span></div></div><button class="go" id="toProg">Ver mi progreso</button></div>`;$('#toProg').onclick=()=>go('progreso');try{navigator.vibrate&&navigator.vibrate([30,60,30,60,120])}catch(x){}}}}
 function sel(id){setTimeout(()=>setVid($('#fig'),cur,vMode));if(lastP){prevP=lastP;swT=performance.now();t0=performance.now()}cur=id;st.set('bjj_cur',id);renderDetail();renderList();build()}
 
 /* ---------- 3D ---------- */
@@ -371,13 +387,14 @@ const limbs=[],joints=[],feet=[];const add=m=>{m.castShadow=true;g.add(m);return
 const seg=(k,rt,rb,m)=>limbs.push({k,m:add(new THREE.Mesh(new THREE.CylinderGeometry(rt*BF,rb*BF,1,20),m))});
 const ball=(k,r,m)=>joints.push({k,m:add(new THREE.Mesh(new THREE.SphereGeometry(r,16,12),m))});
 seg('torso',.215,.18,top);seg('neck',.06,.065,skin);
-['R','L'].forEach(s=>{seg('ua'+s,.078,.07,top);seg('fa'+s,.068,.06,top);seg('th'+s,.098,.085,bot);seg('sn'+s,.078,.068,bot);
-ball('s'+s,.092,top);ball('e'+s,.07,top);ball('w'+s,.052,skin);ball('k'+s,.085,bot);
+['R','L'].forEach(s=>{seg('ua'+s,.078,.07,top);seg('fa'+s,.068,.06,top);seg('th'+s,.098,.085,bot);seg('sn'+s,.078,.068,pal.nogi?skin:bot);
+ball('s'+s,.092,top);ball('e'+s,.07,top);ball('w'+s,.052,skin);ball('k'+s,.085,pal.nogi?skin:bot);
 feet.push({s,m:add(new THREE.Mesh(new THREE.BoxGeometry(.22,.07,.1),skin))})});
 const pelvis=add(new THREE.Mesh(new THREE.SphereGeometry(.18,18,14),bot));pelvis.scale.set(1,.75,1.2);
 const belt=add(new THREE.Mesh(new THREE.TorusGeometry(.196,.03,8,30),beltM));
 const knot=add(new THREE.Mesh(new THREE.BoxGeometry(.08,.07,.08),beltM));
 const tails=[0,1].map(i=>{const t=new THREE.Group();const a=new THREE.Mesh(new THREE.BoxGeometry(.065,.22,.026),beltM);a.position.y=-.11;t.add(a);const b=new THREE.Mesh(new THREE.BoxGeometry(.067,.07,.03),barM);b.position.y=-.17;if(i===0)t.add(b);g.add(t);return t});
+if(pal.nogi){belt.visible=false;knot.visible=false;tails.forEach(t=>t.visible=false)}
 const head=add(new THREE.Mesh(new THREE.SphereGeometry(.15,22,16),skin));
 const hair=add(new THREE.Mesh(new THREE.SphereGeometry(.158,22,16,0,Math.PI*2,0,Math.PI*.5),M(pal.hair,.9)));const beard=pal.beard?add(new THREE.Mesh(new THREE.SphereGeometry(.153,22,16,0,Math.PI*2,Math.PI*.58,Math.PI*.42),M(pal.hair,.95))):null;
 return{g,update(p0){const p=norm(p0),ZS=p.za,ZL=p.zl;
@@ -410,7 +427,7 @@ return S}
 const q2=v=>v<.5?2*v*v:1-Math.pow(-2*v+2,2)/2;
 /* ejercicios */
 const fig=$('#fig');let ES=null,ch=null,dbs=[],band=null,play=true,t0=performance.now();
-function build(){if(!ES)return;ES.root.clear();dbs=[];const e=LX(cur);ch=makeChar(ES.root,meP());
+function build(){if(!ES)return;ES.root.clear();dbs=[];const e=LX(cur);ch=makeChar(ES.root,e.g==='N'?Object.assign(meP(),{top:0x1b1f2a,bot:0x111111,nogi:true}):meP());
 const iron=M(0x3b3f46,.35),plate=M(0xd7263d,.5);
 if(!/Peso corporal|Banda|Tu mano/.test(e.load)){const n=e.one||e.arm1?1:2;for(let i=0;i<n;i++){const d=new THREE.Group();const bar=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,.34,8),iron);bar.rotation.x=Math.PI/2;d.add(bar);[-.15,.15].forEach(z=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,.08,18),plate);p.rotation.x=Math.PI/2;p.position.z=z;p.castShadow=true;d.add(p)});ES.root.add(d);dbs.push(d)}}
 if(e.bench){const b=e.bench,w=b[2]/50,h=b[3]/50;const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,.6),M(0x8a6f4e,.8));m.position.set((b[0]+b[2]/2-90)/50,h/2,e.arm1?-.25:0);m.castShadow=m.receiveShadow=true;ES.root.add(m)}
@@ -516,7 +533,7 @@ $('#belts').innerHTML=[["Blanco","Inicio, 4 grados"],["Azul","~2 años o más"],
 /* ---------- progreso ---------- */
 const H_M=1.72,START={kg:78,date:'2026-11-18'},GOAL=73.9;
 const dk=d=>d.toLocaleDateString('sv-SE');let days=st.get('bjj_days',{}),dsel=new Date();
-const ACTS=[["fa","Fuerza A"],["fb","Fuerza B"],["bjj","BJJ"],["bici","Bicicleta"],["mov","Movilidad"]];
+const ACTS=[["fa","Fuerza A"],["fb","Fuerza B"],["bjj","BJJ"],["nogi","No-Gi en casa"],["bici","Bicicleta"],["mov","Movilidad"]];
 const HABS=[["plan","Comí según el plan"],["sleep","Dormí 7 h o más"],["steps","Cumplí los pasos"]];
 const getD=k=>days[k]||(days[k]={});const saveD=()=>st.set('bjj_days',days);
 const imc=kg=>(kg/(H_M*H_M)).toFixed(1);
@@ -553,8 +570,8 @@ g+=`<polyline fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linejoin
 g+=`<text x="36" y="${Hh-6}" font-size="12" fill="var(--mut)">18 nov · 78 kg</text>`;ch2.innerHTML=g}
 const roC=new ResizeObserver(drawChart);roC.observe(ch2);
 /* hoy te toca */
-function renderHoy(){const w=WEEK[todayIdx],x=days[dk(new Date())]||{};const key={A:'fa',B:'fb',bjj:'bjj',c:'bici',r:'mov'}[w.k];const done=x[key];
-$('#hoy').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Hoy te toca</span><h3>${w.t}</h3></div><button id="hoyBtn" class="${done?'on':''}">${done?'Hecho ✓':'Marcar hecho'}</button></div><p class="sm mut" style="margin:6px 0 0">${SES[w.k]?LV[level].fin:w.x}</p>${SES[w.k]&&!done?`<button data-ses="${w.k}" class="go" style="margin:10px 0 0">Empezar sesión</button>`:''}`;
+function renderHoy(){const w=WEEK[todayIdx],x=days[dk(new Date())]||{};const key={A:'fa',B:'fb',N:'nogi',bjj:'bjj',c:'bici',r:'mov'}[w.k];const done=x[key];
+$('#hoy').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Hoy te toca</span><h3>${w.t}</h3></div><button id="hoyBtn" class="${done?'on':''}">${done?'Hecho ✓':'Marcar hecho'}</button></div><p class="sm mut" style="margin:6px 0 0">${FIN(w)}</p>${SES[w.k]&&!done?`<button data-ses="${w.k}" class="go" style="margin:10px 0 0">Empezar sesión</button>`:''}`;
 $('#hoyBtn').onclick=()=>{const d=getD(dk(new Date()));d[key]=!d[key];saveD();renderHoy();renderDay();if(d[key])toast('¡Bien! Registrado')}}
 /* ---------- nutrición ---------- */
 const R=[
