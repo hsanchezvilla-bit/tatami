@@ -993,6 +993,6 @@ const d=e.target.closest('[data-dial]');if(!d)return;const t=d.dataset.dial;if(t
 renderWeek();renderLevel();renderList();renderDetail();renderMenu();renderShop();renderCook();renderDay();renderHoy();renderHero();renderBadges();renderPlan();renderRecs();renderBelt();renderCoach();renderAv();renderQuick();renderHeat();renderReady();renderLoad();document.body.dataset.disc=discOf(EX[cur].g)||'pes';setVid($('#fig'),cur,vMode);setVid(F2,li,false);try{if(sessionStorage.getItem('spl'))$('#splash').remove();sessionStorage.setItem('spl',1)}catch(e){}setTimeout(()=>{const s=$('#splash');s&&s.remove()},1600);initGL();go(location.hash.slice(1)||'semana');
 }
 </script>
-<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{})}</script>
+<script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js",{updateViaCache:"none"}).then(r=>{r.update();document.addEventListener("visibilitychange",()=>{if(!document.hidden)r.update()})}).catch(()=>{});let _rl=false;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(_rl)return;_rl=true;location.reload()})}</script>
 </body>
 </html>
