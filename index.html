@@ -406,6 +406,7 @@ body.hasback .view .wrap{padding-top:58px}
 <div class="card"><h3>Carga de entrenamiento</h3><div id="loadBars" style="display:flex;gap:6px;margin-top:12px"></div><p class="sm mut" id="loadTxt" style="margin:10px 0 0"></p></div>
 <div class="card"><h3>Constancia · 12 semanas</h3><div class="heat" id="heat"></div><p class="sm mut" style="margin:8px 0 0">Cada cuadro es un día. Más rojo = más sesiones.</p></div>
 <div class="card"><h3>Esta semana</h3><div id="wk" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:10px"></div><p class="sm mut" id="wksum" style="margin:10px 0 0"></p></div>
+<div class="card" id="whtrCard"><h3>Cintura / talla</h3><p class="sm mut" style="margin:4px 0 10px">Mejor que el IMC para ver grasa abdominal: no lo engaña el músculo que ganas entrenando. Meta: bajo 0,50 (cintura bajo 86 cm con tu 1,72 m).</p><div class="kpis" id="whtrK"></div><div style="position:relative;height:120px;margin-top:10px"><svg id="whtrSvg" style="position:absolute;inset:0;width:100%;height:100%"></svg></div><p class="sm mut" id="whtrTxt" style="margin:8px 0 0"></p></div>
 <div class="card"><h3>Peso e IMC</h3><div class="fig" style="min-height:220px;height:220px;background:none;border:0;border-radius:0;margin-top:8px"><svg id="chart" style="position:absolute;inset:0;width:100%;height:100%"></svg></div><p class="sm mut" id="proj" style="margin:8px 0 0"></p></div>
 <div class="card"><h3>Proyección realista</h3><table><thead><tr><th>Semana</th><th style="text-align:right">Peso</th><th style="text-align:right">IMC</th></tr></thead><tbody id="ptab"></tbody></table><p class="sm mut" style="margin:8px 0 0">A ~0,5 kg por semana, que es lo esperable con la dieta + entrenamiento. La quetiapina y las fiestas pueden hacerlo más lento.</p></div>
 <div class="card" id="avCard"></div>
@@ -422,6 +423,21 @@ body.hasback .view .wrap{padding-top:58px}
 <p class="sm mut" style="margin:10px 0 6px">¿Qué día es hoy?</p><div class="seg" id="dtypes" style="grid-template-columns:repeat(3,1fr);position:static"></div>
 <div class="kpis" id="tgt" style="margin:12px 0 0"></div>
 <p class="sm mut" style="margin:8px 0 0">Calculado con tu último peso, 1,72 m y 29 años. Proteína a 2 g por kilo para cuidar el músculo mientras bajas grasa.</p></div>
+<div class="card"><h3>Arma tu táper</h3><p class="sm mut" style="margin:4px 0 10px">4 comidas al día. Almuerzo y cena van en táper; así llegas a ~2.200 kcal y ~150 g de proteína sin contar nada.</p>
+<table><thead><tr><th>Comida</th><th>Qué lleva</th></tr></thead><tbody>
+<tr><td><b>Desayuno</b></td><td>3 huevos o 2 huevos + 1 yogur proteico · 1 marraqueta chica o 2 tostadas · fruta</td></tr>
+<tr><td><b>Táper almuerzo</b></td><td>150 g de proteína cocida (pollo, carne, cerdo magro o 1 lata de atún + 1 huevo) · 1 taza de arroz, fideos o 2 papas medianas · lechuga o repollo libre · 1 cdta de aceite</td></tr>
+<tr><td><b>Once</b></td><td>1 pan con quesillo o jamón de pavo · 1 vaso de leche o yogur · fruta</td></tr>
+<tr><td><b>Táper cena</b></td><td>Igual que el almuerzo, con ½ taza de arroz o fideos en vez de 1 en días de descanso</td></tr></tbody></table>
+<p class="sm mut" style="margin:10px 0 0">Si tienes hambre: más verdura o un huevo duro, no más arroz. Días de entrenamiento fuerte: agrega 1 fruta y 1 pan.</p></div>
+<div class="card"><h3>Día de turno</h3><ul class="c" style="margin:6px 0 0">
+<li><b>Antes de salir:</b> comida completa 2–3 h antes del turno.</li>
+<li><b>En el turno:</b> 2 táperes (comida a mitad de turno + uno más chico). De madrugada, solo algo liviano con proteína: yogur, leche, huevo duro.</li>
+<li><b>Picoteo permitido:</b> fruta, huevo duro, yogur, 1 puñado de maní (30 g). Nada de pan con cosas ni galletas de la sala.</li>
+<li><b>Líquidos:</b> botella de 1 L, rellénala 2 veces. Café sí, pero el último 6 h antes de dormir. Sin bebidas energéticas ni pre-entrenos.</li>
+<li><b>Al salir:</b> desayuno liviano (no llegues a dormir con hambre ni con atracón). Pieza oscura, antifaz, celular lejos, 7 h de sueño.</li>
+<li><b>Si usas medicamentos para dormir:</b> el horario de la dosis en los días después de un turno de noche conversalo con tu médico. No lo ajustes por tu cuenta.</li>
+<li><b>Día después de un turno de 24 h:</b> no se entrena. Sol al despertar, caminar y comer normal.</li></ul></div>
 <div class="card"><div class="row" style="justify-content:space-between"><h3>Tu menú de hoy</h3><button id="regen" class="sm">Otro menú ↻</button></div><div id="dayList" style="margin-top:6px"></div><div id="dayMacros" style="margin-top:6px"></div></div>
 </div>
 <div class="sub" id="s-rec"><div class="chips" id="rfilt" style="margin-bottom:12px"></div><div id="rlist" class="rgrid"></div></div>
@@ -1116,7 +1132,7 @@ $('#belts').innerHTML=[["Blanco","Inicio, 4 grados"],["Azul","~2 años o más"],
 const H_M=1.72,START={kg:78,date:'2026-11-18'},GOAL=73.9;
 const dk=d=>d.toLocaleDateString('sv-SE');let days=st.get('bjj_days',{}),dsel=new Date();
 const ACTS=[["fa","Fuerza A"],["fb","Fuerza B"],["bjj","BJJ"],["nogi","No-Gi en casa"],["cal","Calistenia"],["ren","Físico"],["bici","Bicicleta"],["mov","Movilidad"]];
-const HABS=[["plan","Comí según el plan"],["sleep","Dormí 7 h o más"],["steps","Cumplí los pasos"]];
+const HABS=[["plan","Comí según el plan"],["sleep","Dormí 7 h o más"],["steps","Cumplí 9.000 pasos (Apple Watch)"],["prot","Llegué a la proteína del día"]];
 const getD=k=>days[k]||(days[k]={});const saveD=()=>st.set('bjj_days',days);
 const imc=kg=>(kg/(H_M*H_M)).toFixed(1);
 function weights(){return Object.keys(days).filter(k=>days[k].kg).sort().map(k=>({k,kg:+days[k].kg}))}
@@ -1142,7 +1158,14 @@ $('#proj').textContent=last<=GOAL?'¡Llegaste a IMC bajo 25! Ahora el objetivo e
 $('#ptab').innerHTML=[0,4,8,12].map(w=>{const kg=Math.max(66,last-.5*w);return `<tr><td>${w?'+'+w+' semanas':'Hoy'}</td><td class="n">${kg.toFixed(1)} kg</td><td class="n">${imc(kg)}</td></tr>`}).join('');
 const H=Object.keys(days).sort().reverse().filter(k=>Object.keys(days[k]).some(f=>days[k][f])).slice(0,14);
 $('#hist2').innerHTML=H.length?H.map(k=>{const x=days[k];const a=ACTS.filter(z=>x[z[0]]).map(z=>z[1]).join(', ');return `<div class="ex" style="cursor:default"><div><b>${new Date(k+'T12:00').toLocaleDateString('es-CL',{weekday:'short',day:'numeric',month:'short'})}</b><div class="sm mut">${a||'Descanso'}${x.bjjlog&&x.bjjlog.tec?' · '+x.bjjlog.tec:''}${x.note?' · '+x.note:''}</div></div><span class="k">${x.kg?x.kg+' kg':''}${x.cm?'<br>'+x.cm+' cm':''}</span></div>`}).join(''):'<p class="mut" style="margin:6px 0 0">Aún no hay registros. Marca lo que hiciste hoy arriba.</p>';
-drawChart();if(typeof renderHero==='function'){renderHero();renderBadges();renderHeat();renderQuick()}}
+drawChart();renderWhtr();if(typeof renderHero==='function'){renderHero();renderBadges();renderHeat();renderQuick()}}
+function renderWhtr(){const T=172,C=Object.keys(days).filter(k=>days[k].cm).sort().map(k=>({k,cm:+days[k].cm}));const K=$('#whtrK');if(!K)return;
+if(!C.length){K.innerHTML='<div><b>—</b><span>cintura</span></div><div><b>—</b><span>cintura/talla</span></div><div><b>86</b><span>cm meta</span></div>';$('#whtrSvg').innerHTML='';$('#whtrTxt').textContent='Anota tu cintura arriba (huincha a la altura del ombligo, sin apretar, al final de una espiración). Una vez por semana basta.';return}
+const l=C[C.length-1],r=l.cm/T,f=C[0];K.innerHTML=`<div><b>${l.cm}</b><span>cm cintura</span></div><div><b style="color:${r<.5?'var(--green)':r<.55?'var(--gold)':'var(--red)'}">${r.toFixed(2).replace('.',',')}</b><span>cintura/talla</span></div><div><b>${(f.cm-l.cm)>0?'−':''}${Math.abs(f.cm-l.cm).toFixed(1).replace('.',',')}</b><span>cm desde el inicio</span></div>`;
+const sv=$('#whtrSvg'),W=sv.clientWidth||320,H=120,lo=Math.min(84,...C.map(c=>c.cm))-1,hi=Math.max(...C.map(c=>c.cm))+1,n=Math.max(1,C.length-1),X=i=>12+(W-24)*i/n,Y=v=>8+(H-24)*(hi-v)/(hi-lo);
+let g=`<line x1="12" x2="${W-12}" y1="${Y(86)}" y2="${Y(86)}" stroke="var(--green)" stroke-dasharray="4 4" opacity=".7"/><text x="${W-12}" y="${Y(86)-4}" text-anchor="end" fill="var(--green)" font-size="10">meta 86 cm</text>`;
+g+=`<polyline fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round" points="${C.map((c,i)=>X(C.length>1?i:.5*n)+','+Y(c.cm)).join(' ')}"/>`+C.map((c,i)=>`<circle cx="${X(C.length>1?i:.5*n)}" cy="${Y(c.cm)}" r="3.5" fill="var(--blue)"/>`).join('');sv.innerHTML=g;
+$('#whtrTxt').textContent=r<.5?'Estás en rango saludable. Ahora toca mantener y ganar fuerza.':`Te faltan ${(l.cm-86).toFixed(1).replace('.',',')} cm para la meta. Bajar ~0,5–1 cm por semana es buen ritmo.`}
 const ch2=$('#chart');function drawChart(){const W=ch2.clientWidth,Hh=ch2.clientHeight;if(!W)return;const pts=[{k:START.date,kg:START.kg},...weights().filter(w=>w.k>START.date)];
 const t0c=new Date(pts[0].k).getTime(),t1=Math.max(new Date(pts[pts.length-1].k).getTime(),t0c+28*864e5);const lo=Math.min(GOAL-1,...pts.map(p=>p.kg))-.5,hi=Math.max(...pts.map(p=>p.kg))+.8;
 const X=t=>36+(W-46)*(t-t0c)/(t1-t0c),Y=v=>10+(Hh-34)*(hi-v)/(hi-lo);let g='';
