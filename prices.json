@@ -1,0 +1,22 @@
+{
+  "updated": "2026-11-24",
+  "note": "Precios de referencia en Santiago. Se actualizan cada semana; los supermercados cambian ofertas seguido.",
+  "items": {
+    "huevos": {"u": "bandeja 30", "p": {"aCuenta": 7150, "Lider": 7150, "Unimarc": 8190, "Jumbo": 8690, "La Vega": 10200}, "d": "abr-2026"},
+    "zanahoria": {"u": "kg", "p": {"Feria": 850, "Supermercado": 1290}, "d": "jul-2026"},
+    "papas": {"u": "kg", "p": {"Feria": 569, "Supermercado": 1079}, "d": "nov-2025"},
+    "zapitaliano": {"u": "kg", "p": {"Feria": 900}, "d": "jul-2026"}
+  },
+  "promos": [
+    {"s": "Tottus", "d": "Lunes", "t": "6% en toda la boleta pagando con CMR o débito Banco Falabella"},
+    {"s": "Tottus", "d": "Martes", "t": "20% en pollo y pavo con CMR"},
+    {"s": "Tottus", "d": "Miércoles", "t": "20% en carne de vacuno con CMR"},
+    {"s": "Tottus", "d": "Jueves", "t": "20% en frutas y verduras con CMR"}
+  ],
+  "src": [
+    "https://www.encancha.cl/enlahora/servicios/2026/04/10/precio-del-huevo-sube-un-20-en-este-supermercado-de-chile-puedes-pagar-menos-por-la-bandeja-de-30-unidades/",
+    "https://www.odepa.gob.cl/?p=138999",
+    "https://www.odepa.gob.cl/?p=147455",
+    "https://www.meganoticias.cl/dato-util/500793-descuentos-supermercado-octubre-compras-rebajas-tarjetas-dcv-03-10-2025.html"
+  ]
+}

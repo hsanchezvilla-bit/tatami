@@ -331,6 +331,13 @@ body.hasback .view .wrap{padding-top:58px}
 .mpbar #mpBar button{width:44px;height:44px;min-height:44px;padding:0;border-radius:14px;font-size:22px;flex:none}
 .mpdots{display:flex;justify-content:center;gap:6px;margin-top:10px}.mpdots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15)}.mpdots i.on{background:#ff6a4d;width:22px;border-radius:4px}
 .mprec{display:grid;gap:8px;margin-top:8px}.mprec button{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:12px 14px;border-radius:14px}.mprec span{font-size:12px;color:var(--mut);white-space:nowrap}
+
+.pinfo{margin:4px 0 10px}.pzs{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.pz{font-size:12.5px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}.pz b{color:var(--ink)}.pz.hoy{border-color:#3ddc97;background:rgba(61,220,151,.1)}
+.pgrp{margin:14px 0 6px}.pgh{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}.pgh>span{font-size:24px;line-height:1}.pgh b{display:block;font-size:16px}.pgh small{display:block;font-size:12.5px;color:var(--mut);line-height:1.35;margin-top:2px}
+.prow{display:flex;align-items:center;gap:8px}.prow .chk{flex:1}.pb{display:block;font-size:12px;color:#3ddc97;margin-top:2px}
+.pbtn{width:40px;height:40px;min-height:40px;padding:0;border-radius:12px;font-weight:800;flex:none}
+.plinks{display:grid;gap:8px;margin-top:14px}.plinks .btn{text-align:center}
 </style>
 </head>
 <body>
@@ -418,7 +425,7 @@ body.hasback .view .wrap{padding-top:58px}
 <div class="card"><h3>¿Qué dura y qué se congela?</h3><table><thead><tr><th>Alimento</th><th>Refri</th><th>Congelar</th></tr></thead><tbody id="prep"></tbody></table>
 <ul class="c" style="margin-top:10px"><li>Enfría rápido: a la refri antes de 2 horas, sobre todo el arroz.</li><li>Descongela en la refri la noche anterior. Recalienta hasta que humee por dentro, nunca dos veces.</li><li>Para el turno: lleva la porción congelada en el bento; sirve de gel refrigerante y llega descongelada a la hora de comer.</li></ul></div>
 </div>
-<div class="sub" id="s-shop"><div class="card"><div class="row" style="justify-content:space-between"><h3>Lista de compras semanal</h3><button id="clr" class="sm">Reiniciar</button></div><div id="shop"></div></div>
+<div class="sub" id="s-shop"><div class="card"><div class="row" style="justify-content:space-between"><h3>Lista de compras · dónde comprar</h3><button id="clr" class="sm">Reiniciar</button></div><div id="shop"></div></div>
 </div></div></section>
 
 <section class="view" id="v-aprender"><div class="wrap">
@@ -960,7 +967,37 @@ function renderMenu(){$('#mfilt').querySelectorAll('button').forEach(b=>b.classL
 $('#menu').innerHTML=`<table><thead><tr><th>Momento</th><th>Qué comer</th><th style="text-align:right">Prot.</th></tr></thead><tbody>${MENUS[mk].map(r=>`<tr><td style="font-weight:600;width:28%">${r[0]}</td><td>${r[1]}</td><td class="n">${r[2]}</td></tr>`).join('')}</tbody></table>`}
 const SHOP=["Huevos · bandeja de 30","Pollo trozado o trutros · ~2,5 kg (9–10 presas)","Lentejas o porotos · 500 g","Soya texturizada · 150 g","Salsa de tomate · 1 caja","Arroz · 1 kg (dura 2 semanas)","Papas · 2 kg","Cebolla · 1 kg","Zanahoria · 1 kg","Zapallo · 1 trozo (~500 g)","Lechuga · 1 y repollo · ½","Atún al agua · 3–4 latas chicas (lomitos o desmenuzado)","Quesillo · 3","Leche descremada · 4 L o 400 g en polvo","Avena · 1 kg (dura 2 semanas)","Marraquetas · 4","Plátanos 10 + manzanas 7","Ajo, comino, orégano, merkén, sal"];
 let shop=st.get('bjj_shop',{});
-function renderShop(){$('#shop').innerHTML=SHOP.map((s,i)=>`<label class="chk ${shop[i]?'done':''}"><input type="checkbox" data-i="${i}" ${shop[i]?'checked':''}><span>${s}</span></label>`).join('')}
+/* ===== dónde comprar más barato ===== */
+const PRICE_FALLBACK={"updated": "2026-11-24", "note": "Precios de referencia en Santiago. Se actualizan cada semana; los supermercados cambian ofertas seguido.", "items": {"huevos": {"u": "bandeja 30", "p": {"aCuenta": 7150, "Lider": 7150, "Unimarc": 8190, "Jumbo": 8690, "La Vega": 10200}, "d": "abr-2026"}, "zanahoria": {"u": "kg", "p": {"Feria": 850, "Supermercado": 1290}, "d": "jul-2026"}, "papas": {"u": "kg", "p": {"Feria": 569, "Supermercado": 1079}, "d": "nov-2025"}, "zapitaliano": {"u": "kg", "p": {"Feria": 900}, "d": "jul-2026"}}, "promos": [{"s": "Tottus", "d": "Lunes", "t": "6% en toda la boleta pagando con CMR o débito Banco Falabella"}, {"s": "Tottus", "d": "Martes", "t": "20% en pollo y pavo con CMR"}, {"s": "Tottus", "d": "Miércoles", "t": "20% en carne de vacuno con CMR"}, {"s": "Tottus", "d": "Jueves", "t": "20% en frutas y verduras con CMR"}], "src": ["https://www.encancha.cl/enlahora/servicios/2026/04/10/precio-del-huevo-sube-un-20-en-este-supermercado-de-chile-puedes-pagar-menos-por-la-bandeja-de-30-unidades/", "https://www.odepa.gob.cl/?p=138999", "https://www.odepa.gob.cl/?p=147455", "https://www.meganoticias.cl/dato-util/500793-descuentos-supermercado-octubre-compras-rebajas-tarjetas-dcv-03-10-2025.html"]};
+let PRICES=PRICE_FALLBACK;
+fetch('prices.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.items){PRICES=j;try{renderShop()}catch(_){}}}).catch(()=>{});
+let plog=st.get('bjj_plog',{});
+const PK=[['salsa',/salsa de tomate/i],['zapitaliano',/zapallo italiano/i],['huevos',/huevo/i],['pollo',/pollo|trutro|pechuga/i],['molida',/carne molida/i],['arroz',/arroz/i],['lentejas',/lenteja/i],['porotos',/poroto/i],['garbanzos',/garbanzo/i],['atun',/atún/i],['avena',/avena/i],['leche',/leche/i],['papas',/papa/i],['cebolla',/cebolla/i],['zanahoria',/zanahoria/i],['zapallo',/zapallo/i],['lechuga',/lechuga/i],['repollo',/repollo/i],['tomate',/tomate/i],['fruta',/plátano|manzana/i],['fideos',/fideo/i],['soya',/soya/i],['quesillo',/quesillo/i],['pan',/marraqueta|pan\b/i],['mote',/mote/i],['congelados',/congelad|espinaca|arveja|choclo/i],['condimentos',/comino|orégano|merkén|ají|ajo/i]];
+const PKEY=t=>{for(const[k,r]of PK)if(r.test(t))return k;return 'otro'};
+const PLACE={feria:{n:'Feria libre',e:'🥬',w:'Lo más barato en verduras, fruta y papas: suele salir entre 30 y 50 % menos que el supermercado. Ve al final de la mañana para mejores precios.'},
+bod:{n:'aCuenta / Lider / Mayorista 10',e:'🛒',w:'Abarrotes, lácteos y huevos al precio más bajo de cadena. Revisa la marca propia.'},
+pollo:{n:'Tottus · martes con CMR',e:'🍗',w:'Martes 20 % en pollo y pavo pagando con tu CMR. Si no puedes ese día, carnicería del barrio o Lider.'},
+vacuno:{n:'Tottus · miércoles con CMR',e:'🥩',w:'Miércoles 20 % en carne de vacuno con CMR. Pide carne molida de menos grasa.'}};
+const WHERE={zapitaliano:'feria',huevos:'bod',pollo:'pollo',molida:'vacuno',arroz:'bod',lentejas:'bod',porotos:'bod',garbanzos:'bod',atun:'bod',avena:'bod',leche:'bod',papas:'feria',cebolla:'feria',zanahoria:'feria',zapallo:'feria',lechuga:'feria',repollo:'feria',tomate:'feria',fruta:'feria',fideos:'bod',soya:'bod',quesillo:'bod',pan:'bod',mote:'bod',congelados:'bod',salsa:'bod',condimentos:'feria',otro:'bod'};
+const $$=n=>'$'+Math.round(n).toLocaleString('es-CL');
+function bestPrice(k){const ref=(PRICES.items||{})[k],mine=(plog[k]||[]).slice(-6);let b=null;if(ref)for(const s in ref.p){const v=ref.p[s];if(!b||v<b.v)b={s,v,u:ref.u,src:'ref',d:ref.d}}for(const m of mine)if(!b||m.v<b.v||b.src==='ref'&&m.v<=b.v)b={s:m.s,v:m.v,u:m.u||(ref&&ref.u)||'',src:'tuyo',d:m.d};return b}
+function renderShop(){const groups={};SHOP.forEach((s,i)=>{const k=PKEY(s),pl=WHERE[k]||'bod';(groups[pl]=groups[pl]||[]).push({s,i,k})});
+const order=['feria','bod','pollo','vacuno'];const today=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][new Date().getDay()];
+const promos=(PRICES.promos||[]).map(p=>`<span class="pz ${p.d===today?'hoy':''}"><b>${p.d}${p.d===today?' · hoy':''}</b> ${p.s}: ${p.t}</span>`).join('');
+$('#shop').innerHTML=`<div class="pinfo"><span class="sm mut">Precios de referencia actualizados al ${(PRICES.updated||'').split('-').reverse().join('-')}. Toca <b>$</b> para anotar lo que pagaste: la app recuerda dónde te salió más barato.</span></div>`+
+(promos?`<div class="pzs">${promos}</div>`:'')+
+order.filter(o=>groups[o]).map(o=>{const P=PLACE[o];return `<div class="pgrp"><div class="pgh"><span>${P.e}</span><div><b>${P.n}</b><small>${P.w}</small></div></div>${groups[o].map(({s,i,k})=>{const b=bestPrice(k);return `<div class="prow"><label class="chk ${shop[i]?'done':''}"><input type="checkbox" data-i="${i}" ${shop[i]?'checked':''}><span>${s}${b?`<small class="pb">${b.src==='tuyo'?'Tu mejor precio':'Más barato'}: ${b.s} ${$$(b.v)}${b.u?' / '+b.u:''}</small>`:''}</span></label><button class="pbtn" data-pk="${k}" data-pn="${s.replace(/"/g,'')}" aria-label="Anotar precio">$</button></div>`}).join('')}</div>`}).join('')+
+`<div class="plinks"><a class="btn" href="https://www.sernac.cl/app/cotizador-precios" target="_blank" rel="noopener">Comparar en el cotizador del SERNAC</a><a class="btn" href="https://www.odepa.gob.cl/precios/consumidor" target="_blank" rel="noopener">Precios de feria (ODEPA)</a></div>`}
+function openPrice(k,name){const L=(plog[k]||[]).slice(-5).reverse();const ref=(PRICES.items||{})[k];
+sheet(`<span class="sm mut">Anotar precio</span><h2 style="margin:4px 0 10px">${name.split('·')[0].trim()}</h2>
+${ref?`<p class="sm mut" style="margin:0 0 8px">Referencia (${ref.d}): ${Object.entries(ref.p).sort((a,b)=>a[1]-b[1]).map(([s,v])=>`${s} ${$$(v)}`).join(' · ')} por ${ref.u}</p>`:''}
+<div class="chips" id="pst" style="flex-wrap:wrap">${['Feria','aCuenta','Lider','Tottus','Mayorista 10','Unimarc','Santa Isabel','Jumbo','Otro'].map((s,i)=>`<button data-st="${s}" class="${i===0?'on':''}">${s}</button>`).join('')}</div>
+<div class="log" style="margin-top:10px"><input id="pv" inputmode="numeric" enterkeyhint="done" placeholder="Precio pagado ($)"><input id="pu" enterkeyhint="done" placeholder="Por (kg, unidad…)" value="${ref?ref.u:''}"><button id="psave" style="flex:none">Guardar</button></div>
+${L.length?`<p class="sm" style="margin:12px 0 4px"><b>Lo que has pagado</b></p>${L.map(m=>`<div class="row sm" style="justify-content:space-between"><span>${m.s} · ${m.d}</span><b>${$$(m.v)}${m.u?' / '+m.u:''}</b></div>`).join('')}`:''}`);
+let store='Feria';$('#pst').onclick=e=>{const b=e.target.closest('[data-st]');if(!b)return;store=b.dataset.st;$('#pst').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
+$('#psave').onclick=()=>{const v=+$('#pv').value.replace(/\D/g,'');if(!v){toast('Escribe el precio');return}(plog[k]=plog[k]||[]).push({s:store,v,u:$('#pu').value.trim(),d:new Date().toLocaleDateString('es-CL',{day:'numeric',month:'short'})});st.set('bjj_plog',plog);closeRec();renderShop();toast('Precio guardado')}}
+document.addEventListener('click',e=>{const b=e.target.closest('.pbtn');if(b)openPrice(b.dataset.pk,b.dataset.pn)});
+
 $('#shop').onchange=e=>{const i=e.target.dataset.i;shop[i]=e.target.checked;st.set('bjj_shop_'+mpCur().id,shop);renderShop()};
 $('#clr').onclick=()=>{shop={};st.set('bjj_shop_'+mpCur().id,shop);renderShop();toast('Lista reiniciada')};
 
