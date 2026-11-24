@@ -293,6 +293,17 @@ body[data-list=ren] #exlist .ex.cur b{color:var(--ren)}
 .dgs svg{width:100%;height:auto;display:block;background:#0d0f14;border-radius:12px}
 .dgo{margin:12px 0 8px;padding-left:22px;font-size:15px;line-height:1.45}.dgo li{margin:6px 0}.dgo li::marker{color:#ff6a4d;font-weight:800}
 .dgf{display:grid;gap:6px;font-size:13.5px;color:var(--mut)}.dgf b{color:var(--ink)}
+
+.cmp{margin-top:12px;padding-top:10px;border-top:1px dashed rgba(196,181,253,.25);display:grid;gap:8px}
+.cmpb{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:10px 12px;border-radius:14px;background:rgba(139,92,246,.12);border:1px solid rgba(196,181,253,.28);color:var(--ink)}
+.cmpb b{font-size:14px;color:#d8cffd}.cmpb span{font-size:12px;color:var(--mut)}
+.cmpall{background:var(--reng)!important;color:#fff!important;box-shadow:0 14px 34px -14px rgba(124,58,237,.8)!important;margin:2px 0 0!important}
+.hcmp{margin:8px 0 0;opacity:.92}
+
+.wcard.d-ren::before{background:var(--reng)}.wcard.d-ren .go{background:var(--reng);color:#fff;box-shadow:0 14px 34px -14px rgba(124,58,237,.8)}.wcard.d-ren .pill{background:rgba(139,92,246,.18);color:#d8cffd}
+.wd.d-ren i{background:#a78bfa}
+#hoy[data-d=ren]{background:var(--reng)!important;box-shadow:0 24px 50px -20px rgba(124,58,237,.6)!important;color:#fff}#hoy[data-d=ren] button{background:rgba(255,255,255,.22);color:#fff}
+.cmp{margin:10px 0 4px;padding:10px 0;border-bottom:1px dashed rgba(196,181,253,.25)}
 </style>
 </head>
 <body>
@@ -508,7 +519,7 @@ function renderLevel(){const n=strCount(),nx=LV[level+1];
 $('#lvlCard').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Tu nivel</span><h3>Nivel ${level+1} · ${LV[level].n}</h3></div><span class="pill ${level>=2?'r':''}">${n} sesiones de fuerza</span></div>
 <div class="seg" style="grid-template-columns:repeat(4,1fr);position:static;margin:12px 0 8px">${LV.map((l,i)=>`<button data-lv="${i}" class="${i===level?'on':''}">${i+1} · ${l.n.slice(0,5)}.</button>`).join('')}</div>
 <p class="sm" style="margin:0 0 6px"><b>🥋 ${LV[level].bj}</b></p><p class="sm" style="margin:0">${LV[level].s} En calistenia y drills cambia el ejercicio, no solo las repeticiones.</p>${nx?`<p class="sm mut" style="margin:6px 0 0">${n>=nx.need?`<b style="color:var(--green)">¡Listo para subir a ${nx.n}!</b> Si completas todas las series con buena técnica, toca el ${level+2}.`:`Sube a ${nx.n} cuando sumes ${nx.need} sesiones y completes todas las series con buena técnica.`}</p>`:''}`}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-lv]');if(!b)return;level=+b.dataset.lv;st.set('bjj_level',level);renderLevel();renderWeek();renderList();renderDetail();build();renderCoach();renderHoy();toast('Nivel '+(level+1)+': '+LV[level].n)});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lv]');if(!b)return;level=+b.dataset.lv;st.set('bjj_level',level);planWeek();renderStrip();renderLevel();renderWeek();renderList();renderDetail();build();renderCoach();renderHoy();toast('Nivel '+(level+1)+': '+LV[level].n)});
 const YQ={goblet:'sentadilla goblet mancuerna',rdl:'peso muerto rumano mancuernas',flex:'flexiones de brazos',toalla:'remo con toalla agarre bjj',hollow:'hollow hold',agarre:'farmer hold agarre',bulgara:'sentadilla búlgara mancuernas',puente:'puente de glúteo',press:'press militar mancuernas de pie',inclinado:'remo inclinado mancuernas',camaron:'camarón escape de cadera bjj',pallof:'pallof press banda',cuello:'isométricos de cuello',zancada:'zancada hacia atrás'};
 const ytUrl=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
 const ytBtn=(q,lbl)=>`<a class="btn yt" href="${ytUrl(q)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>${lbl||'Abrir en YouTube'}</a>`;
@@ -641,7 +652,7 @@ Object.assign(VID,{c_jj:'AZrdA3QNJdU',c_flex:'e_EKkqoHxns',c_sq:'EnsHHTYU7no',c_
 Object.assign(YQ,{c_jj:'jumping jacks',c_flex:'flexiones',c_sq:'sentadilla sin peso',c_crunch:'crunch abdominal',c_lunge:'zancadas',c_plank:'plancha abdominal',c_burpee:'burpees'});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-ci]');if(!b)return;cint=b.dataset.ci;st.set('bjj_cint',cint);renderWeek();renderHoy();renderList();toast('Calistenia: intensidad '+CNAME[cint])});
 const cSeg=()=>`<div class="seg" style="grid-template-columns:repeat(3,1fr);position:static;margin:10px 0 4px">${Object.keys(CNAME).map(k=>`<button data-ci="${k}" class="${cint===k?'on':''}">${CNAME[k]}</button>`).join('')}</div>`;
-const SLBL=k=>(typeof RSES!=='undefined'&&RSES.find(x=>x.k===k))?RSES.find(x=>x.k===k).n:k==='R'?'Físico':k==='N'?'No-Gi':k==='C'?'Calistenia':'Día '+k;
+const SLBL=k=>k.includes('+')?k.split('+').map(x=>SLBL(x)).join(' + '):(typeof RSES!=='undefined'&&RSES.find(x=>x.k===k))?RSES.find(x=>x.k===k).n:k==='R'?'Físico':k==='N'?'No-Gi':k==='C'?'Calistenia':'Día '+k;
 const FIN=w=>SES[w.k]?(w.k==='N'?NFIN[level]:w.k==='C'?CFIN[cint]:LV[level].fin):w.x;
 /* ---------- navegación ---------- */
 const views=["semana","ejercicios","progreso","comida","aprender"];
@@ -651,14 +662,14 @@ window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
 
 /* ---------- semana ---------- */
 const todayIdx=(new Date().getDay()+6)%7;let selDay=todayIdx;
-const KEYOF={A:'fa',B:'fb',N:'nogi',C:'cal',bjj:'bjj',c:'bici',r:'mov'};
+const KEYOF={A:'fa',B:'fb',N:'nogi',C:'cal',bjj:'bjj',c:'bici',r:'mov',F:'ren'};
 function wDate(i){const d=new Date();d.setDate(d.getDate()-todayIdx+i);return d}
 function renderStrip(){const el=$('#wstrip');if(!el)return;el.innerHTML=WEEK.map((w,i)=>{const dt=wDate(i),x=days[dk(dt)]||{},dn=x[KEYOF[w.k]];return `<button role="tab" aria-selected="${i===selDay}" data-wd="${i}" class="wd d-${discOf(w.k)||'rest'}${i===selDay?' on':''}${i===todayIdx?' td':''}${dn?' dn':''}"><small>${w.d}</small><b>${dt.getDate()}</b><i></i></button>`}).join('')}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-wd]');if(!b)return;selDay=+b.dataset.wd;renderWeek();try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}});
 function renderWeek(){renderStrip();$('#week').innerHTML=WEEK.map((w,i)=>{if(i!==selDay)return '';const list=SES[w.k]?SES[w.k].map(id=>{const e=LX(id);return `<div class="ex" data-id="${id}"><div><b>${e.t}</b><div class="sm mut">${e.load}</div></div><span class="k">${e.d}<br>desc. ${e.r}</span></div>`}).join(''):'';
 const pill=w.k==='bjj'?'<span class="pill r">Tatami</span>':w.k==='C'?'<span class="pill">Calistenia</span>':w.k==='N'?'<span class="pill r">No-Gi</span>':SES[w.k]?'<span class="pill">Casa</span>':'';
-return `<div class="card wcard d-${discOf(w.k)||'rest'} ${i===todayIdx?'today':''}"><div class="day"><div class="dn">${w.d}${i===todayIdx?'<small>hoy</small>':''}</div><div><div class="row" style="justify-content:space-between"><h3>${w.t}</h3>${pill}</div><p class="sm mut" style="margin:4px 0 0">${FIN(w)}</p>${w.k==='C'?cSeg():''}${list?`<button data-ses="${w.k}" class="go" style="margin:10px 0 4px">Empezar sesión${w.k==='C'?' · '+CNAME[cint]:''}</button><div style="margin-top:6px">${list}</div>`:''}</div></div></div>`}).join('');}
-document.addEventListener('click',e=>{const sb=e.target.closest('[data-ses]');if(sb){const k=sb.dataset.ses;sess={k,i:0,set:0,t0:Date.now()};go('ejercicios');sel(SES[k][0]);return}const x=e.target.closest('.ex[data-id]');if(x){sess=null;sel(x.dataset.id);go('ejercicios')}});
+return `<div class="card wcard d-${discOf(w.k)||'rest'} ${i===todayIdx?'today':''}"><div class="day"><div class="dn">${w.d}${i===todayIdx?'<small>hoy</small>':''}</div><div><div class="row" style="justify-content:space-between"><h3>${w.t}</h3>${pill}</div><p class="sm mut" style="margin:4px 0 0">${FIN(w)}</p>${w.k==='C'?cSeg():''}${list?`<button data-ses="${w.k}" class="go" style="margin:10px 0 4px">Empezar sesión${w.k==='C'?' · '+CNAME[cint]:''}</button>${addHTML(w)}<div style="margin-top:6px">${list}</div>`:''}</div></div></div>`}).join('');}
+document.addEventListener('click',e=>{const sb=e.target.closest('[data-ses]');if(sb){const k=sb.dataset.ses;ensureSes(k);sess={k,i:0,set:0,t0:Date.now()};go('ejercicios');sel(SES[k][0]);return}const x=e.target.closest('.ex[data-id]');if(x){sess=null;sel(x.dataset.id);go('ejercicios')}});
 
 /* ---------- ejercicios ---------- */
 const DISC={bjj:{n:'Jiu-Jitsu',s:'Drills No-Gi en tu colchoneta: escapes, levantadas y defensa de derribos.',ses:'N',icon:'<path d="M3 12h18"/><rect x="3" y="9" width="18" height="6" rx="2"/><path d="M14 9v6M17 9v6"/>'},cal:{n:'Calistenia',s:'Peso corporal pensado para el tatami: base, caderas, frames y escapes. 3 veces por semana; eliges suave, media o intensa.',ses:'C',icon:'<circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M6 10l6-2 6 2M8 21l4-7 4 7"/>'},pes:{n:'Pesas',s:'Fuerza con tus mancuernas: Día A (piernas, empuje y agarre) y Día B (unilateral, hombros y core).',ses:null,icon:'<path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/>'},ren:{n:'Físico',s:'Lo que te falta para el roleo: agarre, fuerza máxima para derribar, explosividad, resistencia y tus 3 sistemas de energía.',ses:null,icon:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'}};
@@ -671,6 +682,23 @@ ${filt==='ren'?renHead():''}${filt==='ren'?'':D.ses?`<button class="go" data-ses
 ${filt==='bjj'?'<button class="ghostlink" data-go="aprender">Ver posiciones y técnicas en Aprender →</button>':''}</div>`}
 function exRow(id){const e=LX(id),l=logs[id];return `<div class="ex ${id===cur?'cur':''}" data-id="${id}"><div><b>${e.t}</b><div class="sm mut">${e.d} · ${e.load}</div></div><span class="k">${l&&l.kg?l.kg+' kg × '+l.reps:'—'}</span></div>`}
 function renHead(){return `<div class="rses">${RSES.map(x=>`<button data-ses="${x.k}" class="${x.lv&&level<x.lv?'lk':''}"><b>${x.n}</b><span>${x.q} · ${x.m} min</span><small>${x.lv&&level<x.lv?'Nivel 1: versión técnica':x.w}</small></button>`).join('')}</div><details class="rwk"><summary>Cómo encajarlo en tu semana</summary><ul class="sm"><li><b>Lun / Jue:</b> BJJ. El día antes de BJJ nada láctico ni al fallo.</li><li><b>Mar:</b> Calistenia + 12 min de Agarre.</li><li><b>Mié:</b> 15 min de Aláctico (sprints) y después Pesas. Desde nivel 2, cada 2 semanas Fuerza máxima o Explosividad en vez de Fuerza A/B.</li><li><b>Vie:</b> Calistenia + Isometría BJJ (también sirve en días de turno: no cansa el sistema nervioso).</li><li><b>Sáb:</b> No-Gi en casa + Resistencia a la fuerza (si te queda energía).</li><li><b>Dom:</b> Aeróbico base en la bici (o calistenia suave). Desde nivel 2, el láctico puede ir el martes.</li></ul><p class="sm mut">Con tus medicamentos: hidrátate bien, levántate lento del suelo después de los sprints y para si te mareas o sientes palpitaciones raras.</p></details>`}
+
+/* ===== plan diario: complementos de Físico integrados a la semana ===== */
+const W_MIE0=Object.assign({},WEEK[2]);
+const PAR=Math.floor(Date.now()/6048e5)%2;
+function planWeek(){const L=level>=1;
+WEEK[0].add=[];WEEK[3].add=[];
+WEEK[1].add=['*','G'];WEEK[1].t='Calistenia + agarre';
+WEEK[2]=L?(PAR===0?{d:'Mié',t:'Sprints + fuerza máxima',k:'F',x:'Fuerza para derribar.',add:['AL','*']}:{d:'Mié',t:'Explosividad + fuerza B',k:'B',x:'Potencia y luego pesas.',add:['X','*']}):Object.assign({},W_MIE0,{t:W_MIE0.k==='A'?'Sprints + fuerza A':'Sprints + fuerza B',add:['AL','*']});
+WEEK[4].add=['*','IS'];WEEK[4].t='Calistenia + isometría BJJ';
+WEEK[5].add=L?['*',PAR===0?'RF':'LA']:['*'];WEEK[5].t=L?(PAR===0?'No-Gi + resistencia a la fuerza':'No-Gi + láctico'):'BJJ No-Gi en casa';
+WEEK[6].add=['*','AE'];WEEK[6].t='Calistenia + bici aeróbica';WEEK[6].x='Ritmo tranquilo. Si llegas cansado, haz solo la bici. Prepara la comida de la semana.'}
+const hasAdd=w=>(w.add||[]).some(x=>x!=='*');
+const seqKey=w=>hasAdd(w)?w.add.map(x=>x==='*'?w.k:x).join('+'):w.k;
+function ensureSes(k){if(SES[k]||!k.includes('+'))return;Object.defineProperty(SES,k,{get(){return k.split('+').flatMap(p=>SES[p]||[])},configurable:true})}
+function addHTML(w){if(!hasAdd(w)||!SES[w.k])return'';const mi=w.add.indexOf('*');const ad=w.add.filter(x=>x!=='*');
+return `<div class="cmp"><span class="sm mut">Complementos de hoy · Físico</span>${ad.map(k=>{const r=RSES.find(x=>x.k===k);return `<button class="cmpb" data-ses="${k}"><b>${r.n}</b><span>${w.add.indexOf(k)<mi?'Antes':'Después'} · ${r.q} · ${r.m} min</span></button>`}).join('')}<button class="go cmpall" data-ses="${seqKey(w)}">Hacer todo seguido</button></div>`}
+planWeek();
 /* ===== diagramas paso a paso (Físico) ===== */
 const DG=(()=>{const C='#ff6a4d',F='#d9d4c8';
 const P=a=>a.map(p=>p.join(' ')).join(' L');
@@ -735,7 +763,7 @@ $('#setDone').onclick=()=>{const n=parseInt(e.d),ids=SES[sess.k];try{navigator.v
 const goNext=()=>{sess.i++;sess.set=0;sel(ids[sess.i]);window.scrollTo({top:0,behavior:'smooth'})};
 if(sess.set<n){sess.set++;const restS=parseInt(e.r);renderDetail();if(sess.set<n)startRest(restS,'Descansa · luego serie '+(sess.set+1));else if(sess.i<ids.length-1)startRest(45,'Siguiente: '+LX(ids[sess.i+1]).t,goNext);return}
 if(sess.i<ids.length-1){goNext();return}
-const d=getD(dk(new Date()));d[{A:'fa',B:'fb',N:'nogi',C:'cal'}[sess.k]||'ren']=true;saveD();renderHoy();renderDay();const mins=Math.max(1,Math.round((Date.now()-(sess.t0||Date.now()))/6e4)),sets=ids.reduce((a,id)=>a+parseInt(LX(id).d),0),k=sess.k;sess=null;renderDetail();$('#detail').innerHTML=`<div class="card celeb"><span class="pill r">Día ${k} completado</span><div class="big">¡Sesión lista!</div><p class="mut" style="margin:0">Quedó registrada en tu progreso.</p><div class="kpis"><div><b>${ids.length}</b><span>ejercicios</span></div><div><b>${sets}</b><span>series</span></div><div><b>${mins}</b><span>minutos</span></div></div><button class="go" id="toProg">Ver mi progreso</button></div>`;$('#toProg').onclick=()=>go('progreso');setTimeout(()=>rpeAsk(k,mins),900);try{navigator.vibrate&&navigator.vibrate([30,60,30,60,120])}catch(x){}}}}
+const d=getD(dk(new Date()));sess.k.split('+').forEach(p=>d[{A:'fa',B:'fb',N:'nogi',C:'cal'}[p]||'ren']=true);saveD();renderHoy();renderDay();const mins=Math.max(1,Math.round((Date.now()-(sess.t0||Date.now()))/6e4)),sets=ids.reduce((a,id)=>a+parseInt(LX(id).d),0),k=sess.k;sess=null;renderDetail();$('#detail').innerHTML=`<div class="card celeb"><span class="pill r">Día ${k} completado</span><div class="big">¡Sesión lista!</div><p class="mut" style="margin:0">Quedó registrada en tu progreso.</p><div class="kpis"><div><b>${ids.length}</b><span>ejercicios</span></div><div><b>${sets}</b><span>series</span></div><div><b>${mins}</b><span>minutos</span></div></div><button class="go" id="toProg">Ver mi progreso</button></div>`;$('#toProg').onclick=()=>go('progreso');setTimeout(()=>rpeAsk(k,mins),900);try{navigator.vibrate&&navigator.vibrate([30,60,30,60,120])}catch(x){}}}}
 function sel(id){document.body.dataset.disc=discOf(EX[id].g)||'pes';setTimeout(()=>setVid($('#fig'),cur,vMode));if(lastP){prevP=lastP;swT=performance.now();t0=performance.now()}cur=id;st.set('bjj_cur',id);renderDetail();renderList();build()}
 
 /* ---------- 3D ---------- */
@@ -937,8 +965,8 @@ g+=`<polyline fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linejoin
 g+=`<text x="36" y="${Hh-6}" font-size="12" fill="var(--mut)">18 nov · 78 kg</text>`;ch2.innerHTML=g}
 const roC=new ResizeObserver(drawChart);roC.observe(ch2);
 /* hoy te toca */
-function renderHoy(){$('#hoy').dataset.d=discOf(WEEK[todayIdx].k)||'rest';const w=WEEK[todayIdx],x=days[dk(new Date())]||{};const key={A:'fa',B:'fb',N:'nogi',C:'cal',bjj:'bjj',c:'bici',r:'mov'}[w.k];const done=x[key];
-$('#hoy').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Hoy te toca</span><h3>${w.t}</h3></div><button id="hoyBtn" class="${done?'on':''}">${done?'Hecho ✓':'Marcar hecho'}</button></div><p class="sm mut" style="margin:6px 0 0">${FIN(w)}</p>${w.k==='C'&&!done?cSeg():''}${SES[w.k]&&!done?`<button data-ses="${w.k}" class="go" style="margin:10px 0 0">Empezar sesión${w.k==='C'?' · '+CNAME[cint]:''}</button>`:''}`;
+function renderHoy(){$('#hoy').dataset.d=discOf(WEEK[todayIdx].k)||'rest';const w=WEEK[todayIdx],x=days[dk(new Date())]||{};const key=KEYOF[w.k]||'ren';const done=x[key];
+$('#hoy').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Hoy te toca</span><h3>${w.t}</h3></div><button id="hoyBtn" class="${done?'on':''}">${done?'Hecho ✓':'Marcar hecho'}</button></div><p class="sm mut" style="margin:6px 0 0">${FIN(w)}</p>${w.k==='C'&&!done?cSeg():''}${SES[w.k]&&!done?`${hasAdd(w)?`<p class="sm hcmp">${w.add.map(x=>x==='*'?`<b>${SLBL(w.k)}</b>`:RSES.find(r=>r.k===x).n).join(' → ')}</p>`:''}<button data-ses="${seqKey(w)}" class="go" style="margin:10px 0 0">${hasAdd(w)?'Empezar sesión completa':'Empezar sesión'}${w.k==='C'?' · '+CNAME[cint]:''}</button>`:''}`;
 $('#hoyBtn').onclick=()=>{const d=getD(dk(new Date()));d[key]=!d[key];saveD();renderHoy();renderDay();if(d[key])toast('¡Bien! Registrado')}}
 /* ---------- nutrición ---------- */
 const R=[
