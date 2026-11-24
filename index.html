@@ -351,6 +351,7 @@ body.hasback .view .wrap{padding-top:58px}
 .gitem{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);margin:6px 0;color:var(--ink);text-decoration:none}
 .gitem b{display:block;font-size:14.5px}.gitem small{display:block;font-size:12px;color:var(--mut);margin-top:2px;line-height:1.35}
 .gp{text-align:right;flex:none}.gp b{font:700 italic 20px/1 "Barlow Condensed";color:#3ddc97}.gp small{white-space:nowrap}
+.acad td:first-child{font-weight:800;white-space:nowrap;vertical-align:top}.acad td{font-size:13px;line-height:1.45}.acad b{color:#3ddc97}
 </style>
 </head>
 <body>
@@ -446,6 +447,16 @@ body.hasback .view .wrap{padding-top:58px}
 <div class="belt" aria-hidden="true"></div>
 <p class="mut" style="margin-top:0">Lo que necesitas saber antes de tu primera clase y durante los primeros 3 meses. Esto no reemplaza a tu profesor: es para que llegues entendiendo qué estás viendo.</p>
 <div class="card" id="rutaCard"><h3>Ruta técnica por nivel</h3><p class="sm mut" style="margin:4px 0 0">Técnica real del tatami con video de profesores, y los ejercicios de la app que te preparan físicamente para ejecutarla bien.</p><div id="ruta"></div></div>
+<div class="card" id="acadCard"><h3>Tu academia · Checkmat</h3><p class="sm mut" style="margin:4px 0 8px">Clases para adultos. ★ = las que te recomiendo ahora como cinturón blanco.</p>
+<table class="acad"><thead><tr><th>Día</th><th>Clases</th></tr></thead><tbody>
+<tr><td>Lun</td><td>07:00 kimono · 13:30 kimono · <b>★ 18:30 Fundamentos</b> · 19:30 kimono · 21:00 kimono</td></tr>
+<tr><td>Mar</td><td>07:00 NoGi · 10:30 Sumisión · 12:00 Acondicionamiento · 13:30 NoGi · 19:30 NoGi · 21:00 Competición</td></tr>
+<tr><td>Mié</td><td>07:00 kimono · 10:30 Sumisión · 13:30 kimono · <b>★ 18:30 Fundamentos</b> · 19:30 kimono · 21:00 kimono</td></tr>
+<tr><td>Jue</td><td>07:00 NoGi · 10:30 Sumisión · 12:00 Acondicionamiento · 13:30 NoGi · 19:30 NoGi · 21:00 Competición</td></tr>
+<tr><td>Vie</td><td>07:00 kimono · 13:30 kimono · 15:00 Kick Boxing · <b>★ 18:30 Fundamentos</b> · 19:30 kimono · 21:00 kimono</td></tr>
+<tr><td>Sáb</td><td>11:00 kimono · 12:30 Judo NoGi · 13:30 Acondicionamiento · 15:00 Open Mat</td></tr>
+<tr><td>Dom</td><td>11:00 kimono · 15:00 Open Mat</td></tr></tbody></table>
+<p class="sm mut" style="margin:8px 0 0">Con turno de noche: usa las de 07:00 o 13:30 del mismo día. Competición, cuando tu profe te lo proponga.</p></div>
 <div class="card" id="gearCard"><h3>Tu equipo · dónde comprar</h3><p class="sm mut" style="margin:4px 0 0">Bonito y a precio razonable, en tiendas de Chile. Prioriza en este orden.</p><div id="gear"></div></div>
 <div class="fig" id="fig2"><div class="tag" id="tag2"></div><button class="vtog" id="lTog"></button><div class="hud"><div class="row"><button id="lPrev" aria-label="Paso anterior">‹</button><button id="lPlay">Pausa</button><button id="lNext" aria-label="Paso siguiente">›</button></div></div></div>
 <div class="row sm mut" style="gap:14px;margin:8px 2px"><span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#f2f0ea;border:1px solid var(--line);vertical-align:-1px"></span> Tú: gi blanco, cinturón blanco</span><span><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:#1f3f8f;vertical-align:-1px"></span> Compañero: gi azul, cinturón morado</span></div>
@@ -704,7 +715,7 @@ Object.assign(YQ,{c_jj:'jumping jacks',c_flex:'flexiones',c_sq:'sentadilla sin p
 document.addEventListener('click',e=>{const b=e.target.closest('[data-ci]');if(!b)return;cint=b.dataset.ci;st.set('bjj_cint',cint);renderWeek();renderHoy();renderList();toast('Calistenia: intensidad '+CNAME[cint])});
 const cSeg=()=>`<div class="seg" style="grid-template-columns:repeat(3,1fr);position:static;margin:10px 0 4px">${Object.keys(CNAME).map(k=>`<button data-ci="${k}" class="${cint===k?'on':''}">${CNAME[k]}</button>`).join('')}</div>`;
 const SLBL=k=>k.startsWith('T_')?'Preparación · '+((RUTA.find(t=>'T_'+t.id===k)||{}).n||''):k.includes('+')?k.split('+').map(x=>SLBL(x)).join(' + '):(typeof RSES!=='undefined'&&RSES.find(x=>x.k===k))?RSES.find(x=>x.k===k).n:k==='R'?'Físico':k==='N'?'No-Gi':k==='C'?'Calistenia':'Día '+k;
-const FIN=w=>SES[w.k]?(w.k==='N'?NFIN[level]:w.k==='C'?CFIN[cint]:LV[level].fin):w.x;
+const FIN=w=>(typeof RSES!=='undefined'&&RSES.some(r=>r.k===w.k&&w.k!=='F'))?w.x:SES[w.k]?((w.k==='N'?NFIN[level]:w.k==='C'?CFIN[cint]:LV[level].fin)+(w.x&&/academia|Checkmat|casa/.test(w.x)?' '+w.x:'')):w.x;
 /* ---------- navegación ---------- */
 const views=["semana","ejercicios","progreso","comida","aprender"];
 function go(v,fromH){if(!views.includes(v))v="semana";const curV=((document.querySelector('.view.on')||{}).id||'').slice(2);if(fromH){if(NAVH[NAVH.length-1]===v)NAVH.pop();else NAVH.length=0}else if(curV&&curV!==v){NAVH.push(curV);if(NAVH.length>20)NAVH.shift();history.pushState(null,'','#'+v)}document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);renderBack();if(v==='ejercicios')requestAnimationFrame(()=>{ES&&ES.resize()});if(v==='aprender')requestAnimationFrame(()=>{LS&&LS.resize()});window.scrollTo(0,0)}
@@ -713,7 +724,7 @@ window.addEventListener('hashchange',()=>go(location.hash.slice(1),true));
 
 /* ---------- semana ---------- */
 const todayIdx=(new Date().getDay()+6)%7;let selDay=todayIdx;
-const KEYOF={A:'fa',B:'fb',N:'nogi',C:'cal',bjj:'bjj',c:'bici',r:'mov',F:'ren'};
+const KEYOF={A:'fa',B:'fb',N:'nogi',C:'cal',bjj:'bjj',c:'bici',r:'mov',F:'ren',AE:'ren'};
 function wDate(i){const d=new Date();d.setDate(d.getDate()-todayIdx+i);return d}
 function renderStrip(){const el=$('#wstrip');if(!el)return;el.innerHTML=WEEK.map((w,i)=>{const dt=wDate(i),x=days[dk(dt)]||{},dn=x[KEYOF[w.k]];return `<button role="tab" aria-selected="${i===selDay}" data-wd="${i}" class="wd d-${discOf(w.k)||'rest'}${i===selDay?' on':''}${i===todayIdx?' td':''}${dn?' dn':''}"><small>${w.d}</small><b>${dt.getDate()}</b><i></i></button>`}).join('')}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-wd]');if(!b)return;selDay=+b.dataset.wd;renderWeek();try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}});
@@ -737,13 +748,17 @@ function renHead(){return `<div class="rses">${RSES.map(x=>`<button data-ses="${
 /* ===== plan diario: complementos de Físico integrados a la semana ===== */
 const W_MIE0=Object.assign({},WEEK[2]);
 const PAR=Math.floor(Date.now()/6048e5)%2;
-function planWeek(){const L=level>=1;
-WEEK[0].add=[];WEEK[3].add=[];
-WEEK[1].add=['*','G'];WEEK[1].t='Calistenia + agarre';
-WEEK[2]=L?(PAR===0?{d:'Mié',t:'Sprints + fuerza máxima',k:'F',x:'Fuerza para derribar.',add:['AL','*']}:{d:'Mié',t:'Explosividad + fuerza B',k:'B',x:'Potencia y luego pesas.',add:['X','*']}):Object.assign({},W_MIE0,{t:W_MIE0.k==='A'?'Sprints + fuerza A':'Sprints + fuerza B',add:['AL','*']});
-WEEK[4].add=['*','IS'];WEEK[4].t='Calistenia + isometría BJJ';
-WEEK[5].add=L?['*',PAR===0?'RF':'LA']:['*'];WEEK[5].t=L?(PAR===0?'No-Gi + resistencia a la fuerza':'No-Gi + láctico'):'BJJ No-Gi en casa';
-WEEK[6].add=['*','AE'];WEEK[6].t='Calistenia + bici aeróbica';WEEK[6].x='Ritmo tranquilo. Si llegas cansado, haz solo la bici. Prepara la comida de la semana.'}
+function planWeek(){const L=level>=1,P=PAR===0;
+const T='Si tienes turno: 07:00 o 13:30 (adultos con kimono).';
+WEEK[0]={d:'Lun',t:'BJJ · Fundamentos 18:30',k:'bjj',x:'Checkmat. Llega 10 min antes. '+(L?'Si te queda energía, quédate a la de 19:30 con kimono. ':'')+T,add:[]};
+WEEK[1]=L?(P?{d:'Mar',t:'Sprints + fuerza máxima',k:'F',x:'En casa. Alternativa: Acondicionamiento Físico 12:00 en la academia.',add:['AL','*']}:{d:'Mar',t:'Explosividad + fuerza B',k:'B',x:'En casa. Alternativa: Acondicionamiento Físico 12:00 en la academia.',add:['X','*']})
+:Object.assign({},W_MIE0,{d:'Mar',t:W_MIE0.k==='A'?'Sprints + fuerza A':'Sprints + fuerza B',x:'En casa. Alternativa: Acondicionamiento Físico 12:00 en la academia.',add:['AL','*']});
+WEEK[2]={d:'Mié',t:'BJJ · Fundamentos 18:30',k:'bjj',x:'Checkmat. Enfócate en una sola técnica de la clase. '+T,add:[]};
+WEEK[3]={d:'Jue',t:'Calistenia + agarre',k:'C',x:L?'En casa. Desde ya puedes probar NoGi 19:30 en la academia en vez de esto.':'En casa. Alternativa: Acondicionamiento Físico 12:00 en la academia.',add:['*','G']};
+WEEK[4]={d:'Vie',t:'BJJ · Fundamentos 18:30',k:'bjj',x:'Checkmat. '+(L?'Puedes encadenar la de 19:30 con kimono. ':'')+T,add:[]};
+WEEK[5]=L?{d:'Sáb',t:'Open Mat 15:00',k:'bjj',x:'Checkmat, con o sin kimono. Roleo libre: pide a alguien de grado más alto que te corrija. Antes, si quieres: Acondicionamiento 13:30.',add:[]}
+:{d:'Sáb',t:'Calistenia + isometría BJJ',k:'C',x:'En casa. Cuando lleves un mes, cámbialo por el Open Mat de las 15:00.',add:['*','IS']};
+WEEK[6]={d:'Dom',t:'Bici aeróbica + meal prep',k:'AE',x:'Descanso activo: bici suave y cocinar la semana. Open Mat 15:00 opcional si te sientes bien.',add:[]};}
 const hasAdd=w=>(w.add||[]).some(x=>x!=='*');
 const seqKey=w=>hasAdd(w)?w.add.map(x=>x==='*'?w.k:x).join('+'):w.k;
 function ensureSes(k){if(SES[k]||!k.includes('+'))return;Object.defineProperty(SES,k,{get(){return k.split('+').flatMap(p=>SES[p]||[])},configurable:true})}
