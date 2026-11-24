@@ -1,22 +1,179 @@
 {
-  "updated": "2026-11-24",
-  "note": "Precios de referencia en Santiago. Se actualizan cada semana; los supermercados cambian ofertas seguido.",
-  "items": {
-    "huevos": {"u": "bandeja 30", "p": {"aCuenta": 7150, "Lider": 7150, "Unimarc": 8190, "Jumbo": 8690, "La Vega": 10200}, "d": "abr-2026"},
-    "zanahoria": {"u": "kg", "p": {"Feria": 850, "Supermercado": 1290}, "d": "jul-2026"},
-    "papas": {"u": "kg", "p": {"Feria": 569, "Supermercado": 1079}, "d": "nov-2025"},
-    "zapitaliano": {"u": "kg", "p": {"Feria": 900}, "d": "jul-2026"}
+ "updated": "2026-11-24",
+ "note": "Precios de referencia en Santiago, revisados 2 veces por semana (martes y viernes). Las ofertas cambian seguido: anota lo que pagas con el botón $.",
+ "items": {
+  "huevos": {
+   "u": "bandeja 30",
+   "p": {
+    "Feria/almacén": 5600,
+    "Lider": 8390,
+    "Jumbo": 8890
+   },
+   "d": "24-nov"
   },
-  "promos": [
-    {"s": "Tottus", "d": "Lunes", "t": "6% en toda la boleta pagando con CMR o débito Banco Falabella"},
-    {"s": "Tottus", "d": "Martes", "t": "20% en pollo y pavo con CMR"},
-    {"s": "Tottus", "d": "Miércoles", "t": "20% en carne de vacuno con CMR"},
-    {"s": "Tottus", "d": "Jueves", "t": "20% en frutas y verduras con CMR"}
-  ],
-  "src": [
-    "https://www.encancha.cl/enlahora/servicios/2026/04/10/precio-del-huevo-sube-un-20-en-este-supermercado-de-chile-puedes-pagar-menos-por-la-bandeja-de-30-unidades/",
-    "https://www.odepa.gob.cl/?p=138999",
-    "https://www.odepa.gob.cl/?p=147455",
-    "https://www.meganoticias.cl/dato-util/500793-descuentos-supermercado-octubre-compras-rebajas-tarjetas-dcv-03-10-2025.html"
-  ]
+  "pollo": {
+   "u": "kg",
+   "p": {
+    "Lider congelado 2 kg": 2495,
+    "Lider trutro": 3690,
+    "Tottus": 3790
+   },
+   "d": "24-nov"
+  },
+  "lentejas": {
+   "u": "kg",
+   "p": {
+    "Lider": 2590,
+    "Unimarc": 2890,
+    "Iansa (oferta)": 3000
+   },
+   "d": "24-nov"
+  },
+  "porotos": {
+   "u": "kg",
+   "p": {
+    "Jumbo negros (oferta)": 2176,
+    "Lider": 2290,
+    "Banquete": 2390
+   },
+   "d": "24-nov"
+  },
+  "garbanzos": {
+   "u": "kg",
+   "p": {
+    "Jumbo": 2790,
+    "Lider": 2990
+   },
+   "d": "24-nov"
+  },
+  "atun": {
+   "u": "lata 160 g",
+   "p": {
+    "La Romana 140 g": 1000,
+    "Angelmo (oferta)": 1090,
+    "Lider": 1190
+   },
+   "d": "24-nov"
+  },
+  "arroz": {
+   "u": "kg",
+   "p": {
+    "Tottus (oferta)": 1000,
+    "Lider delgado": 1290,
+    "Santa Isabel": 2000
+   },
+   "d": "24-nov"
+  },
+  "molida": {
+   "u": "500 g",
+   "p": {
+    "Lider 10%": 4750,
+    "Tottus 7% (oferta)": 4990,
+    "Jumbo": 5990
+   },
+   "d": "24-nov"
+  },
+  "leche": {
+   "u": "litro",
+   "p": {
+    "Lider": 1000,
+    "Unimarc Soprole": 1150,
+    "Unimarc Los Peumos": 1190
+   },
+   "d": "24-nov"
+  },
+  "avena": {
+   "u": "kg",
+   "p": {
+    "Lider": 1940,
+    "Tottus": 2414
+   },
+   "d": "24-nov"
+  },
+  "salsa": {
+   "u": "200 g",
+   "p": {
+    "Lider pack 6": 482,
+    "Jumbo 2x$1.490": 745
+   },
+   "d": "24-nov"
+  },
+  "fideos": {
+   "u": "paquete",
+   "p": {
+    "Lider": 490
+   },
+   "d": "24-nov"
+  },
+  "papas": {
+   "u": "kg",
+   "p": {
+    "Feria": 1050,
+    "Supermercado": 1590
+   },
+   "d": "nov-2026"
+  },
+  "zanahoria": {
+   "u": "kg",
+   "p": {
+    "Feria": 975,
+    "Supermercado": 1250
+   },
+   "d": "nov-2026"
+  },
+  "tomate": {
+   "u": "kg",
+   "p": {
+    "Feria": 1779
+   },
+   "d": "13-nov"
+  },
+  "zapitaliano": {
+   "u": "kg",
+   "p": {
+    "Feria": 767
+   },
+   "d": "nov-2026"
+  },
+  "zapallo": {
+   "u": "kg",
+   "p": {
+    "Feria": 1700
+   },
+   "d": "nov-2026"
+  },
+  "lechuga": {
+   "u": "unidad",
+   "p": {
+    "Feria escarola": 750,
+    "Feria": 1300
+   },
+   "d": "nov-2026"
+  }
+ },
+ "promos": [
+  {
+   "s": "Unimarc",
+   "d": "Jueves",
+   "t": "15% pagando con Unipay en unimarc.cl"
+  },
+  {
+   "s": "Feria",
+   "d": "Domingo",
+   "t": "Llega a la hora del cierre: verduras hasta 60% más baratas que el súper"
+  },
+  {
+   "s": "Todas",
+   "d": "Black Friday",
+   "t": "27 al 30 de noviembre: carga despensa (legumbres, arroz, atún, avena)"
+  }
+ ],
+ "src": [
+  "https://super.lider.cl/ip/00218152000000",
+  "https://super.lider.cl/ip/arroz-y-legumbres/00780874360292",
+  "https://super.lider.cl/v/porotos-1-kg",
+  "https://www.jumbo.cl/busca/despensa/legumbres",
+  "https://super.lider.cl/browse/marcas-propias/nuestras-marcas/lider/69507955_30193274_77297815",
+  "https://www.odepa.gob.cl/precios/mejores-alimentos-de-temporada"
+ ]
 }
