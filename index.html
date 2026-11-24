@@ -5112,7 +5112,7 @@ return S}}}
 /* ---------- Modelo 3D realista (maniquí con esqueleto) ---------- */
 let XB=null,XBp=null;
 const realOn=()=>st.get('bjj_real',true);
-function loadXbot(){if(XBp)return XBp;XBp=new Promise(res=>{try{if(!window.THREE||!THREE.GLTFLoader||!THREE.SkeletonUtils)return res(null);new THREE.GLTFLoader().load('xbot.glb',g=>{XB=g;res(g)},undefined,()=>res(null))}catch(e){res(null)}});return XBp}
+function loadXbot(){if(XBp)return XBp;XBp=new Promise(res=>{try{if(!window.THREE||!THREE.GLTFLoader||!THREE.SkeletonUtils)return res(null);const L=new THREE.GLTFLoader(),U=['xbot.glb','https://hsanchezvilla-bit.github.io/tatami/xbot.glb'];const tryU=i=>{if(i>=U.length)return res(null);L.load(U[i],g=>{XB=g;res(g)},undefined,()=>tryU(i+1))};tryU(0)}catch(e){res(null)}});return XBp}
 function makeChar(parent,pal){if(XB&&realOn()){try{return makeReal(parent,pal)}catch(e){console.warn('real',e)}}return makeCharSimple(parent,pal)}
 function makeReal(parent,pal){
 const g=new THREE.Group();parent.add(g);const hold=new THREE.Group();g.add(hold);
