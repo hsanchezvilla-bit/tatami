@@ -448,7 +448,7 @@ body.hasback .view .wrap{padding-top:58px}
 <p class="mut" style="margin-top:0">Lo que necesitas saber antes de tu primera clase y durante los primeros 3 meses. Esto no reemplaza a tu profesor: es para que llegues entendiendo qué estás viendo.</p>
 <div class="card" id="rutaCard"><h3>Ruta técnica por nivel</h3><p class="sm mut" style="margin:4px 0 0">Técnica real del tatami con video de profesores, y los ejercicios de la app que te preparan físicamente para ejecutarla bien.</p><div id="ruta"></div></div>
 <div class="card" id="acadCard"><h3>Tu academia · Checkmat</h3><p class="sm mut" style="margin:4px 0 8px">Clases para adultos. ★ = las que te recomiendo ahora como cinturón blanco.</p>
-<table class="acad"><thead><tr><th>Día</th><th>Clases</th></tr></thead><tbody>
+<label class="acadT" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05)"><span class="sm"><b>Ya entreno en Checkmat</b><br><span class="mut">Apágalo y la semana queda 100% en casa</span></span><input type="checkbox" id="acadSw" style="width:22px;height:22px;accent-color:#3ddc97"></label><table class="acad"><thead><tr><th>Día</th><th>Clases</th></tr></thead><tbody>
 <tr><td>Lun</td><td>07:00 kimono · 13:30 kimono · <b>★ 18:30 Fundamentos</b> · 19:30 kimono · 21:00 kimono</td></tr>
 <tr><td>Mar</td><td>07:00 NoGi · 10:30 Sumisión · 12:00 Acondicionamiento · 13:30 NoGi · 19:30 NoGi · 21:00 Competición</td></tr>
 <tr><td>Mié</td><td>07:00 kimono · 10:30 Sumisión · 13:30 kimono · <b>★ 18:30 Fundamentos</b> · 19:30 kimono · 21:00 kimono</td></tr>
@@ -581,7 +581,7 @@ function renderLevel(){const n=strCount(),nx=LV[level+1];
 $('#lvlCard').innerHTML=`<div class="row" style="justify-content:space-between"><div><span class="sm mut">Tu nivel</span><h3>Nivel ${level+1} · ${LV[level].n}</h3></div><span class="pill ${level>=2?'r':''}">${n} sesiones de fuerza</span></div>
 <div class="seg" style="grid-template-columns:repeat(4,1fr);position:static;margin:12px 0 8px">${LV.map((l,i)=>`<button data-lv="${i}" class="${i===level?'on':''}">${i+1} · ${l.n.slice(0,5)}.</button>`).join('')}</div>
 <p class="sm" style="margin:0 0 6px"><b>🥋 ${LV[level].bj}</b></p><p class="sm" style="margin:0">${LV[level].s} En calistenia y drills cambia el ejercicio, no solo las repeticiones.</p>${nx?`<p class="sm mut" style="margin:6px 0 0">${n>=nx.need?`<b style="color:var(--green)">¡Listo para subir a ${nx.n}!</b> Si completas todas las series con buena técnica, toca el ${level+2}.`:`Sube a ${nx.n} cuando sumes ${nx.need} sesiones y completes todas las series con buena técnica.`}</p>`:''}`}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-lv]');if(!b)return;level=+b.dataset.lv;st.set('bjj_level',level);planWeek();renderStrip();renderLevel();renderWeek();renderList();renderDetail();build();renderCoach();renderHoy();toast('Nivel '+(level+1)+': '+LV[level].n)});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-lv]');if(!b)return;level=+b.dataset.lv;st.set('bjj_level',level);planWeek();renderStrip();renderLevel();renderWeek();renderList();renderDetail();build();renderCoach();renderHoy();toast('Nivel '+(level+1)+': '+LV[level].n)});(function(){const c=document.getElementById("acadSw");if(!c)return;c.checked=!!st.get("bjj_acad",0);c.addEventListener("change",()=>{st.set("bjj_acad",c.checked?1:0);planWeek();["renderStrip","renderWeek","renderList","renderDetail","build","renderCoach","renderHoy"].forEach(f=>{try{({renderStrip,renderWeek,renderList,renderDetail,build,renderCoach,renderHoy})[f]()}catch(e){}});try{toast(c.checked?"Semana con Checkmat":"Semana 100% en casa")}catch(e){}})})()
 const YQ={goblet:'sentadilla goblet mancuerna',rdl:'peso muerto rumano mancuernas',flex:'flexiones de brazos',toalla:'remo con toalla agarre bjj',hollow:'hollow hold',agarre:'farmer hold agarre',bulgara:'sentadilla búlgara mancuernas',puente:'puente de glúteo',press:'press militar mancuernas de pie',inclinado:'remo inclinado mancuernas',camaron:'camarón escape de cadera bjj',pallof:'pallof press banda',cuello:'isométricos de cuello',zancada:'zancada hacia atrás'};
 const ytUrl=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
 const ytBtn=(q,lbl)=>`<a class="btn yt" href="${ytUrl(q)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>${lbl||'Abrir en YouTube'}</a>`;
@@ -749,6 +749,14 @@ function renHead(){return `<div class="rses">${RSES.map(x=>`<button data-ses="${
 const W_MIE0=Object.assign({},WEEK[2]);
 const PAR=Math.floor(Date.now()/6048e5)%2;
 function planWeek(){const L=level>=1,P=PAR===0;
+if(!st.get('bjj_acad',0)){const H='En casa, mientras juntas para Checkmat. ';
+WEEK[0]={d:'Lun',t:'BJJ en casa + intervalos',k:'N',x:H+'Día libre: 18:30. Con turno de 17:00: 10:00.',add:['*','LA']};
+WEEK[1]=Object.assign({},W_MIE0,{d:'Mar',t:W_MIE0.k==='A'?'Sprints + fuerza A':'Sprints + fuerza B',x:H+'Mejor a media mañana (10:00), tras dormir bien.',add:['AL','*']});
+WEEK[2]={d:'Mié',t:'BJJ en casa + bici',k:'N',x:H+'Día libre: 18:30, el mismo bloque de Fundamentos para crear el hábito.',add:['*','AE']};
+WEEK[3]={d:'Jue',t:'Calistenia + agarre',k:'C',x:H+'10:00.',add:['*','G']};
+WEEK[4]={d:'Vie',t:W_MIE0.k==='A'?'Fuerza B + intervalos':'Fuerza A + intervalos',k:W_MIE0.k==='A'?'B':'A',x:H+'Día libre: 18:30. Con turno: 10:00.',add:['*','LA']};
+WEEK[5]={d:'Sáb',t:'Calistenia + isometría BJJ',k:'C',x:H+'10:30.',add:['*','IS']};
+WEEK[6]={d:'Dom',t:'Bici aeróbica + meal prep',k:'AE',x:'Descanso activo: bici suave 30–40 min y cocinar la semana.',add:[]};return}
 const T='Si tienes turno: 07:00 o 13:30 (adultos con kimono).';
 WEEK[0]={d:'Lun',t:'BJJ · Fundamentos 18:30',k:'bjj',x:'Checkmat. Llega 10 min antes. '+(L?'Si te queda energía, quédate a la de 19:30 con kimono. ':'')+T,add:[]};
 WEEK[1]=L?(P?{d:'Mar',t:'Sprints + fuerza máxima',k:'F',x:'En casa. Alternativa: Acondicionamiento Físico 12:00 en la academia.',add:['AL','*']}:{d:'Mar',t:'Explosividad + fuerza B',k:'B',x:'En casa. Alternativa: Acondicionamiento Físico 12:00 en la academia.',add:['X','*']})
