@@ -304,6 +304,27 @@ body[data-list=ren] #exlist .ex.cur b{color:var(--ren)}
 .wd.d-ren i{background:#a78bfa}
 #hoy[data-d=ren]{background:var(--reng)!important;box-shadow:0 24px 50px -20px rgba(124,58,237,.6)!important;color:#fff}#hoy[data-d=ren] button{background:rgba(255,255,255,.22);color:#fff}
 .cmp{margin:10px 0 4px;padding:10px 0;border-bottom:1px dashed rgba(196,181,253,.25)}
+
+/* timer de ejercicio */
+.et{display:flex;gap:14px;align-items:center;margin-top:12px;padding:12px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.etr{position:relative;width:118px;height:118px;flex:none}.etr svg{width:100%;height:100%}
+#etc{stroke:#3ddc97;transition:stroke-dashoffset .2s linear}
+.et[data-ph=prep] #etc,.et[data-ph=switch] #etc{stroke:#f5b942}.et[data-ph=work] #etc{stroke:#ff3b4e}.et[data-ph=rest] #etc{stroke:#22d3ee}.et[data-ph=done] #etc{stroke:#3ddc97}
+.et[data-ph=work]{border-color:rgba(255,59,78,.45);background:rgba(255,59,78,.08)}.et[data-ph=rest]{border-color:rgba(34,211,238,.4);background:rgba(34,211,238,.06)}
+.etin{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.etin b{font:700 italic 34px/1 "Barlow Condensed";font-variant-numeric:tabular-nums}.etin span{font-size:11.5px;color:var(--mut);margin-top:3px;max-width:90px;line-height:1.2}
+.etside{flex:1;min-width:0}.eti{font-weight:700;font-size:15px;margin-top:2px}
+.etd{display:flex;gap:5px;margin-top:6px}.etd i{width:18px;height:6px;border-radius:3px;background:rgba(255,255,255,.12)}.etd i.ok{background:#3ddc97}
+#etGo{font-size:14px;min-height:48px}
+/* navegación */
+#backChip{position:fixed;left:12px;top:calc(10px + env(safe-area-inset-top));z-index:12;display:flex;align-items:center;gap:4px;padding:8px 14px 8px 8px;min-height:40px;border-radius:999px;background:rgba(14,15,20,.78);border:1px solid rgba(255,255,255,.12);color:var(--ink);font-weight:700;font-size:14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 30px -10px rgba(0,0,0,.8)}
+#backChip[hidden]{display:none}
+#backChip svg,#upBtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+#upBtn{position:fixed;left:18px;bottom:calc(100px + env(safe-area-inset-bottom));z-index:10;width:46px;height:46px;min-height:46px;padding:0;border-radius:16px;display:grid;place-items:center;background:rgba(14,15,20,.8);border:1px solid rgba(255,255,255,.12);color:var(--ink);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);opacity:0;pointer-events:none;transform:translateY(10px);transition:.2s var(--ease)}
+body.scrolled #upBtn{opacity:1;pointer-events:auto;transform:none}
+body:has(#sheet.on) #upBtn,body:has(#sheet.on) #backChip{opacity:0;pointer-events:none}
+@media (min-width:900px){#upBtn{left:calc(50% - 310px - 66px);bottom:18px}}
+body.hasback .view .wrap{padding-top:58px}
 </style>
 </head>
 <body>
@@ -423,6 +444,7 @@ body[data-list=ren] #exlist .ex.cur b{color:var(--ren)}
 <div class="card"><div class="ladder" id="belts"></div><p class="sm mut" style="margin:10px 0 0">Los tiempos varían mucho según la academia y la constancia. El azul suele tomar 2 años o más entrenando 2–3 veces por semana.</p></div>
 </div></section>
 
+<button id="backChip" hidden aria-label="Volver"></button><button id="upBtn" aria-label="Volver arriba"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
 <button id="fab" aria-label="Registro rápido"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
 <nav aria-label="Secciones">
 <button data-v="semana"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/></svg>Inicio</button>
@@ -656,9 +678,9 @@ const SLBL=k=>k.includes('+')?k.split('+').map(x=>SLBL(x)).join(' + '):(typeof R
 const FIN=w=>SES[w.k]?(w.k==='N'?NFIN[level]:w.k==='C'?CFIN[cint]:LV[level].fin):w.x;
 /* ---------- navegación ---------- */
 const views=["semana","ejercicios","progreso","comida","aprender"];
-function go(v){if(!views.includes(v))v="semana";document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);if(v==='ejercicios')requestAnimationFrame(()=>{ES&&ES.resize()});if(v==='aprender')requestAnimationFrame(()=>{LS&&LS.resize()});window.scrollTo(0,0)}
+function go(v,fromH){if(!views.includes(v))v="semana";const curV=((document.querySelector('.view.on')||{}).id||'').slice(2);if(fromH){if(NAVH[NAVH.length-1]===v)NAVH.pop();else NAVH.length=0}else if(curV&&curV!==v){NAVH.push(curV);if(NAVH.length>20)NAVH.shift();history.pushState(null,'','#'+v)}document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);renderBack();if(v==='ejercicios')requestAnimationFrame(()=>{ES&&ES.resize()});if(v==='aprender')requestAnimationFrame(()=>{LS&&LS.resize()});window.scrollTo(0,0)}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.v));
-window.addEventListener('hashchange',()=>go(location.hash.slice(1)));
+window.addEventListener('hashchange',()=>go(location.hash.slice(1),true));
 
 /* ---------- semana ---------- */
 const todayIdx=(new Date().getDay()+6)%7;let selDay=todayIdx;
@@ -699,6 +721,44 @@ function ensureSes(k){if(SES[k]||!k.includes('+'))return;Object.defineProperty(S
 function addHTML(w){if(!hasAdd(w)||!SES[w.k])return'';const mi=w.add.indexOf('*');const ad=w.add.filter(x=>x!=='*');
 return `<div class="cmp"><span class="sm mut">Complementos de hoy · Físico</span>${ad.map(k=>{const r=RSES.find(x=>x.k===k);return `<button class="cmpb" data-ses="${k}"><b>${r.n}</b><span>${w.add.indexOf(k)<mi?'Antes':'Después'} · ${r.q} · ${r.m} min</span></button>`}).join('')}<button class="go cmpall" data-ses="${seqKey(w)}">Hacer todo seguido</button></div>`}
 planWeek();
+/* ===== temporizador de ejercicio ===== */
+const ET={id:null,ph:'idle',set:0,side:0,end:0,dur:0,left:0,paused:false,int:null,wl:null,auto:false};
+function etParse(e){const d=e.d||'',m=d.match(/(\d+)\s*×\s*(\d+)(?:[–-]\d+)?\s*(s|min)\b/),sides=/por (lado|mano|brazo|pierna|dirección)/.test(d)?2:1,sets=parseInt(d)||1,rm=(e.r||'').match(/(\d+)(?:[–-]\d+)?\s*(s|min)/);return{sets,work:m?(+m[2])*(m[3]==='min'?60:1):0,sides,rest:rm?(+rm[1])*(rm[2]==='min'?60:1):0}}
+const etF=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+async function etWake(on){try{if(on&&!ET.wl&&navigator.wakeLock)ET.wl=await navigator.wakeLock.request('screen');if(!on&&ET.wl){ET.wl.release();ET.wl=null}}catch(_){}}
+function etReset(id){clearInterval(ET.int);Object.assign(ET,{id,ph:'idle',set:sess&&sess.i!=null&&SES[sess.k]&&SES[sess.k][sess.i]===id?sess.set:0,side:0,end:0,dur:0,left:0,paused:false,int:null});etWake(false)}
+function etPhase(ph,sec){ET.ph=ph;ET.dur=sec;ET.end=Date.now()+sec*1000;ET.left=sec;ET.paused=false;clearInterval(ET.int);ET.int=setInterval(etTick,200);etWake(true);etTick()}
+function etTick(){if(ET.paused)return;const left=Math.max(0,Math.ceil((ET.end-Date.now())/1000));if(left!==ET.left){ET.left=left;if(left>0&&left<=3)beep(ET.ph==='work'?880:660,70)}etPaint();if(Date.now()>=ET.end)etNext()}
+function etNext(){const e=LX(ET.id),p=etParse(e),inS=sess&&SES[sess.k]&&SES[sess.k][sess.i]===ET.id;clearInterval(ET.int);
+if(ET.ph==='prep'||ET.ph==='switch'){beep(1320,180);try{navigator.vibrate&&navigator.vibrate(120)}catch(_){}return etPhase('work',p.work)}
+if(ET.ph==='work'){beep(1320,250,2);try{navigator.vibrate&&navigator.vibrate([150,80,150])}catch(_){}
+if(p.sides===2&&ET.side===0){ET.side=1;return etPhase('switch',5)}
+ET.side=0;
+if(inS){ET.ph='idle';ET.auto=true;etWake(false);const b=$('#setDone');if(b)b.click();ET.set=sess?sess.set:ET.set+1;etPaint();return}
+ET.set++;if(ET.set>=p.sets){ET.ph='done';etWake(false);etPaint();toast('¡Ejercicio terminado!');return}
+return etPhase('rest',p.rest||30)}
+if(ET.ph==='rest'){beep(1320,250,2);return p.work?etPhase('prep',3):(ET.ph='idle',etWake(false),etPaint())}}
+function etAfterRest(){const e=LX(cur),p=etParse(e);if(ET.auto&&ET.id===cur&&p.work&&sess&&sess.set<p.sets){ET.auto=false;ET.set=sess.set;etPhase('prep',3)}}
+function etStart(){const e=LX(ET.id),p=etParse(e);try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume&&actx.resume()}catch(_){}
+if(ET.paused){ET.paused=false;ET.end=Date.now()+ET.left*1000;etPaint();return}
+if(ET.ph!=='idle'&&ET.ph!=='done'){ET.paused=true;etPaint();return}
+if(ET.ph==='done')ET.set=0;
+if(p.work)etPhase('prep',3);else etPhase('rest',p.rest||60)}
+function etPaint(){const el=$('#et');if(!el||ET.id!==cur)return;const e=LX(ET.id),p=etParse(e),R=52,C=2*Math.PI*R;
+const lab={idle:p.work?'Listo':'Haz tus repeticiones',prep:'Prepárate',work:p.sides===2?(ET.side?'Lado 2 · aprieta':'Lado 1 · aprieta'):'¡Ahora!',switch:'Cambia de lado',rest:'Descansa',done:'¡Terminado!'}[ET.ph];
+const show=ET.ph==='idle'?(p.work||p.rest):ET.ph==='done'?0:ET.left,frac=ET.ph==='idle'||ET.ph==='done'?1:ET.left/(ET.dur||1);
+el.dataset.ph=ET.ph;
+$('#etc').setAttribute('stroke-dashoffset',C*(1-frac));$('#etn').textContent=etF(show);$('#etp').textContent=ET.paused?'En pausa':lab;
+const st=Math.min(ET.set+(ET.ph==='rest'?0:1),p.sets);$('#eti').innerHTML=`Serie ${ET.ph==='done'?p.sets:Math.max(1,ET.ph==='rest'?ET.set+1:st)} de ${p.sets}${p.sides===2?' · por lado':''}<span class="etd">${Array.from({length:p.sets},(_,k)=>`<i class="${k<ET.set?'ok':''}"></i>`).join('')}</span>`;
+const g=$('#etGo');g.textContent=ET.ph==='idle'?(p.work?'▶ Iniciar':'✓ Serie hecha'):ET.ph==='done'?'↺ Otra vuelta':ET.paused?'▶ Seguir':'❚❚ Pausa'}
+function etHTML(id){const e=LX(id),p=etParse(e),inS=sess&&SES[sess.k]&&SES[sess.k][sess.i]===id;if(ET.id!==id)etReset(id);if(inS&&!p.work)return'';const R=52,C=2*Math.PI*R;
+setTimeout(etPaint,0);
+return `<div class="et" id="et" data-ph="${ET.ph}"><div class="etr"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/><circle id="etc" cx="60" cy="60" r="${R}" fill="none" stroke-width="9" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="0" transform="rotate(-90 60 60)"/></svg><div class="etin"><b id="etn">0:00</b><span id="etp"></span></div></div>
+<div class="etside"><span class="sm mut">${p.work?'Temporizador del ejercicio':'Temporizador de descanso'}</span><div id="eti" class="eti"></div><div class="row" style="gap:8px;flex-wrap:nowrap;margin-top:8px"><button id="etGo" class="go" style="margin:0;flex:1"></button><button id="etRs" aria-label="Reiniciar" style="flex:none;width:48px">↺</button></div></div></div>`}
+document.addEventListener('click',e=>{if(e.target.closest('#etGo'))etStart();else if(e.target.closest('#etRs')){etReset(cur);etPaint()}});
+/* ===== navegación: volver entre secciones ===== */
+const NAVH=[],VNAME={semana:'Inicio',ejercicios:'Ejercicios',progreso:'Progreso',comida:'Nutrición',aprender:'Aprender'};
+function renderBack(){const b=$('#backChip');if(!b)return;const p=NAVH[NAVH.length-1];b.hidden=!p;document.body.classList.toggle('hasback',!!p);if(p)b.innerHTML=`<svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>${VNAME[p]}`}
 /* ===== diagramas paso a paso (Físico) ===== */
 const DG=(()=>{const C='#ff6a4d',F='#d9d4c8';
 const P=a=>a.map(p=>p.join(' ')).join(' L');
@@ -745,14 +805,14 @@ $('#filt').onclick=e=>{const b=e.target.closest('button');if(!b)return;filt=b.da
 let sess=null,restI=null;
 function chipsFor(e){const [se,rp]=e.d.split('×').map(s=>s.trim());return `${e.adj?`<div class="tip" style="margin:0 0 8px">Ajustado hoy: ${e.adj}.</div>`:''}<div class="row" style="gap:6px"><span class="pill">${se} series</span><span class="pill">${rp}</span><span class="pill">desc. ${e.r}</span><span class="pill r">${e.load}</span></div>`}
 function stopRest(){clearInterval(restI);restI=null}
-function startRest(sec,label,onEnd){stopRest();const end=Date.now()+sec*1000,box=$('#rest');if(!box)return;const tick=()=>{const left=Math.max(0,Math.ceil((end-Date.now())/1000));if(left<=3&&left>0&&typeof beep==='function'&&tick.l!==left){tick.l=left;beep(880,80)}box.innerHTML=`<div class="restbox"><div><span class="sm mut">${label||'Descansa'}</span><b>${Math.floor(left/60)}:${String(left%60).padStart(2,'0')}</b></div><div class="bar"><i style="width:${100-left/sec*100}%"></i></div><button id="skip" class="sm">Saltar</button></div>`;$('#skip').onclick=()=>{stopRest();box.innerHTML='';onEnd&&onEnd()};if(!left){stopRest();box.innerHTML='';if(typeof beep==='function')beep(1320,250,2);if(onEnd)onEnd();else toast('¡Vamos, a la siguiente serie!')}};tick();restI=setInterval(tick,250)}
+function startRest(sec,label,onEnd){stopRest();const end=Date.now()+sec*1000,box=$('#rest');if(!box)return;const tick=()=>{const left=Math.max(0,Math.ceil((end-Date.now())/1000));if(left<=3&&left>0&&typeof beep==='function'&&tick.l!==left){tick.l=left;beep(880,80)}box.innerHTML=`<div class="restbox"><div><span class="sm mut">${label||'Descansa'}</span><b>${Math.floor(left/60)}:${String(left%60).padStart(2,'0')}</b></div><div class="bar"><i style="width:${100-left/sec*100}%"></i></div><button id="skip" class="sm">Saltar</button></div>`;$('#skip').onclick=()=>{stopRest();box.innerHTML='';onEnd&&onEnd()};if(!left){stopRest();box.innerHTML='';if(typeof beep==='function')beep(1320,250,2);if(onEnd)onEnd();else{toast('¡Vamos, a la siguiente serie!');try{etAfterRest()}catch(_){}}}};tick();restI=setInterval(tick,250)}
 function renderDetail(){const e=LX(cur),l=logs[cur];stopRest();document.body.classList.toggle('ses',!!sess);if(ES)requestAnimationFrame(()=>ES.resize());$('#filt').style.display=$('#exlist').style.display=sess?'none':'';
 $('#tag').innerHTML=sess?`<small>${SLBL(sess.k)} · ${sess.i+1} de ${SES[sess.k].length}</small>${e.t}`:e.t;
 let top='';if(sess){const n=parseInt(e.d),tot=SES[sess.k].length;
 top=`<div class="row" style="justify-content:space-between;margin-bottom:10px;gap:6px"><button id="sesPrev" aria-label="Ejercicio anterior" style="min-height:36px" ${sess.i?'':'disabled'}>‹</button><span class="sm mut" style="flex:1;text-align:center">${SLBL(sess.k)} · ${sess.i+1} de ${tot}<br><span style="color:var(--ink)">${sess.i<tot-1?'Luego: '+LX(SES[sess.k][sess.i+1]).t:'Último ejercicio'}</span></span><button id="sesNext" aria-label="Ejercicio siguiente" style="min-height:36px" ${sess.i<tot-1?'':'disabled'}>›</button><button id="sesExit" class="sm" style="min-height:36px">Salir</button></div>
 <div class="dots">${Array.from({length:n},(_,k)=>`<span class="${k<sess.set?'ok':''}">${k+1}</span>`).join('')}</div>
 ${sess.i===0&&sess.set===0&&!sess.wu?`<div class="tip" style="margin-bottom:10px"><b>Calentamiento · 6 min</b>${WARM.map(w=>`<div class="row" style="justify-content:space-between"><span>${w[0]}</span><span class="mut">${w[1]}</span></div>`).join('')}<button id="wuOk" style="margin-top:8px;width:100%">Listo, ya calenté</button></div>`:''}<button id="setDone" class="go">${sess.set>=n?(sess.i<tot-1?'Siguiente ejercicio →':'Terminar sesión ✓'):'Serie '+(sess.set+1)+' hecha ✓'}</button><div id="rest"></div>`}
-$('#detail').innerHTML=`<div class="card">${top}${chipsFor(e)}${diagHTML(cur)}<div style="margin-top:10px">${ytBtn((LVX[cur]&&LVX[cur][level]&&LVX[cur][level].t?e.t:YQ[cur]||e.t)+' técnica correcta')}</div>
+$('#detail').innerHTML=`<div class="card">${top}${chipsFor(e)}${etHTML(cur)}${diagHTML(cur)}<div style="margin-top:10px">${ytBtn((LVX[cur]&&LVX[cur][level]&&LVX[cur][level].t?e.t:YQ[cur]||e.t)+' técnica correcta')}</div>
 <details style="border:0;padding:8px 0 0"><summary>Técnica y para qué sirve</summary><p>${e.why}</p><ul class="c">${e.c.map(c=>`<li>${c}</li>`).join('')}</ul></details>
 <div class="log"><input id="lkg" inputmode="decimal" enterkeyhint="next" placeholder="kg usados" value="${l?l.kg:''}" aria-label="Carga en kg"><input id="lreps" inputmode="numeric" enterkeyhint="done" placeholder="reps" value="${l?l.reps:''}" aria-label="Repeticiones"><button id="lsave" style="flex:none">Guardar</button></div>
 <p class="sm mut" style="margin:6px 0 0">${l?'Última vez: '+l.kg+' kg × '+l.reps+' · '+l.date:'Anota la carga para verla la próxima vez.'}</p>${progTip(cur,e,l)}${l&&l.hist&&l.hist.length?`<div class="row" style="gap:6px;margin-top:8px"><span class="pill r">Récord ${Math.max(...l.hist.map(h=>+h.kg||0))} kg</span>${l.hist.slice(-4).map(h=>`<span class="tg">${h.kg} kg × ${h.reps}</span>`).join('')}</div>`:''}</div>`;
@@ -1197,6 +1257,10 @@ function openFab(){const w=WEEK[todayIdx],done=(days[dk(new Date())]||{})[KEYOF[
 <button data-fa="water" class="fa-cy"><svg viewBox="0 0 24 24"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg><b>+250 ml</b><span>agua</span></button>
 <button data-fa="kg" class="fa-gd"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 10a3 3 0 0 1 6 0M12 10l1.5-2"/></svg><b>Peso</b><span>en ayunas</span></button>
 <button data-fa="timer"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg><b>Timer</b><span>de rounds</span></button></div>`)}
+
+$('#backChip').onclick=()=>{if(NAVH.length)history.back()};
+$('#upBtn').onclick=()=>window.scrollTo({top:0,behavior:'smooth'});
+addEventListener('scroll',()=>{document.body.classList.toggle('scrolled',scrollY>500)},{passive:true});
 $('#fab').onclick=()=>{try{navigator.vibrate&&navigator.vibrate(10)}catch(_){}openFab()};
 document.addEventListener('click',e=>{const f=e.target.closest('[data-fa]');if(f){({today:markToday,diary:openDiary,check:openCheckin,water:addWater,kg:openWeight,timer:openTimer})[f.dataset.fa]();return}
 const d=e.target.closest('[data-dial]');if(!d)return;const t=d.dataset.dial;if(t==='rec')rd()?$('#ready').scrollIntoView({behavior:'smooth',block:'center'}):openCheckin();else if(t==='sem'){selDay=todayIdx;renderWeek();$('#wstrip').scrollIntoView({behavior:'smooth',block:'start'})}else go('progreso')});
