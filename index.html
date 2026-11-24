@@ -266,6 +266,28 @@ nav{left:50%!important;right:auto!important;transform:translateX(-50%);width:min
 .fgrid b{font-size:15px}.fgrid span{font-size:12px;color:var(--mut);font-weight:500}
 .fgrid .fa-red svg{color:#ff6a7a}.fgrid .fa-cy svg{color:#22d3ee}.fgrid .fa-gd svg{color:#f2c26b}
 .wrap{padding-bottom:calc(170px + env(safe-area-inset-bottom))}
+
+/* Físico */
+:root{--reng:linear-gradient(135deg,#c4b5fd,#7c3aed);--ren:#b9a5ff}
+.dseg{grid-template-columns:repeat(4,minmax(0,1fr))!important}.dseg button{font-size:12.5px}
+.dseg .df-ren.on{background:var(--reng);color:#fff;border-color:transparent;box-shadow:0 12px 30px -12px rgba(124,58,237,.8)}
+.dh-ren{background:radial-gradient(120% 120% at 100% 0%,rgba(139,92,246,.5),rgba(124,58,237,.08) 60%),#110b1f}
+.dh-ren .dic{background:var(--reng)}.dh-ren .dic svg{stroke:#fff}
+.rses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.rses button{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;padding:12px;border-radius:16px;min-height:86px;background:rgba(255,255,255,.07);border:1px solid rgba(196,181,253,.22);color:#fff}
+.rses button b{font-size:14px;line-height:1.2}.rses button span{font-size:12px;color:#d8cffd}.rses button small{font-size:11px;color:rgba(255,255,255,.55);margin-top:auto;padding-top:4px;line-height:1.25}
+.rses button:last-child{grid-column:1/-1}
+.rses button.lk{border-style:dashed}
+.rses button:active{transform:scale(.97)}
+.rwk{margin-top:12px;background:rgba(0,0,0,.25);border-radius:14px;padding:10px 12px}
+.rwk summary{cursor:pointer;font-weight:700;font-size:14px;color:#d8cffd}.rwk ul{margin:8px 0 6px;padding-left:18px}.rwk li{margin:4px 0}
+.rgh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:14px 2px 6px;border-bottom:1px solid rgba(196,181,253,.18)}
+.rgh b{color:var(--ren);font-size:15px}.rgh span{font-size:12px;color:var(--mut)}
+.rgh:first-child{padding-top:2px}
+body[data-disc=ren] #v-ejercicios .fig{background:radial-gradient(90% 70% at 50% 15%,rgba(139,92,246,.2),transparent 60%),radial-gradient(120% 90% at 50% 30%,#15102a,#0a0812)!important}
+body[data-disc=ren] #detail button.go,body[data-disc=ren] #detail .dots span.ok{background:var(--reng);color:#fff;box-shadow:0 14px 34px -14px rgba(124,58,237,.8)}
+body[data-disc=ren] .tag small{color:#d8cffd}
+body[data-list=ren] #exlist .ex.cur b{color:var(--ren)}
 </style>
 </head>
 <body>
@@ -528,12 +550,70 @@ m:{c_inch:['2 × 6','30 s'],c_bear:['3 × 30 s','30 s'],c_hindu:['3 × 8','60 s'
 i:{c_inch:['2 × 8','20 s'],c_bear:['4 × 40 s','20 s','Adelante y atrás'],c_burpee:['4 × 10','45 s'],c_hindu:['4 × 10','45 s'],c_pike:['4 × 8','60 s'],c_cossack:['4 × 8 por lado','45 s'],c_slbridge:['4 × 12 por lado','30 s','Explosivo'],c_vup:['4 × 15','30 s'],c_crab:['3 × 40 s','20 s']}};
 const CNAME={s:'Suave',m:'Media',i:'Intensa'};
 Object.defineProperty(SES,'C',{get(){return Object.keys(CDOSE[cint])},configurable:true});
+/* ===== FÍSICO: agarre, fuerza máxima, explosividad, resistencia y sistemas de energía ===== */
+Object.assign(EX,{
+r_towel:Object.assign({},EX.agarre,{t:'Aguante con toalla',g:'R',d:'3 × 30 s por mano',r:'60 s',load:'1 mancuerna de 10–12 kg colgando de una toalla',one:1,why:'Es el agarre de manga y solapa: cerrar el puño en la tela durante todo el roleo.',c:['Pasa una toalla por la manija y agárrala con los dos extremos en un puño','Brazo estirado al costado, hombro abajo','Aprieta fuerte sin dejar que la toalla resbale']}),
+r_pinch:Object.assign({},EX.agarre,{t:'Pinza de mancuerna',g:'R',d:'3 × 20 s por mano',r:'60 s',load:'1 mancuerna tomada por la cabeza (los discos)',one:1,why:'Fuerza de dedos para controlar muñecas y tobillos sin kimono.',c:['Toma la mancuerna por un disco, solo con los dedos','Pulgar fuerte del otro lado','Aguanta sin que se te escape']}),
+r_farmer:Object.assign({},EX.agarre,{t:'Farmer hold pesado',g:'R',d:'3 × 40 s',r:'60 s',load:'2 mancuernas de 15 kg',why:'Resistencia de agarre: que no se te abran las manos al final de la clase.'}),
+r_towpull:Object.assign({},EX.rdl,{b:EX.rdl.a,t:'Tirón isométrico de toalla',g:'R',d:'5 × 6 s al máximo',r:'60 s',load:'Toalla bajo los pies, tiras con todo sin moverte',nodb:1,why:'Fuerza máxima de agarre y espalda sin peso: como romper un agarre o tirar de la solapa.',c:['Pisa el centro de la toalla, rodillas un poco dobladas','Agarra los extremos y tira hacia arriba con todo, 6 s','Espalda recta, suelta y respira']}),
+r_isopen:Object.assign({},EX.zancada,{b:EX.zancada.b||EX.zancada.a,t:'Isometría de penetración',g:'R',d:'5 × 6 s por lado',r:'60 s',load:'Empujas una pared al máximo, sin moverte',nodb:1,why:'Fuerza máxima justo en el ángulo donde terminas un derribo, sin necesitar pesas pesadas.',c:['Posición de entrada de doble pierna: rodilla de atrás casi al suelo','Hombro y manos contra la pared, cabeza arriba','Empuja con todo 6 s, suelta y cambia de pierna']}),
+r_bulg:Object.assign({},EX.bulgara,{t:'Sentadilla búlgara pesada',g:'R',d:'4 × 6 por pierna',r:'2 min',load:'2 mancuernas de 15 kg, bajada de 3 s',why:'Piernas fuertes de a una: con eso levantas y terminas un derribo.'}),
+r_rdl1:Object.assign({},EX.rdl,{t:'Peso muerto a una pierna',g:'R',d:'4 × 6 por pierna',r:'2 min',load:'1 mancuerna de 15 kg',one:1,why:'Cadena posterior y equilibrio para levantar al rival y no caer en un single leg.'}),
+r_rowh:Object.assign({},EX.inclinado,{t:'Remo pesado',g:'R',d:'4 × 6',r:'2 min',load:'2 mancuernas de 15 kg, 2 s arriba',why:'Tirar fuerte: clinch, agarres y llevar al rival hacia ti.'}),
+r_jump:Object.assign({},EX.goblet,{t:'Sentadilla con salto',g:'R',d:'4 × 5',r:'90 s',load:'Peso corporal, máxima altura y aterrizaje suave',nodb:1,why:'Potencia de piernas para explotar en la entrada y al levantar.',c:['Baja rápido a media sentadilla','Salta lo más alto que puedas','Aterriza suave y para antes de la siguiente']}),
+r_broad:Object.assign({},EX.sprawl,{t:'Salto largo + sprawl',g:'R',d:'4 × 4',r:'90 s',load:'Peso corporal, explosivo',nodb:1,why:'Cerrar la distancia de golpe y reaccionar con sprawl.',c:['Salta hacia adelante lo más lejos posible','Aterriza estable','Sprawl inmediato y vuelve a la postura']}),
+r_shoot:Object.assign({},EX.zancada,{t:'Entrada de doble pierna con banda',g:'R',d:'4 × 4 por lado',r:'90 s',load:'Banda atada a algo firme y a tu cintura',nodb:1,why:'El derribo más común: entrada explosiva contra resistencia.',c:['Postura de lucha, la banda tira hacia atrás','Baja el nivel y da el paso de penetración explosivo','Vuelve a la postura controlando la banda']}),
+r_plyo:Object.assign({},EX.flex,{t:'Flexión explosiva',g:'R',d:'4 × 5',r:'90 s',load:'Peso corporal, despega las manos',why:'Empujar de golpe para crear espacio y enmarcar.'}),
+r_thr:Object.assign({},EX.goblet,{t:'Thruster con mancuernas',g:'R',d:'4 × 40 s',r:'20 s',load:'2 mancuernas de 6–8 kg, ritmo constante',why:'Piernas y hombros sin parar: aguantar empujando como en un roleo largo.',c:['Mancuernas en los hombros','Sentadilla y al subir empuja arriba en un solo movimiento','Respira en cada repetición, ritmo parejo']}),
+r_reneg:Object.assign({},EX.flex,{t:'Remo renegado',g:'R',d:'4 × 40 s',r:'20 s',load:'2 mancuernas de 6–8 kg, en plancha alta',why:'Aguantar arriba mientras tiras: core y espalda en la base.',c:['Plancha alta sobre las mancuernas, pies abiertos','Rema una mano sin girar la cadera','Alterna lados respirando']}),
+r_swing:Object.assign({},EX.rdl,{t:'Swing con mancuerna',g:'R',d:'4 × 40 s',r:'20 s',load:'1 mancuerna de 12–15 kg',one:1,why:'Cadera explosiva una y otra vez: el motor del upa y de los derribos.',c:['La mancuerna pasa entre las piernas con la espalda recta','La cadera empuja adelante y la mancuerna sube sola al pecho','Brazos relajados, la fuerza es de la cadera']}),
+r_bear:Object.assign({},EX.c_bear,{g:'R',d:'4 × 40 s',r:'20 s'}),
+r_z2:{t:'Bici en zona 2',g:'R',d:'1 × 35 min',r:'—',load:'Ritmo en que puedes hablar en frases completas, respirando por la nariz',why:'Tu motor aeróbico: te recuperas más rápido entre roleos y entre esfuerzos. Es lo que más ayuda a no agotarte.',a:{h:[98,40],n:[94,52],hp:[82,84],k:[106,78],f:[108,104],k2:[98,92],f2:[92,114],e:[106,66],w:[120,70],e2:[104,66],w2:[120,70]},b:{h:[98,41],n:[94,53],hp:[82,84],k:[98,92],f:[92,114],k2:[106,78],f2:[108,104],e:[106,67],w:[120,70],e2:[104,67],w2:[120,70]},nodb:1,c:['Pedalea a un ritmo que podrías mantener una hora','Si no puedes hablar, baja la intensidad','Ideal en días de descanso o después de un turno liviano']},
+r_flow:Object.assign({},EX.n_cam,{t:'Flow de movimientos',g:'R',d:'3 × 5 min',r:'1 min',load:'Ritmo suave y continuo: camarón, levantada técnica, oso y sit-out',why:'Aeróbico con los movimientos del tatami: técnica y motor al mismo tiempo.'}),
+r_spr:{t:'Sprint en bici',g:'R',d:'8 × 8 s',r:'90 s',load:'Resistencia alta y a fondo; en la pausa pedalea suave',why:'Sistema anaeróbico aláctico: el esfuerzo máximo corto de una entrada, una raspada o un scramble. La pausa larga es para que cada sprint sea al 100 %.',a:{h:[98,40],n:[94,52],hp:[82,84],k:[106,78],f:[108,104],k2:[98,92],f2:[92,114],e:[106,66],w:[120,70],e2:[104,66],w2:[120,70]},b:{h:[98,41],n:[94,53],hp:[82,84],k:[98,92],f:[92,114],k2:[106,78],f2:[108,104],e:[106,67],w:[120,70],e2:[104,67],w2:[120,70]},nodb:1,c:['Sube la resistencia','8 s a fondo, sentado o de pie','Pausa completa: si el siguiente sale más lento, descansa más']},
+r_shootx:Object.assign({},EX.sprawl,{t:'Entradas y sprawls máximos',g:'R',d:'6 × 6 s',r:'60 s',load:'Peso corporal, lo más rápido posible',nodb:1,why:'El mismo sistema aláctico, con el gesto del BJJ.',c:['6 s: entrada de doble pierna y sprawl, sin parar','Cada repetición a velocidad máxima','Si pierdes técnica, termina la serie']}),
+r_lacr:{t:'Intervalos en bici',g:'R',d:'5 × 40 s',r:'80 s',load:'Fuerte (8 de 10); pedaleo suave en la pausa',why:'Sistema anaeróbico láctico: tolerar la quemazón de un roleo intenso y seguir funcionando.',a:{h:[98,40],n:[94,52],hp:[82,84],k:[106,78],f:[108,104],k2:[98,92],f2:[92,114],e:[106,66],w:[120,70],e2:[104,66],w2:[120,70]},b:{h:[98,41],n:[94,53],hp:[82,84],k:[98,92],f:[92,114],k2:[106,78],f2:[108,104],e:[106,67],w:[120,70],e2:[104,67],w2:[120,70]},nodb:1,c:['40 s fuerte, que te cueste hablar','80 s suave sin bajarte','La última serie igual de fuerte que la primera']},
+r_lacb:Object.assign({},EX.sprawl,{t:'Rounds de tatami',g:'R',d:'4 × 60 s',r:'2 min',load:'15 s camarón · 15 s sprawl · 15 s oso · 15 s levantada técnica',nodb:1,why:'Lo láctico con movimientos de BJJ: así se siente un scramble largo.',c:['Encadena los 4 movimientos sin parar','Ritmo alto pero con técnica','En la pausa camina y respira por la nariz']})});
+const RSES=[
+{k:'G',n:'Agarre isométrico',q:'Antebrazos',m:12,w:'2 × semana, al final de Calistenia',ids:['r_towel','r_pinch','r_farmer','r_towpull']},
+{k:'F',n:'Fuerza máxima',q:'Para derribar',m:35,w:'Desde nivel 2: en lugar de Fuerza A o B',lv:1,ids:['r_isopen','r_bulg','r_rdl1','r_rowh']},
+{k:'X',n:'Explosividad',q:'Potencia',m:25,w:'Desde nivel 2: al inicio de Pesas, estando fresco',lv:1,ids:['r_jump','r_broad','r_shoot','r_plyo']},
+{k:'RF',n:'Resistencia a la fuerza',q:'No agotarte',m:30,w:'1 × semana, sábado después del No-Gi',ids:['r_thr','r_reneg','r_swing','r_bear']},
+{k:'AE',n:'Aeróbico base',q:'Motor',m:35,w:'1–2 × semana, domingo o día libre',ids:['r_z2','r_flow']},
+{k:'AL',n:'Anaeróbico aláctico',q:'Arranques de 6–10 s',m:20,w:'1 × semana, antes de Pesas',ids:['r_spr','r_shootx']},
+{k:'LA',n:'Anaeróbico láctico',q:'Aguantar el ritmo',m:25,w:'Desde nivel 2: 1 × semana, nunca el día antes de BJJ',lv:1,ids:['r_lacr','r_lacb']}];
+RSES.forEach(x=>SES[x.k]=x.ids);
+Object.assign(LVX,{
+r_towel:[{d:'2 × 20 s por mano',load:'1 mancuerna de 6–8 kg colgando de una toalla'},null,{d:'3 × 45 s por mano',load:'1 mancuerna de 15 kg colgando de una toalla'},{d:'4 × 30 s por mano',load:'1 mancuerna de 15 kg + 5 s de apretón máximo al final'}],
+r_pinch:[{d:'2 × 15 s por mano'},null,{d:'3 × 30 s por mano'},{d:'4 × 30 s por mano',load:'Mancuerna más pesada tomada por la cabeza'}],
+r_farmer:[{d:'2 × 30 s',load:'2 mancuernas de 10 kg'},null,{d:'3 × 60 s'},{d:'4 × 45 s',load:'2 mancuernas de 15 kg con toalla en las manijas'}],
+r_towpull:[{d:'3 × 5 s al 70 %'},null,{d:'5 × 8 s al máximo'},{d:'6 × 8 s al máximo',load:'Toalla bajo los pies + 3 tirones explosivos al final'}],
+r_isopen:[{d:'3 × 5 s al 70 % por lado',load:'Empujas la pared fuerte pero sin ir al máximo: aprende la posición'},null,{d:'6 × 8 s por lado'},{d:'6 × 6 s por lado',load:'Al máximo y al soltar haces una entrada explosiva'}],
+r_bulg:[{t:'Zancada búlgara asistida',d:'3 × 8 por pierna',r:'90 s',load:'Peso corporal o 2 × 6 kg, apoyado en la pared'},null,{d:'5 × 5 por pierna',load:'2 mancuernas de 15 kg, pausa de 2 s abajo'},{d:'5 × 4 por pierna',load:'2 mancuernas de 15 kg, bajada de 4 s y subida explosiva'}],
+r_rdl1:[{d:'3 × 8 por pierna',r:'90 s',load:'Peso corporal, apoyado en la pared'},null,{d:'5 × 5 por pierna',load:'2 mancuernas de 15 kg'},{d:'5 × 5 por pierna',load:'2 mancuernas de 15 kg, bajada de 3 s'}],
+r_rowh:[{d:'3 × 10',r:'90 s',load:'2 mancuernas de 8 kg'},null,{d:'5 × 5',load:'2 mancuernas de 15 kg, 3 s arriba'},{t:'Remo pesado a una mano con toalla',d:'5 × 5 por lado',load:'1 mancuerna de 15 kg con toalla en la manija'}],
+r_jump:[{t:'Sentadilla rápida sin salto',d:'3 × 6',load:'Peso corporal, sube lo más rápido posible'},null,{d:'5 × 4',load:'2 mancuernas de 5 kg'},{d:'5 × 3',load:'2 mancuernas de 8 kg, máxima altura'}],
+r_broad:[{t:'Salto largo con aterrizaje',d:'3 × 3',load:'Peso corporal · aterriza y aguanta 2 s'},null,{d:'5 × 4'},{t:'Salto largo + sprawl + levantada',d:'5 × 4'}],
+r_shoot:[{t:'Entrada de doble pierna sin banda',d:'3 × 5 por lado',load:'Lenta y técnica: cambio de nivel y paso'},null,{d:'5 × 4 por lado',load:'Banda fuerte'},{d:'5 × 3 por lado',load:'Banda fuerte + sprawl al volver'}],
+r_plyo:[{t:'Flexión rápida inclinada',d:'3 × 6',load:'Manos en una silla, subida rápida'},null,{d:'5 × 5'},{t:'Flexión con palmada',d:'5 × 4',load:'Peso corporal, palmada arriba'}],
+r_thr:[{d:'3 × 30 s',r:'40 s',load:'2 mancuernas de 4–5 kg'},null,{d:'5 × 45 s',r:'15 s',load:'2 mancuernas de 8–10 kg'},{d:'5 × 60 s',r:'15 s',load:'2 mancuernas de 10 kg'}],
+r_reneg:[{d:'3 × 30 s',r:'40 s',load:'Rodillas apoyadas, 2 mancuernas de 5 kg'},null,{d:'5 × 45 s',r:'15 s'},{t:'Remo renegado con flexión',d:'5 × 60 s',r:'15 s'}],
+r_swing:[{d:'3 × 30 s',r:'40 s',load:'1 mancuerna de 8 kg · aprende la bisagra'},null,{d:'5 × 45 s',r:'15 s'},{d:'5 × 60 s',r:'15 s',load:'1 mancuerna de 15 kg'}],
+r_bear:[{d:'3 × 30 s',r:'40 s'},null,{d:'5 × 45 s',r:'15 s'},{d:'5 × 60 s',r:'15 s'}].map((x,i)=>x&&Object.assign({},LVX.c_bear[i]||{},x)),
+r_z2:[{d:'1 × 25 min'},null,{d:'1 × 45 min'},{d:'1 × 50–60 min'}],
+r_flow:[{d:'2 × 4 min'},null,{d:'4 × 5 min'},{d:'5 × 6 min'}],
+r_spr:[{d:'6 × 6 s',r:'2 min',load:'Al 80 %: aprende a arrancar fuerte'},null,{d:'10 × 8 s'},{d:'10 × 10 s',r:'60–90 s'}],
+r_shootx:[{d:'4 × 5 s',r:'90 s',load:'Técnica rápida, sin perder la forma'},null,{d:'8 × 6 s'},{d:'8 × 8 s',load:'Entrada, sprawl y levantada técnica'}],
+r_lacr:[{d:'4 × 30 s',r:'2 min',load:'Al 7 de 10, para conocer la sensación'},null,{d:'6 × 45 s',r:'75 s'},{d:'8 × 45 s',r:'60 s'}],
+r_lacb:[{d:'3 × 45 s',r:'2 min',load:'15 s de camarón, sprawl y oso'},null,{d:'5 × 75 s'},{d:'6 × 90 s',r:'90 s'}]});
+Object.assign(YQ,{r_towel:'towel grip hold dumbbell',r_pinch:'dumbbell pinch grip hold',r_farmer:'farmer hold',r_towpull:'isometric towel deadlift',r_isopen:'isometric penetration step wall',r_bulg:'sentadilla búlgara',r_rdl1:'single leg rdl dumbbell',r_rowh:'remo con mancuernas',r_jump:'jump squat',r_broad:'broad jump sprawl',r_shoot:'banded double leg shot drill',r_plyo:'plyometric push up',r_thr:'dumbbell thruster',r_reneg:'renegade row',r_swing:'dumbbell swing',r_bear:'bear crawl',r_z2:'zone 2 cardio bike',r_flow:'bjj solo drills flow',r_spr:'bike sprint intervals',r_shootx:'double leg shot sprawl drill',r_lacr:'bike intervals 40 seconds',r_lacb:'bjj conditioning solo drills'});
+
 const CFIN={s:'Final: 5 min de caminata o bici suave + estiramiento.',m:'Final: estiramiento de 5 min (cadera, hombros y espalda).',i:'Final: 5 rondas de 20 s fuerte + 40 s suave en bicicleta.'};
 Object.assign(VID,{c_jj:'AZrdA3QNJdU',c_flex:'e_EKkqoHxns',c_sq:'EnsHHTYU7no',c_crunch:'hl9Yu7UZqHU',c_lunge:'IpSouV9cPxQ',c_plank:'d0atctiI7Vw',c_burpee:'ON3ZKhn-T0Q'});
 Object.assign(YQ,{c_jj:'jumping jacks',c_flex:'flexiones',c_sq:'sentadilla sin peso',c_crunch:'crunch abdominal',c_lunge:'zancadas',c_plank:'plancha abdominal',c_burpee:'burpees'});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-ci]');if(!b)return;cint=b.dataset.ci;st.set('bjj_cint',cint);renderWeek();renderHoy();renderList();toast('Calistenia: intensidad '+CNAME[cint])});
 const cSeg=()=>`<div class="seg" style="grid-template-columns:repeat(3,1fr);position:static;margin:10px 0 4px">${Object.keys(CNAME).map(k=>`<button data-ci="${k}" class="${cint===k?'on':''}">${CNAME[k]}</button>`).join('')}</div>`;
-const SLBL=k=>k==='N'?'No-Gi':k==='C'?'Calistenia':'Día '+k;
+const SLBL=k=>(typeof RSES!=='undefined'&&RSES.find(x=>x.k===k))?RSES.find(x=>x.k===k).n:k==='R'?'Físico':k==='N'?'No-Gi':k==='C'?'Calistenia':'Día '+k;
 const FIN=w=>SES[w.k]?(w.k==='N'?NFIN[level]:w.k==='C'?CFIN[cint]:LV[level].fin):w.x;
 /* ---------- navegación ---------- */
 const views=["semana","ejercicios","progreso","comida","aprender"];
@@ -553,15 +633,18 @@ return `<div class="card wcard d-${discOf(w.k)||'rest'} ${i===todayIdx?'today':'
 document.addEventListener('click',e=>{const sb=e.target.closest('[data-ses]');if(sb){const k=sb.dataset.ses;sess={k,i:0,set:0,t0:Date.now()};go('ejercicios');sel(SES[k][0]);return}const x=e.target.closest('.ex[data-id]');if(x){sess=null;sel(x.dataset.id);go('ejercicios')}});
 
 /* ---------- ejercicios ---------- */
-const DISC={bjj:{n:'Jiu-Jitsu',s:'Drills No-Gi en tu colchoneta: escapes, levantadas y defensa de derribos.',ses:'N',icon:'<path d="M3 12h18"/><rect x="3" y="9" width="18" height="6" rx="2"/><path d="M14 9v6M17 9v6"/>'},cal:{n:'Calistenia',s:'Peso corporal pensado para el tatami: base, caderas, frames y escapes. 3 veces por semana; eliges suave, media o intensa.',ses:'C',icon:'<circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M6 10l6-2 6 2M8 21l4-7 4 7"/>'},pes:{n:'Pesas',s:'Fuerza con tus mancuernas: Día A (piernas, empuje y agarre) y Día B (unilateral, hombros y core).',ses:null,icon:'<path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/>'}};
-const discOf=g=>g==='N'?'bjj':g==='C'?'cal':g==='bjj'?'bjj':(g==='A'||g==='B'||g==='Extra')?'pes':null;
+const DISC={bjj:{n:'Jiu-Jitsu',s:'Drills No-Gi en tu colchoneta: escapes, levantadas y defensa de derribos.',ses:'N',icon:'<path d="M3 12h18"/><rect x="3" y="9" width="18" height="6" rx="2"/><path d="M14 9v6M17 9v6"/>'},cal:{n:'Calistenia',s:'Peso corporal pensado para el tatami: base, caderas, frames y escapes. 3 veces por semana; eliges suave, media o intensa.',ses:'C',icon:'<circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M6 10l6-2 6 2M8 21l4-7 4 7"/>'},pes:{n:'Pesas',s:'Fuerza con tus mancuernas: Día A (piernas, empuje y agarre) y Día B (unilateral, hombros y core).',ses:null,icon:'<path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/>'},ren:{n:'Físico',s:'Lo que te falta para el roleo: agarre, fuerza máxima para derribar, explosividad, resistencia y tus 3 sistemas de energía.',ses:null,icon:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>'}};
+const discOf=g=>(g==='R'||(typeof RSES!=='undefined'&&RSES.some(x=>x.k===g)))?'ren':g==='N'?'bjj':g==='C'?'cal':g==='bjj'?'bjj':(g==='A'||g==='B'||g==='Extra')?'pes':null;
 let filt=st.get('bjj_disc','bjj'),cur=st.get('bjj_cur','goblet');if(!EX[cur])cur='goblet';if(!DISC[filt])filt='bjj';
 const logs=st.get('bjj_logs',{});
 function renderDiscHead(){const D=DISC[filt];document.body.dataset.list=filt;
 $('#discHead').innerHTML=`<div class="dh dh-${filt}"><div class="row" style="gap:12px;flex-wrap:nowrap"><span class="dic"><svg viewBox="0 0 24 24">${D.icon}</svg></span><div><span class="sm mut">Disciplina</span><h2 style="margin:0">${D.n}</h2></div></div><p class="sm" style="margin:10px 0 0;color:rgba(255,255,255,.8)">${D.s}</p>
-${filt==='cal'?cSeg():''}${D.ses?`<button class="go" data-ses="${D.ses}" style="margin-top:10px">Empezar sesión de ${D.n}${filt==='cal'?' · '+CNAME[cint]:''}</button>`:`<div class="row" style="gap:8px;margin-top:10px"><button class="go" data-ses="A" style="flex:1;margin:0">Día A</button><button class="go" data-ses="B" style="flex:1;margin:0">Día B</button></div>`}
+${filt==='ren'?renHead():''}${filt==='ren'?'':D.ses?`<button class="go" data-ses="${D.ses}" style="margin-top:10px">Empezar sesión de ${D.n}${filt==='cal'?' · '+CNAME[cint]:''}</button>`:`<div class="row" style="gap:8px;margin-top:10px"><button class="go" data-ses="A" style="flex:1;margin:0">Día A</button><button class="go" data-ses="B" style="flex:1;margin:0">Día B</button></div>`}
 ${filt==='bjj'?'<button class="ghostlink" data-go="aprender">Ver posiciones y técnicas en Aprender →</button>':''}</div>`}
-function renderList(){renderDiscHead();const ids=Object.keys(EX).filter(id=>discOf(EX[id].g)===filt&&(filt!=='cal'||SES.C.includes(id)));
+function exRow(id){const e=LX(id),l=logs[id];return `<div class="ex ${id===cur?'cur':''}" data-id="${id}"><div><b>${e.t}</b><div class="sm mut">${e.d} · ${e.load}</div></div><span class="k">${l&&l.kg?l.kg+' kg × '+l.reps:'—'}</span></div>`}
+function renHead(){return `<div class="rses">${RSES.map(x=>`<button data-ses="${x.k}" class="${x.lv&&level<x.lv?'lk':''}"><b>${x.n}</b><span>${x.q} · ${x.m} min</span><small>${x.lv&&level<x.lv?'Nivel 1: versión técnica':x.w}</small></button>`).join('')}</div><details class="rwk"><summary>Cómo encajarlo en tu semana</summary><ul class="sm"><li><b>Lun / Jue:</b> BJJ. El día antes de BJJ nada láctico ni al fallo.</li><li><b>Mar:</b> Calistenia + 12 min de Agarre.</li><li><b>Mié:</b> 15 min de Aláctico (sprints) y después Pesas. Desde nivel 2, cada 2 semanas Fuerza máxima o Explosividad en vez de Fuerza A/B.</li><li><b>Vie:</b> Calistenia + Agarre.</li><li><b>Sáb:</b> No-Gi en casa + Resistencia a la fuerza (si te queda energía).</li><li><b>Dom:</b> Aeróbico base en la bici (o calistenia suave). Desde nivel 2, el láctico puede ir el martes.</li></ul><p class="sm mut">Con tus medicamentos: hidrátate bien, levántate lento del suelo después de los sprints y para si te mareas o sientes palpitaciones raras.</p></details>`}
+function renderList(){renderDiscHead();const ids=Object.keys(EX).filter(id=>EX[id].g!=='R'&&discOf(EX[id].g)===filt&&(filt!=='cal'||SES.C.includes(id)));
+if(filt==='ren'){$('#exlist').innerHTML=RSES.map(x=>`<div class="rgh"><b>${x.n}</b><span>${x.q} · ${x.m} min</span></div>`+x.ids.map(exRow).join('')).join('');return}
 $('#exlist').innerHTML=ids.map(id=>{const e=LX(id),l=logs[id];return `<div class="ex ${id===cur?'cur':''}" data-id="${id}"><div><b>${e.t}</b><div class="sm mut">${e.g==='Extra'?'Extra':SLBL(e.g)} · ${e.d} · ${e.load}</div></div><span class="k">${l?l.kg+' kg × '+l.reps:'—'}</span></div>`}).join('')}
 $('#filt').innerHTML=Object.keys(DISC).map(k=>`<button data-f="${k}" class="df-${k} ${k===filt?'on':''}"><svg viewBox="0 0 24 24">${DISC[k].icon}</svg>${DISC[k].n}</button>`).join('');
 $('#filt').onclick=e=>{const b=e.target.closest('button');if(!b)return;filt=b.dataset.f;st.set('bjj_disc',filt);$('#filt').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));renderList();const first=Object.keys(EX).find(id=>discOf(EX[id].g)===filt&&(filt!=='cal'||SES.C.includes(id)));if(first&&discOf(EX[cur].g)!==filt)sel(first)};
@@ -586,7 +669,7 @@ $('#setDone').onclick=()=>{const n=parseInt(e.d),ids=SES[sess.k];try{navigator.v
 const goNext=()=>{sess.i++;sess.set=0;sel(ids[sess.i]);window.scrollTo({top:0,behavior:'smooth'})};
 if(sess.set<n){sess.set++;const restS=parseInt(e.r);renderDetail();if(sess.set<n)startRest(restS,'Descansa · luego serie '+(sess.set+1));else if(sess.i<ids.length-1)startRest(45,'Siguiente: '+LX(ids[sess.i+1]).t,goNext);return}
 if(sess.i<ids.length-1){goNext();return}
-const d=getD(dk(new Date()));d[{A:'fa',B:'fb',N:'nogi',C:'cal'}[sess.k]]=true;saveD();renderHoy();renderDay();const mins=Math.max(1,Math.round((Date.now()-(sess.t0||Date.now()))/6e4)),sets=ids.reduce((a,id)=>a+parseInt(LX(id).d),0),k=sess.k;sess=null;renderDetail();$('#detail').innerHTML=`<div class="card celeb"><span class="pill r">Día ${k} completado</span><div class="big">¡Sesión lista!</div><p class="mut" style="margin:0">Quedó registrada en tu progreso.</p><div class="kpis"><div><b>${ids.length}</b><span>ejercicios</span></div><div><b>${sets}</b><span>series</span></div><div><b>${mins}</b><span>minutos</span></div></div><button class="go" id="toProg">Ver mi progreso</button></div>`;$('#toProg').onclick=()=>go('progreso');setTimeout(()=>rpeAsk(k,mins),900);try{navigator.vibrate&&navigator.vibrate([30,60,30,60,120])}catch(x){}}}}
+const d=getD(dk(new Date()));d[{A:'fa',B:'fb',N:'nogi',C:'cal'}[sess.k]||'ren']=true;saveD();renderHoy();renderDay();const mins=Math.max(1,Math.round((Date.now()-(sess.t0||Date.now()))/6e4)),sets=ids.reduce((a,id)=>a+parseInt(LX(id).d),0),k=sess.k;sess=null;renderDetail();$('#detail').innerHTML=`<div class="card celeb"><span class="pill r">Día ${k} completado</span><div class="big">¡Sesión lista!</div><p class="mut" style="margin:0">Quedó registrada en tu progreso.</p><div class="kpis"><div><b>${ids.length}</b><span>ejercicios</span></div><div><b>${sets}</b><span>series</span></div><div><b>${mins}</b><span>minutos</span></div></div><button class="go" id="toProg">Ver mi progreso</button></div>`;$('#toProg').onclick=()=>go('progreso');setTimeout(()=>rpeAsk(k,mins),900);try{navigator.vibrate&&navigator.vibrate([30,60,30,60,120])}catch(x){}}}}
 function sel(id){document.body.dataset.disc=discOf(EX[id].g)||'pes';setTimeout(()=>setVid($('#fig'),cur,vMode));if(lastP){prevP=lastP;swT=performance.now();t0=performance.now()}cur=id;st.set('bjj_cur',id);renderDetail();renderList();build()}
 
 /* ---------- 3D ---------- */
@@ -645,9 +728,9 @@ return S}
 const q2=v=>v<.5?2*v*v:1-Math.pow(-2*v+2,2)/2;
 /* ejercicios */
 const fig=$('#fig');let ES=null,ch=null,dbs=[],band=null,play=true,t0=performance.now();
-function build(){if(!ES)return;ES.root.clear();dbs=[];const e=LX(cur);ch=makeChar(ES.root,(e.g==='N'||e.g==='C')?Object.assign(meP(),{top:0x1b1f2a,bot:0x111111,nogi:true}):meP());
+function build(){if(!ES)return;ES.root.clear();dbs=[];const e=LX(cur);ch=makeChar(ES.root,(e.g==='N'||e.g==='C'||e.g==='R')?Object.assign(meP(),{top:0x1b1f2a,bot:0x111111,nogi:true}):meP());
 const iron=M(0x3b3f46,.35),plate=M(0xd7263d,.5);
-if(e.g!=='C'&&e.g!=='N'&&!/Peso corporal|Banda|Tu mano/.test(e.load)){const n=e.one||e.arm1?1:2;for(let i=0;i<n;i++){const d=new THREE.Group();const bar=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,.34,8),iron);bar.rotation.x=Math.PI/2;d.add(bar);[-.15,.15].forEach(z=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,.08,18),plate);p.rotation.x=Math.PI/2;p.position.z=z;p.castShadow=true;d.add(p)});ES.root.add(d);dbs.push(d)}}
+if(e.g!=='C'&&e.g!=='N'&&!e.nodb&&!/Peso corporal|Banda|Tu mano|Toalla bajo|pared/.test(e.load)){const n=e.one||e.arm1?1:2;for(let i=0;i<n;i++){const d=new THREE.Group();const bar=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,.34,8),iron);bar.rotation.x=Math.PI/2;d.add(bar);[-.15,.15].forEach(z=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,.08,18),plate);p.rotation.x=Math.PI/2;p.position.z=z;p.castShadow=true;d.add(p)});ES.root.add(d);dbs.push(d)}}
 if(e.bench){const b=e.bench,w=b[2]/50,h=b[3]/50;const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,.6),M(0x8a6f4e,.8));m.position.set((b[0]+b[2]/2-90)/50,h/2,e.arm1?-.25:0);m.castShadow=m.receiveShadow=true;ES.root.add(m)}
 band=null;if(e.band){band=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,1,6),new THREE.MeshBasicMaterial({color:0x1d9e75}));ES.root.add(band)}}
 function phase(ms){const T=3600,x=(((ms%T)+T)%T)/T;if(x<.4)return q2(x/.4);if(x<.5)return 1;if(x<.9)return 1-q2((x-.5)/.4);return 0}
@@ -751,7 +834,7 @@ $('#belts').innerHTML=[["Blanco","Inicio, 4 grados"],["Azul","~2 años o más"],
 /* ---------- progreso ---------- */
 const H_M=1.72,START={kg:78,date:'2026-11-18'},GOAL=73.9;
 const dk=d=>d.toLocaleDateString('sv-SE');let days=st.get('bjj_days',{}),dsel=new Date();
-const ACTS=[["fa","Fuerza A"],["fb","Fuerza B"],["bjj","BJJ"],["nogi","No-Gi en casa"],["cal","Calistenia"],["bici","Bicicleta"],["mov","Movilidad"]];
+const ACTS=[["fa","Fuerza A"],["fb","Fuerza B"],["bjj","BJJ"],["nogi","No-Gi en casa"],["cal","Calistenia"],["ren","Físico"],["bici","Bicicleta"],["mov","Movilidad"]];
 const HABS=[["plan","Comí según el plan"],["sleep","Dormí 7 h o más"],["steps","Cumplí los pasos"]];
 const getD=k=>days[k]||(days[k]={});const saveD=()=>st.set('bjj_days',days);
 const imc=kg=>(kg/(H_M*H_M)).toFixed(1);
