@@ -108,47 +108,114 @@
   "papas": {
    "u": "kg",
    "p": {
-    "Feria": 1050,
-    "Supermercado": 1590
+    "Feria": 1049,
+    "Supermercado": 2076
    },
-   "d": "nov-2026"
+   "d": "20-nov"
   },
   "zanahoria": {
    "u": "kg",
    "p": {
-    "Feria": 975,
-    "Supermercado": 1250
+    "Feria": 1256,
+    "Supermercado": 1527
    },
-   "d": "nov-2026"
+   "d": "20-nov"
   },
   "tomate": {
    "u": "kg",
    "p": {
-    "Feria": 1779
+    "Feria": 1769,
+    "Supermercado": 2021
    },
-   "d": "13-nov"
+   "d": "20-nov"
   },
   "zapitaliano": {
-   "u": "kg",
+   "u": "unidad",
    "p": {
-    "Feria": 767
+    "Feria": 368,
+    "Supermercado": 886
    },
-   "d": "nov-2026"
+   "d": "20-nov"
   },
   "zapallo": {
    "u": "kg",
    "p": {
-    "Feria": 1700
+    "Feria": 2647,
+    "Supermercado": 3114
    },
-   "d": "nov-2026"
+   "d": "20-nov"
   },
   "lechuga": {
    "u": "unidad",
    "p": {
-    "Feria escarola": 750,
-    "Feria": 1300
+    "Feria": 1123,
+    "Supermercado": 1409
    },
-   "d": "nov-2026"
+   "d": "20-nov"
+  },
+  "cebolla": {
+   "u": "kg",
+   "p": {
+    "Feria": 1517,
+    "Supermercado": 1850
+   },
+   "d": "20-nov"
+  },
+  "repollo": {
+   "u": "unidad",
+   "p": {
+    "Supermercado": 1744,
+    "Feria": 2768
+   },
+   "d": "20-nov"
+  },
+  "pan": {
+   "u": "marraqueta kg",
+   "p": {
+    "Supermercado": 2126,
+    "Panadería/almacén": 2416
+   },
+   "d": "20-nov"
+  },
+  "fruta": {
+   "u": "plátano kg",
+   "p": {
+    "Jumbo": 1450,
+    "Jumbo Barraganette": 1990
+   },
+   "d": "24-nov"
+  },
+  "quesillo": {
+   "u": "320 g",
+   "p": {
+    "Jumbo Colun": 2290,
+    "Jumbo Soprole 300 g": 2590
+   },
+   "d": "24-nov"
+  },
+  "soya": {
+   "u": "kg",
+   "p": {
+    "Jumbo granel": 6290,
+    "Jumbo Mi Tierra (300 g)": 9500
+   },
+   "d": "24-nov"
+  },
+  "mote": {
+   "u": "kg",
+   "p": {
+    "Jumbo Oso 500 g (oferta)": 2860,
+    "Jumbo Oso 1 kg": 3140
+   },
+   "d": "24-nov"
+  },
+  "congelados": {
+   "u": "kg",
+   "p": {
+    "Jumbo choclo Cuisine&Co 1 kg": 3240,
+    "Jumbo primavera Minuto Verde 500 g": 3380
+   },
+   "d": "24-nov"
   }
  },
  "promos": [
@@ -166,6 +233,11 @@
    "s": "Todas",
    "d": "Black Friday",
    "t": "27 al 30 de noviembre: carga despensa (legumbres, arroz, atún, avena)"
+  },
+  {
+   "s": "Jumbo",
+   "d": "Toda la semana",
+   "t": "Choclo Cuisine & Co 500 g 3x2; mote Oso 500 g en oferta ($1.430)"
   }
  ],
  "src": [
@@ -174,6 +246,15 @@
   "https://super.lider.cl/v/porotos-1-kg",
   "https://www.jumbo.cl/busca/despensa/legumbres",
   "https://super.lider.cl/browse/marcas-propias/nuestras-marcas/lider/69507955_30193274_77297815",
-  "https://www.odepa.gob.cl/precios/mejores-alimentos-de-temporada"
+  "https://www.odepa.gob.cl/precios/mejores-alimentos-de-temporada",
+  "https://www.odepa.gob.cl/precios/mejores-alimentos-de-temporada?mobile=off",
+  "https://www.jumbo.cl/busqueda/quesos-y-fiambres/quesos/chacras-frescos-y-quesillos",
+  "https://www.jumbo.cl/platano-granel/p",
+  "https://www.jumbo.cl/platano-barraganette-jumbo-1-kg-6-unidades-aprox-granel/p",
+  "https://www.jumbo.cl/proteina-de-soya-granel-2047111-kg/p",
+  "https://www.jumbo.cl/carne-de-soya-mi-tierra-bolsa-300-g/p",
+  "https://www.jumbo.cl/trigo-mote-oso-1-kg/p",
+  "https://www.jumbo.cl/trigo-mote-oso-500-g/p",
+  "https://www.jumbo.cl/congelados/verduras-congeladas/choclos-y-arvejas"
  ]
 }
