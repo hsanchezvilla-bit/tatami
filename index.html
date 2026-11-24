@@ -5113,24 +5113,40 @@ return S}}}
 let XB=null,XBp=null;
 const realOn=()=>st.get('bjj_real',true);
 function loadXbot(){if(XBp)return XBp;XBp=new Promise(res=>{try{if(!window.THREE||!THREE.GLTFLoader||!THREE.SkeletonUtils)return res(null);const L=new THREE.GLTFLoader(),U=['xbot.glb','https://hsanchezvilla-bit.github.io/tatami/xbot.glb'];const tryU=i=>{if(i>=U.length)return res(null);L.load(U[i],g=>{XB=g;res(g)},undefined,()=>tryU(i+1))};tryU(0)}catch(e){res(null)}});return XBp}
-function makeChar(parent,pal){if(XB&&realOn()){try{return makeReal(parent,pal)}catch(e){console.warn('real',e)}}return makeCharSimple(parent,pal)}
+function makeChar(parent,pal){if(XB&&realOn()){const n0=parent.children.length;try{return makeReal(parent,pal)}catch(e){console.warn('real',e);while(parent.children.length>n0)parent.remove(parent.children[parent.children.length-1])}}return makeCharSimple(parent,pal)}
 function makeReal(parent,pal){
 const g=new THREE.Group();parent.add(g);const hold=new THREE.Group();g.add(hold);
 const m=THREE.SkeletonUtils.clone(XB.scene);hold.add(m);
-const dark=new THREE.Color(pal.nogi?0x16181d:pal.top).multiplyScalar(pal.nogi?1:.42);
-const surf=new THREE.MeshStandardMaterial({color:pal.nogi?0x2a2f3a:pal.top,roughness:.5,metalness:.08,skinning:true});
-const jnt=new THREE.MeshStandardMaterial({color:pal.nogi?0xb97d55:dark,roughness:.42,metalness:.25,skinning:true});
-m.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=false;o.frustumCulled=false;o.material=/Joint/i.test(o.name)?jnt:surf}});
-const belt=null;
+const blue=pal.top===PAL_RIVAL.top;
+const C={rash:new THREE.Color(blue?0x1f4fb8:0x1b1f27),short:new THREE.Color(blue?0x0d1630:0x0e0f12),skin:new THREE.Color(pal.skin||0xb97d55),trim:new THREE.Color(blue?0xe8ecf5:(pal.belt!=null&&pal.belt!==0xf4f1ea?pal.belt:0xff3b4e))};
+const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.62,metalness:.02,skinning:true});
+const iv=new THREE.Matrix4(),bp=new THREE.Vector3();
+m.traverse(o=>{if(!o.isSkinnedMesh)return;o.castShadow=true;o.frustumCulled=false;o.geometry=o.geometry.clone();
+const bones=o.skeleton.bones,BP=bones.map((b,k)=>{iv.copy(o.skeleton.boneInverses[k]).invert();return new THREE.Vector3().setFromMatrixPosition(iv)});
+const ix=n=>bones.findIndex(b=>b.name.replace(/^mixamorig:?/,'')===n);
+const kR=BP[ix('RightLeg')],kL=BP[ix('LeftLeg')],hR=BP[ix('RightUpLeg')],hL=BP[ix('LeftUpLeg')],eR=BP[ix('RightForeArm')],wR=BP[ix('RightHand')],eL=BP[ix('LeftForeArm')],wL=BP[ix('LeftHand')],nk=BP[ix('Neck')];
+const P=o.geometry.attributes.position,SI=o.geometry.attributes.skinIndex,SW=o.geometry.attributes.skinWeight,n=P.count,col=new Float32Array(n*3);
+for(let v=0;v<n;v++){let bi=0,bw=-1;const ws=[SW.getX(v),SW.getY(v),SW.getZ(v),SW.getW(v)],is=[SI.getX(v),SI.getY(v),SI.getZ(v),SI.getW(v)];for(let c=0;c<4;c++)if(ws[c]>bw){bw=ws[c];bi=is[c]}
+const nm=bones[bi].name.replace(/^mixamorig:?/,'');bp.fromBufferAttribute(P,v);let cc=C.skin;
+if(/Hips/.test(nm))cc=bp.y>(hR.y+ (nk.y-hR.y)*.16)?C.rash:C.short;
+else if(/UpLeg/.test(nm)){const r=nm[0]==='R',h=r?hR:hL,k=r?kR:kL;const t=(bp.y-k.y)/(h.y-k.y);cc=t>.42?C.short:C.skin;if(t>.4&&t<.47)cc=C.trim}
+else if(/Spine|Shoulder/.test(nm))cc=C.rash;
+else if(/^(Right|Left)Arm$/.test(nm))cc=C.rash;
+else if(/ForeArm/.test(nm)){const r=nm[0]==='R',e=r?eR:eL,w=r?wR:wL;const t=bp.distanceTo(e)/e.distanceTo(w);cc=t<.55?C.rash:C.skin;if(t>.5&&t<.56)cc=C.trim}
+else if(/Neck/.test(nm))cc=bp.y<nk.y+ (BP[ix('Head')].y-nk.y)*.15?C.rash:C.skin;
+col[v*3]=cc.r;col[v*3+1]=cc.g;col[v*3+2]=cc.b}
+o.geometry.setAttribute('color',new THREE.BufferAttribute(col,3));o.material=mat});
 const B=n=>m.getObjectByName('mixamorig'+n)||m.getObjectByName('mixamorig:'+n);
-const bn={hips:B('Hips'),spine:B('Spine'),neck:B('Neck'),head:B('Head'),
+const bn={hips:B('Hips'),spine:B('Spine'),neck:B('Neck'),head:B('Head'),htop:B('HeadTop_End'),
 aR:B('RightArm'),faR:B('RightForeArm'),hR:B('RightHand'),aL:B('LeftArm'),faL:B('LeftForeArm'),hL:B('LeftHand'),
-uR:B('RightUpLeg'),lR:B('RightLeg'),fR:B('RightFoot'),uL:B('LeftUpLeg'),lL:B('LeftLeg'),fL:B('LeftFoot'),tR:B('RightToeBase'),tL:B('LeftToeBase')};
+uR:B('RightUpLeg'),lR:B('RightLeg'),fR:B('RightFoot'),uL:B('LeftUpLeg'),lL:B('LeftLeg'),fL:B('LeftFoot'),tR:B('RightToeBase'),tL:B('LeftToeBase'),teR:B('RightToe_End'),teL:B('LeftToe_End')};
 for(const k in bn)if(!bn[k])throw new Error('bone '+k);
 const rest=new Map();m.traverse(o=>{if(o.isBone)rest.set(o,o.quaternion.clone())});const restHipPos=bn.hips.position.clone();
 const W=o=>o.getWorldPosition(new THREE.Vector3()),WQ=o=>o.getWorldQuaternion(new THREE.Quaternion());
 g.updateMatrixWorld(true);
-// base de reposo de la cadera
+// pelo corto (gorro) pegado a la cabeza
+{const hh=bn.head.position.length(),top=bn.htop.position.length(),R=top*.62;const hair=new THREE.Mesh(new THREE.SphereGeometry(R,24,16,0,Math.PI*2,0,Math.PI*.42),new THREE.MeshStandardMaterial({color:pal.hair||0x111111,roughness:.9}));hair.position.set(0,top*.52,-R*.08);hair.rotation.x=-.25;bn.head.add(hair);
+if(pal.beard){const bd=new THREE.Mesh(new THREE.SphereGeometry(R*.93,24,16,Math.PI*.15,Math.PI*.7,Math.PI*.55,Math.PI*.3),new THREE.MeshStandardMaterial({color:pal.hair||0x111111,roughness:.95}));bd.position.set(0,top*.42,0);bn.head.add(bd)}}
 const rUp=W(bn.neck).sub(W(bn.hips)).normalize(),rRt=W(bn.uR).sub(W(bn.uL));rRt.addScaledVector(rUp,-rRt.dot(rUp)).normalize();
 const rFw=new THREE.Vector3().crossVectors(rUp,rRt);const Mr=new THREE.Matrix4().makeBasis(rRt,rUp,rFw);
 const hipRestWQ=WQ(bn.hips);
@@ -5138,33 +5154,32 @@ const mLeg=W(bn.uR).distanceTo(W(bn.lR))+W(bn.lR).distanceTo(W(bn.fR));
 let sc=0;
 const tmpQ=new THREE.Quaternion(),pq=new THREE.Quaternion();
 function setWQ(b,q){b.parent.getWorldQuaternion(pq);b.quaternion.copy(pq.invert().multiply(q));b.updateMatrixWorld(true)}
-function aim(b,c,to){// rota b para que el vector b->c apunte hacia "to" (mundo)
-const d0=W(c).sub(W(b)).normalize(),d1=to.clone().normalize();if(d1.lengthSq()<1e-6)return;tmpQ.setFromUnitVectors(d0,d1);setWQ(b,tmpQ.clone().multiply(WQ(b)))}
+function aim(b,c,to){const d0=W(c).sub(W(b)).normalize(),d1=to.clone().normalize();if(d1.lengthSq()<1e-6)return;tmpQ.setFromUnitVectors(d0,d1);setWQ(b,tmpQ.clone().multiply(WQ(b)))}
+function shift(dW){const p=W(bn.hips).add(dW);bn.hips.position.copy(bn.hips.parent.worldToLocal(p));m.updateMatrixWorld(true)}
 return{g,real:true,update(p0){const p=norm(p0),ZS=p.za,ZL=p.zl,fx=p.fx||1;
 const nk=V(p.n),hp=V(p.hp),hd=V(p.h),up=nk.clone().sub(hp).normalize();const front=new THREE.Vector3(up.y*fx,-up.x*fx,0);
 const z=v=>v*fx;
 const S={R:{s:V(p.n,z(ZS)).addScaledVector(up,-.07),e:V(p.e,z(ZS)),w:V(p.w,z(ZS)),h:V(p.hp,z(.1)),k:V(p.k,z(ZL)),f:V(p.f,z(ZL))},L:{s:V(p.n,-z(ZS)).addScaledVector(up,-.07),e:V(p.e2,-z(ZS)),w:V(p.w2,-z(ZS)),h:V(p.hp,-z(.1)),k:V(p.k2,-z(ZL)),f:V(p.f2,-z(ZL))}};
-if(!sc){const L=S.R.h.distanceTo(S.R.k)+S.R.k.distanceTo(S.R.f);sc=L/mLeg*1.02;hold.scale.setScalar(sc)}
+if(!sc){const L=(S.R.h.distanceTo(S.R.k)+S.R.k.distanceTo(S.R.f)+S.L.h.distanceTo(S.L.k)+S.L.k.distanceTo(S.L.f))/2;sc=L/mLeg;hold.scale.setScalar(sc)}
 rest.forEach((q,b)=>b.quaternion.copy(q));bn.hips.position.copy(restHipPos);g.updateMatrixWorld(true);
+const ankH=W(bn.fR).y-W(bn.teR).y;
 const G=v=>g.localToWorld(v.clone());
-// cadera: posición y orientación
-const hpW=G(hp);bn.hips.position.copy(bn.hips.parent.worldToLocal(hpW.clone()));
 const gq=WQ(g),upW=up.clone().applyQuaternion(gq),fwW=front.clone().applyQuaternion(gq),rtW=new THREE.Vector3().crossVectors(fwW,upW).normalize();
 const fw2=new THREE.Vector3().crossVectors(upW,rtW);const Mt=new THREE.Matrix4().makeBasis(rtW,upW,fw2);
 const Q=new THREE.Quaternion().setFromRotationMatrix(Mt.multiply(Mr.clone().transpose()));setWQ(bn.hips,Q.multiply(hipRestWQ));
-// columna y cabeza
+// las articulaciones de cadera del modelo caen sobre la cadera de la pose
+shift(G(hp).sub(W(bn.uR).add(W(bn.uL)).multiplyScalar(.5)));
 aim(bn.spine,bn.neck,G(nk).sub(W(bn.spine)));aim(bn.neck,bn.head,G(hd).sub(G(nk)));
-// brazos y piernas
-[['R',bn.aR,bn.faR,bn.hR,bn.uR,bn.lR,bn.fR],['L',bn.aL,bn.faL,bn.hL,bn.uL,bn.lL,bn.fL]].forEach(([s,a,fa,h,u,l,f])=>{const q=S[s];
+const fH=new THREE.Vector3(fx,0,0).applyQuaternion(gq);
+[['R',bn.aR,bn.faR,bn.hR,bn.uR,bn.lR,bn.fR,bn.tR],['L',bn.aL,bn.faL,bn.hL,bn.uL,bn.lL,bn.fL,bn.tL]].forEach(([s,a,fa,h,u,l,f,t])=>{const q=S[s];
 aim(a,fa,G(q.e).sub(G(q.s)));aim(fa,h,G(q.w).sub(G(q.e)));aim(u,l,G(q.k).sub(G(q.h)));aim(l,f,G(q.f).sub(G(q.k)));
-// pie: planta paralela al suelo cuando el pie está abajo, punta hacia adelante
-const fy=q.f.y;if(fy<.25){const t=s==='R'?bn.tR:bn.tL;const toes=W(t).sub(W(f));const flat=new THREE.Vector3(fx,0,0).applyQuaternion(gq).multiplyScalar(toes.length());flat.y=-toes.length()*.12;aim(f,t,flat)}});
-// apoyo: que el pie más bajo toque el suelo si está cerca
+if(q.f.y<.3){const toes=W(t).sub(W(f));const flat=fH.clone().multiplyScalar(toes.length());flat.y=-toes.length()*.18;aim(f,t,flat)}});
+// apoyo real en el suelo: el pie más bajo que la pose marca como apoyado queda sobre la colchoneta
+const pl=['R','L'].filter(s=>S[s].f.y<.08);
+if(pl.length){const lo=Math.min(...pl.map(s=>{const f=s==='R'?bn.fR:bn.fL,te=s==='R'?bn.teR:bn.teL;return Math.min(W(f).y-ankH,W(te).y)}));const floor=g.localToWorld(new THREE.Vector3(0,0,0)).y;const dy=floor-lo;if(Math.abs(dy)<.3)shift(new THREE.Vector3(0,dy,0))}
 g.updateMatrixWorld(true);const out={R:{},L:{}};
-['R','L'].forEach(s=>{const H=s==='R'?bn.hR:bn.hL;out[s]=Object.assign({},S[s],{w:g.worldToLocal(W(H)),e:g.worldToLocal(W(s==='R'?bn.faR:bn.faL))})});
-if(belt){const hw=g.worldToLocal(W(bn.spine));belt.position.copy(hw);belt.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1),up)}
+['R','L'].forEach(s=>{out[s]=Object.assign({},S[s],{w:g.worldToLocal(W(s==='R'?bn.hR:bn.hL)),e:g.worldToLocal(W(s==='R'?bn.faR:bn.faL))})});
 return out}}}
-
 function makeStage(el,o){if(!window.THREE)return null;let R;try{R=new THREE.WebGLRenderer({antialias:true,alpha:true})}catch(e){return null}
 UP=UP||new THREE.Vector3(0,1,0);R.setPixelRatio(Math.min(devicePixelRatio,2));R.shadowMap.enabled=true;el.prepend(R.domElement);
 const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(36,1,.1,50);
@@ -5182,7 +5197,7 @@ return S}
 const q2=v=>v<.5?2*v*v:1-Math.pow(-2*v+2,2)/2;
 /* ejercicios */
 const fig=$('#fig');let ES=null,ch=null,dbs=[],band=null,play=true,t0=performance.now();
-function build(){if(!ES)return;ES.root.clear();dbs=[];const e=LX(cur);ch=makeChar(ES.root,(e.g==='N'||e.g==='C'||e.g==='R')?Object.assign(meP(),{top:0x1b1f2a,bot:0x111111,nogi:true}):meP());
+function build(){if(!ES)return;ES.root.clear();dbs=[];const e=LX(cur);ch=makeChar(ES.root,Object.assign(meP(),{top:0x1b1f2a,bot:0x111111,nogi:true}));
 const iron=M(0x3b3f46,.35),plate=M(0xd7263d,.5);
 if(e.g!=='C'&&e.g!=='N'&&!e.nodb&&!/Peso corporal|Banda|Tu mano|Toalla bajo|pared/.test(e.load)){const n=e.one||e.arm1?1:2;for(let i=0;i<n;i++){const d=new THREE.Group();const bar=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,.34,8),iron);bar.rotation.x=Math.PI/2;d.add(bar);[-.15,.15].forEach(z=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.08,.08,.08,18),plate);p.rotation.x=Math.PI/2;p.position.z=z;p.castShadow=true;d.add(p)});ES.root.add(d);dbs.push(d)}}
 if(e.bench){const b=e.bench,w=b[2]/50,h=b[3]/50;const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,.6),M(0x8a6f4e,.8));m.position.set((b[0]+b[2]/2-90)/50,h/2,e.arm1?-.25:0);m.castShadow=m.receiveShadow=true;ES.root.add(m)}
@@ -5223,7 +5238,7 @@ function buildL(){const it=LIB[li];lastI=-1;$('#tag2').innerHTML=`${it.t}<small>
 $('#lchips').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.l===li));
 ['lPrev','lNext','lPlay'].forEach(id=>$('#'+id).style.display=it.f.length>1?'':'none');
 $('#lyt').innerHTML=ytBtn('bjj '+it.t+' tutorial español','Más videos: '+it.t);if(it.ty==='pos')$('#lstep').innerHTML=`<b>${it.t}</b><p class="mut" style="margin:4px 0 0">${it.d}</p>`;
-if(!LS)return;LS.root.clear();cA=makeChar(LS.root,meP());cB=makeChar(LS.root,PAL_RIVAL);const ta=it.tA||{};cA.g.position.set(ta.x||0,0,ta.z||0);cA.g.rotation.y=ta.ry||0}
+if(!LS)return;LS.root.clear();cA=makeChar(LS.root,Object.assign(meP(),{top:0x1b1f2a,bot:0x111111,nogi:true}));cB=makeChar(LS.root,Object.assign({},PAL_RIVAL,{bot:0x0d1630,nogi:true}));const ta=it.tA||{};cA.g.position.set(ta.x||0,0,ta.z||0);cA.g.rotation.y=ta.ry||0}
 let prevA=null,prevB=null,lsw=0,curA=null,curB=null;
 function selL(id){if(curA){prevA=curA;prevB=curB;lsw=performance.now()}li=id;lstep=0;lplay=true;lt0=performance.now();$('#lPlay').textContent='Pausa';buildL();setVid(F2,li,lvMode)}
 function lframe(now){const F=LIB[li].f,n=F.length;if(n===1)return{i:0,j:0,t:0};const H=1200,MV=1500,C=H+MV,T=n*C;const x=lplay?(((now-lt0)%T)+T)%T:lstep*C;const i=Math.floor(x/C),r=x-i*C;return{i,j:(i+1)%n,t:r<H?0:.5-Math.cos(Math.PI*(r-H)/MV)/2}}
