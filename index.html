@@ -407,7 +407,7 @@ html body #hoy button.go,html body #hoy[data-d] button.go{background:var(--da)!i
 #tr .trlab{margin-top:8px;font-size:15px;color:var(--mut);text-align:center}#tr .dots{display:flex;gap:8px;margin-top:14px}#tr .dots i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.12)}#tr .dots i.ok{background:var(--red)}
 #tr .trgo{width:100%;border:0;border-radius:18px;background:var(--red);color:var(--acc-ink);font:700 19px Inter,sans-serif;padding:20px;margin-top:8px}#tr .trgo:active{transform:scale(.98)}
 #tr .trsub{display:flex;gap:8px;margin-top:10px}#tr .trsub>*{flex:1;text-align:center;background:rgba(255,255,255,.07);color:var(--ink);border:0;border-radius:14px;padding:13px;font:600 14px Inter,sans-serif;text-decoration:none}
-#tr .wu li:before{content:'•';background:none}#tr .end{font-size:64px;text-align:center}
+#tr .wu li:before{content:'•';background:none}#tr #trfig .fig{height:min(34vh,290px);min-height:220px;margin:4px 0 12px}#tr #trfig .fig .tag{display:none}#tr ol li{font-size:15px;margin-bottom:7px}#tr .trmid{min-height:0;flex:none;justify-content:flex-start;padding:12px 0 8px}#tr .ring{width:140px;height:140px}#tr .ring b{font-size:38px}#tr .trgo{margin-top:auto}#tr .end{font-size:64px;text-align:center}
 
 /* ===== rediseño v2 ===== */
 .appbar{margin:2px 0 16px;gap:10px}.appbar .logo{display:flex;align-items:center;gap:10px;white-space:nowrap}.appbar .logo b{font:700 20px 'Space Grotesk',Inter,sans-serif;letter-spacing:-.01em}.appbar .pro{margin-left:2px}
@@ -5101,7 +5101,10 @@ const TR={on:false,k:null,ids:[],i:-1,set:0,ph:'idle',end:0,dur:0,int:null};
 const trEl=(()=>{const d=document.createElement('div');d.id='tr';document.body.appendChild(d);return d})();
 const WU=['2 min de trote o escalera en el lugar','1 min de círculos de cadera y hombros','1 min de camarones y puentes suaves','1 min de sentadillas y flexiones sin peso'];
 function trStart(k){ensureSes(k);const ids=(SES[k]||[]).slice();if(!ids.length)return false;Object.assign(TR,{on:true,k,ids,i:-1,set:0,ph:'idle'});trEl.classList.add('on');document.body.style.overflow='hidden';try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume&&actx.resume()}catch(_){}etWake(true);trPaint();return true}
-function trClose(){clearInterval(TR.int);TR.on=false;trEl.classList.remove('on');document.body.style.overflow='';etWake(false)}
+
+let trHome=null;function trFig(id){const f=$('#fig'),box=trEl.querySelector('#trfig');if(!f||!box)return;if(!trHome)trHome={p:f.parentNode,n:f.nextSibling};f.style.display='';box.appendChild(f);try{if(cur!==id)sel(id);else setVid(f,cur,vMode)}catch(_){}requestAnimationFrame(()=>{try{ES&&ES.resize()}catch(_){}})}
+function trFigBack(){const f=$('#fig');if(f)f.style.display='';if(trHome&&f){trHome.p.insertBefore(f,trHome.n);trHome=null;requestAnimationFrame(()=>{try{ES&&ES.resize()}catch(_){}})}}
+function trClose(){trFigBack();clearInterval(TR.int);TR.on=false;trEl.classList.remove('on');document.body.style.overflow='';etWake(false)}
 function trCur(){const id=TR.ids[TR.i],e=LX(id),p=etParse(e);return{id,e,p}}
 function trTimer(ph,sec){TR.ph=ph;TR.dur=sec;TR.end=Date.now()+sec*1000;clearInterval(TR.int);TR.int=setInterval(trTick,250);trPaint()}
 function trTick(){const left=Math.max(0,Math.ceil((TR.end-Date.now())/1000));const o=trEl.querySelector('.ring b');if(o)o.textContent=etF(left);const c=trEl.querySelector('#trc');if(c)c.setAttribute('stroke-dashoffset',(2*Math.PI*88)*(1-left/(TR.dur||1)));
@@ -5110,7 +5113,7 @@ if(Date.now()>=TR.end){clearInterval(TR.int);beep(1320,250,2);try{navigator.vibr
 const {p}=trCur();if(TR.ph==='work'){if(p.sides===2&&!TR.side){TR.side=1;return trTimer('work',p.work)}TR.side=0;trSetDone()}else if(TR.ph==='rest'){TR.ph='idle';trPaint();if(p.work)trTimer('work',p.work)}}}
 function trSetDone(){const {p}=trCur();TR.set++;if(TR.set>=p.sets){TR.ph='next';trPaint();return}trTimer('rest',p.rest||45)}
 function trNext(){TR.i++;TR.set=0;TR.side=0;TR.ph='idle';clearInterval(TR.int);if(TR.i>=TR.ids.length){TR.ph='end';}trPaint()}
-function trPaint(){if(!TR.on)return;const n=TR.ids.length,pct=TR.i<0?0:Math.min(1,(TR.i+(TR.ph==='next'?1:0))/n);
+function trPaint(){if(!TR.on)return;const _f=document.getElementById('fig');if(_f&&trEl.contains(_f)){_f.style.display='none';document.body.appendChild(_f)}const n=TR.ids.length,pct=TR.i<0?0:Math.min(1,(TR.i+(TR.ph==='next'?1:0))/n);
 const top=`<div class="trtop"><div class="trbar"><i style="width:${pct*100}%"></i></div><button class="trx" data-tr="x">Salir</button></div>`;
 if(TR.i<0){trEl.innerHTML=top+`<div class="trk">${SLBL(TR.k)} · ${n} ejercicios</div><h1>Calentamiento · 5 min</h1><ol class="wu">${WU.map(x=>`<li>${x}</li>`).join('')}</ol><div class="trmid"></div><button class="trgo" data-tr="go">Listo, empezar</button>`;return}
 if(TR.ph==='end'){trEl.innerHTML=top+`<div class="trmid"><div class="end">🥋</div><h1 style="text-align:center;margin-top:10px">¡Sesión terminada!</h1><p class="trlab">Estira 5 min y toma agua.</p></div><button class="trgo" data-tr="done">Guardar como hecho</button><div class="trsub"><button data-tr="x">Cerrar sin guardar</button></div>`;return}
@@ -5120,7 +5123,7 @@ let mid,btn;
 if(TR.ph==='rest'||TR.ph==='work'){const left=Math.max(0,Math.ceil((TR.end-Date.now())/1000));mid=`<div class="ring"><svg viewBox="0 0 200 200"><circle cx="100" cy="100" r="${R}" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="12"/><circle id="trc" cx="100" cy="100" r="${R}" fill="none" stroke="${TR.ph==='rest'?'#8E97A6':'var(--red)'}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-left/(TR.dur||1))}"/></svg><b>${etF(left)}</b></div><div class="trlab">${TR.ph==='rest'?'Descansa · viene la serie '+(TR.set+1)+' de '+p.sets:(p.sides===2?(TR.side?'Lado 2':'Lado 1'):'¡Dale!')}</div>`;btn=TR.ph==='rest'?`<button class="trgo" data-tr="skip">Saltar descanso</button>`:`<button class="trgo" data-tr="stop">Terminé la serie</button>`}
 else if(TR.ph==='next'){mid=`<div class="end">✅</div><div class="trlab">Ejercicio listo${nx?'<br>Sigue: <b style="color:var(--ink)">'+LX(nx).t+'</b>':''}</div>`;btn=`<button class="trgo" data-tr="next">${nx?'Siguiente ejercicio':'Terminar sesión'}</button>`}
 else{mid=`<div class="trlab" style="font-size:17px;color:var(--ink)">Serie <b>${TR.set+1}</b> de ${p.sets}${p.sides===2?' · por lado':''}</div>`;btn=timed?`<button class="trgo" data-tr="work">▶ Empezar serie (${etF(p.work)})</button>`:`<button class="trgo" data-tr="set">✓ Serie ${TR.set+1} hecha</button>`}
-trEl.innerHTML=top+`<div class="trk">Ejercicio ${TR.i+1} de ${n}</div><h1>${e.t}</h1><div class="trdose"><span>${e.d}</span><span>desc. ${e.r}</span>${e.load&&!/^Peso corporal$/.test(e.load)?`<span class="l">${e.load}</span>`:''}</div>${cues.length?`<ol>${cues.map(c=>`<li>${c}</li>`).join('')}</ol>`:''}<div class="trmid">${mid}<div class="dots">${Array.from({length:p.sets},(_,k)=>`<i class="${k<TR.set?'ok':''}"></i>`).join('')}</div></div>${btn}<div class="trsub"><a href="${url}" target="_blank" rel="noopener">▶ Ver video</a><button data-tr="skipex">Saltar ejercicio</button></div>`}
+trEl.innerHTML=top+`<div class="trk">Ejercicio ${TR.i+1} de ${n}</div><h1>${e.t}</h1><div id="trfig"></div><div class="trdose"><span>${e.d}</span><span>desc. ${e.r}</span>${e.load&&!/^Peso corporal$/.test(e.load)?`<span class="l">${e.load}</span>`:''}</div>${cues.length?`<ol>${cues.map(c=>`<li>${c}</li>`).join('')}</ol>`:''}<div class="trmid">${mid}<div class="dots">${Array.from({length:p.sets},(_,k)=>`<i class="${k<TR.set?'ok':''}"></i>`).join('')}</div></div>${btn}<div class="trsub"><a href="${url}" target="_blank" rel="noopener">▶ Ver video</a><button data-tr="skipex">Saltar ejercicio</button></div>`;trFig(id)}
 trEl.addEventListener('click',e=>{const b=e.target.closest('[data-tr]');if(!b)return;const a=b.dataset.tr;
 if(a==='x')return trClose();if(a==='go')return trNext();if(a==='set')return trSetDone();if(a==='work'){TR.side=0;return trTimer('work',trCur().p.work)}
 if(a==='stop'){clearInterval(TR.int);TR.side=0;return trSetDone()}if(a==='skip'){clearInterval(TR.int);TR.ph='idle';const {p}=trCur();if(p.work)return trTimer('work',p.work);return trPaint()}
@@ -5424,7 +5427,7 @@ $('#lchips').innerHTML=Object.keys(LIB).map(k=>`<button data-l="${k}">${LIB[k].t
 $('#lchips').onclick=e=>{const b=e.target.closest('button');if(b)selL(b.dataset.l)};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-show]');if(b){selL(b.dataset.show);F2.scrollIntoView({behavior:'smooth',block:'center'})}});
 const vis=v=>document.getElementById('v-'+v).classList.contains('on');
-function loop(now){if(ES&&vis('ejercicios')){draw(play?phase(now-t0):.5);ES.render(now,play)}if(vis('aprender')){drawL(now);if(LS)LS.render(now,lplay)}requestAnimationFrame(loop)}
+function loop(now){if(ES&&(vis('ejercicios')||(typeof TR!=='undefined'&&TR.on&&TR.i>=0))){draw(play?phase(now-t0):.5);ES.render(now,play)}if(vis('aprender')){drawL(now);if(LS)LS.render(now,lplay)}requestAnimationFrame(loop)}
 function initGL(){ES=makeStage(fig,{az:.75,el:.18,r:5,ty:.85,tx:.1});if(!ES)fig.insertAdjacentHTML('beforeend','<div class="err">No se pudo cargar el visor 3D. Revisa tu conexión y vuelve a abrir.</div>');else build();
 LS=makeStage(F2,{az:.95,el:.42,r:5.4,ty:.55,tx:-.05,mw:6,md:3.4});if(!LS)F2.insertAdjacentHTML('beforeend','<div class="err">No se pudo cargar el visor 3D.</div>');buildL();requestAnimationFrame(loop)}
 
