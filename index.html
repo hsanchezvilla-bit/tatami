@@ -430,6 +430,11 @@ details.card.more>.card{background:rgba(255,255,255,.03);margin:12px 0 0}
 #hoy .hgo{margin:14px 0 4px;font-size:18px;padding:17px}
 #hoy .hdet{margin-top:10px}#hoy .hdet summary{font-size:13px;color:var(--mut);cursor:pointer;list-style:none}#hoy .hdet summary::-webkit-details-marker{display:none}#hoy .hdet summary:after{content:' ›'}
 #v-progreso .wrap>h1{margin-bottom:14px}
+.fx{border-top:1px solid var(--line);padding:8px 0}.fx summary{gap:12px;justify-content:flex-start}.fx summary:after{margin-left:auto}.fx summary small{display:block;font-size:12.5px;color:var(--mut);font-weight:500}
+.fxb{width:58px;height:16px;border-radius:4px;position:relative;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}.fxb i{position:absolute;right:8px;top:0;bottom:0;width:16px;background:#111;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.fxg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:8px}.fxg div{background:rgba(255,255,255,.05);border-radius:12px;padding:8px}.fxg small{display:block;font-size:11px;color:var(--mut)}.fxg b{font-size:13px;line-height:1.25;display:block}
+ol.tsteps{list-style:none;margin:0;padding:0;counter-reset:t}ol.tsteps li{counter-increment:t;position:relative;padding:0 0 14px 40px}ol.tsteps li:before{content:counter(t);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:50%;background:var(--redbg);color:var(--red);font:700 13px Inter,sans-serif;display:grid;place-items:center}ol.tsteps li:after{content:'';position:absolute;left:13.5px;top:30px;bottom:2px;width:1px;background:var(--line)}ol.tsteps li:last-child:after{display:none}ol.tsteps b{display:block;font-size:15px}ol.tsteps span{font-size:14px;color:var(--mut);line-height:1.45}
+.tvoc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.tvoc div{background:rgba(255,255,255,.05);border-radius:12px;padding:8px 10px}.tvoc b{display:block;font-size:14px}.tvoc span{font-size:12.5px;color:var(--mut)}
 </style>
 </head>
 <body>
@@ -571,14 +576,14 @@ details.card.more>.card{background:rgba(255,255,255,.03);margin:12px 0 0}
 <div id="plan"></div>
 <h2>Tus primeras técnicas</h2>
 <div class="card" id="tech"></div>
-<h2>Primera clase</h2>
-<div class="card"><ul class="c" id="first"></ul></div>
+<h2>Cómo entrar al tatami</h2>
+<div class="card" id="tatami"><ul class="c" id="first" style="display:none"></ul></div>
 <h2>Higiene en el tatami</h2>
 <div class="card"><ul class="c" id="hyg"></ul></div>
 <h2>Glosario</h2>
 <div class="card" id="glos"></div>
-<h2>Cinturones</h2>
-<div class="card"><div class="ladder" id="belts"></div><p class="sm mut" style="margin:10px 0 0">Los tiempos varían mucho según la academia y la constancia. El azul suele tomar 2 años o más entrenando 2–3 veces por semana.</p></div>
+<h2>Faixas: el sistema de cinturones</h2>
+<div class="card" id="faixas"></div>
 </div></section>
 
 <button id="backChip" hidden aria-label="Volver"></button><button id="upBtn" aria-label="Volver arriba"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
@@ -5583,11 +5588,39 @@ const PLAN=[["Mes 1 · Sobrevivir","Aprende los nombres de las posiciones y la e
 $('#plan').innerHTML=PLAN.map(p=>`<div class="card"><h3>${p[0]}</h3><p class="mut" style="margin:6px 0 0">${p[1]}</p></div>`).join('');
 const TECH=[["Saída da montada com ponte (upa)","Atrapas un brazo y el pie del mismo lado del rival, haces un puente explosivo hacia ese lado y lo volteas. Es el ejercicio \"Puente sobre hombros\" aplicado."],["Fuga de quadril / reposição de guarda","Enmarcas, haces camarón y metes la rodilla entre tú y el rival para recuperar la media guardia o la guardia."],["Guarda fechada","Piernas cruzadas en la espalda del rival. Controlas su postura tirándolo hacia ti: un rival con la postura rota no te puede atacar."],["Raspagem de tesoura","Desde guardia, una pierna atraviesa el abdomen y la otra barre la rodilla del rival mientras tiras de manga y solapa. Terminas montado."],["Kimura","Llave al hombro: atrapas la muñeca del rival y pasas tu brazo por detrás del suyo para agarrar tu propia muñeca. En práctica se aplica lento."],["Chave de braço da guarda (armlock)","Controlas un brazo, giras la cadera, pasas la pierna por la cara del rival y extiendes el codo con la cadera. Siempre lento y controlado."],["Mata-leão","Desde la espalda tomada, el brazo rodea el cuello y comprime los lados del cuello. Se aplica con suavidad y se suelta apenas el compañero golpea."]];
 const TK=['upa','codo','rompe','tij','kim','arm','mata'],TKV=['uw4z2FXH89k','9_tJxfoFJ_w','Ldu4g7c5AgA','wzvfzGfszdk','JKlWmjHWGxI','SLVbr1ncGIQ','wEsNKSKEL5w'];$('#tech').innerHTML=TECH.map((t,i)=>`<details ${i===0?'open':''}><summary>${t[0]}</summary><p>${t[1]}</p><button data-show="${TK[i]}">Ver animación 3D</button> <button data-lsn="${TKV[i]}">Ver video</button></details>`).join('')+'<p class="sm mut" style="margin:10px 0 0">Las técnicas se aprenden en clase con un compañero y un profesor. Estas descripciones son para que reconozcas lo que te enseñen.</p>';
-$('#first').innerHTML=["Polera ajustada o rashguard y short sin bolsillos ni cierres (para No-Gi). Pregunta si prestan gi.","Uñas de manos y pies cortas. Sin anillos, cadenas ni aros.","Chalas para fuera del tatami: nunca pises el tatami con zapatos ni camines descalzo fuera de él.","Botella de agua y llegar 10 minutos antes.","Avísale al profe que eres nuevo y que no tienes lesiones. Así te empareja con alguien con experiencia.","Golpea (tap) con la mano en el compañero o el suelo, o di \"tap\", apenas sientas presión en una articulación o el cuello."].map(x=>`<li>${x}</li>`).join('');
+
+/* ---------- faixas y etiqueta del tatami ---------- */
+const FX=[
+{n:'Branca',es:'Blanco',c:'#F2F0EA',t:'#111',age:'Cualquier edad',min:'Sin mínimo',real:'1–2 años o más',f:'Sobrevivir abajo, escapar, conocer las posiciones y no lesionarte ni lesionar. Aquí se forma el hábito.',g:'4 graus (grados): cintas blancas en la barra negra que pone el profe.'},
+{n:'Azul',es:'Azul',c:'#2F5BD3',t:'#fff',age:'16 años o más',min:'2 años antes de pasar a roxa',real:'2–3 años',f:'Ya conoces un poco de todo. Empiezas a tener un juego propio y a encadenar ataques. Suele ser la faixa más larga.',g:'4 graus.'},
+{n:'Roxa',es:'Morado',c:'#7A3FB8',t:'#fff',age:'16 años o más',min:'1,5 años antes de pasar a marrom',real:'2–4 años',f:'Juego sólido y fluido. Muchas academias te dejan ayudar a enseñar a los más nuevos.',g:'4 graus.'},
+{n:'Marrom',es:'Marrón',c:'#6B4226',t:'#fff',age:'18 años o más',min:'1 año antes de pasar a preta',real:'1,5–3 años',f:'Pulir detalles, presión y defensa. Es la preparación final para la faixa preta.',g:'4 graus.'},
+{n:'Preta',es:'Negro',c:'#111',bar:'#c0262d',t:'#fff',age:'19 años o más',min:'—',real:'8–12 años desde que empezaste',f:'Dominio técnico y capacidad de enseñar. En Brasil se dice que la preta es el comienzo: ahí uno recién sabe jiu-jitsu.',g:'6 graus (grados) con el tiempo, en una barra roja.'},
+{n:'Coral y vermelha',es:'Rojinegra, rojiblanca y roja',c:'linear-gradient(90deg,#c0262d 0 25%,#111 25% 50%,#c0262d 50% 75%,#111 75%)',t:'#fff',age:'Décadas de faixa preta',min:'—',real:'7º, 8º y 9º–10º grado',f:'Mestres y grandes mestres. Reconocen toda una vida dedicada al jiu-jitsu.',g:''}];
+function renderFaixas(){const el=$('#faixas');if(!el)return;el.innerHTML=`<p class="sm" style="margin:0 0 12px">El jiu-jitsu brasileño tiene <b>5 faixas para adultos</b>. No se gana por un examen: <b>la da tu professor</b> cuando ve tu técnica, tu constancia y tu actitud en el tatami.</p>`+FX.map((b,i)=>`<details class="fx"${i===0?' open':''}><summary><span class="fxb" style="background:${b.c}"><i${b.bar?` style="background:${b.bar}"`:''}></i></span><span><b>${b.n}</b><small>${b.es}</small></span></summary>
+<div class="fxg"><div><small>Edad mínima</small><b>${b.age}</b></div><div><small>Mínimo IBJJF</small><b>${b.min}</b></div><div><small>Lo normal</small><b>${b.real}</b></div></div>
+<p class="sm" style="margin:8px 0 0">${b.f}</p>${b.g?`<p class="sm mut" style="margin:6px 0 0">${b.g}</p>`:''}</details>`).join('')+
+`<div class="tip" style="margin-top:12px"><b>Niños (4 a 15 años):</b> usan faixas gris, amarilla, naranja y verde antes de la azul.</div>
+<div class="tip"><b>Grau (grado):</b> cada cinta en la barra marca un avance dentro de la misma faixa. Tu profe la pone con cinta adhesiva, normalmente al terminar una clase. Anota tus grados en Progreso → Tu cinturón.</div>
+<div class="tip"><b>Para que no se te olvide:</b> nunca pidas una faixa ni un grau. Se dice que la faixa solo cubre 2 cm de la espalda: el resto lo tienes que cubrir tú.</div>
+<p class="sm mut" style="margin:10px 0 0">Tiempos mínimos y edades: sistema de graduación de la IBJJF (adultos). Cada academia puede tener sus propias reglas.</p>`}
+const TAT=[
+['Antes de llegar','Uñas cortas, sin joyas, ropa o gi limpios. Si tienes una herida o algo en la piel, no entrenes hasta que sane.'],
+['Al llegar','Saluda al professor y a los compañeros. Si eres nuevo, preséntate y dile si tienes alguna lesión.'],
+['Chinelos en el borde','Las chalas quedan a la orilla del tatami. Nunca pises el tatami con zapatos, y no camines descalzo fuera de él.'],
+['El cumprimento','Al subir al tatami, haz una pequeña reverencia mirando hacia el tatami (o hacia el professor). Lo mismo al bajar.'],
+['Si llegas tarde','Cámbiate, ponte en el borde y espera a que el professor te haga una seña para entrar. No interrumpas la clase.'],
+['La fila','Al empezar y terminar, la clase forma una fila por faixa y grau: los más graduados a un lado. Ponte donde te diga el profe.'],
+['Durante la técnica','Escucha en silencio. Al practicar, haz la técnica completa y suave para tu compañero; no lo conviertas en un rola.'],
+['El rola (sparring)','Antes de empezar, choquen las manos. Si te dan tap, suelta al instante. Si te duele algo, tú das tap sin orgullo.'],
+['Salir del tatami','Si necesitas salir (agua, baño, lesión), avísale al professor. Al terminar el rola, choquen las manos y agradece: "valeu".'],
+['Al final','Fila, cumprimento y saludo a todos. Muchos se dan la mano o un abrazo con cada compañero. Gi o ropa directo a lavar.']];
+function renderTatami(){const el=$('#tatami');if(!el)return;el.innerHTML=`<p class="sm" style="margin:0 0 12px">El tatami es como la casa de la academia: hay códigos de respeto que vienen de Brasil y de Japón. Varía un poco en cada academia, así que mira qué hacen los demás.</p><ol class="tsteps">${TAT.map(t=>`<li><b>${t[0]}</b><span>${t[1]}</span></li>`).join('')}</ol>
+<p class="sm" style="margin:14px 0 6px"><b>Palabras que vas a escuchar</b></p><div class="tvoc">${[['Oss','"Entendido" o saludo de respeto'],['Professor / Mestre','Así se llama a tu profe'],['Rola','El sparring'],['Bater / dar tap','Golpear para rendirte'],['Faixa','Cinturón'],['Grau','Grado'],['Valeu','"Gracias" en portugués']].map(v=>`<div><b>${v[0]}</b><span>${v[1]}</span></div>`).join('')}</div>`}
+renderFaixas();renderTatami();
 $('#hyg').innerHTML=["Lava el gi o la ropa después de CADA clase. Nunca la uses dos veces.","Dúchate apenas termines, con jabón, en especial cuello, axilas e ingle.","Revisa tu piel: tiña, impétigo, herpes o cualquier lesión húmeda = no entrenas hasta que esté tratada.","Cubre heridas abiertas. Como enfermero ya sabes que el tatami es un contacto piel con piel continuo."].map(x=>`<li>${x}</li>`).join('');
 const GL=[["Tatami","El piso de colchonetas donde se entrena."],["Rolar / rolear","Combate de práctica (sparring) al final de la clase."],["Tap / golpear","Rendirse dando golpecitos. Detiene la técnica al instante."],["Guardia","Estar de espalda con las piernas entre tú y el rival."],["Pasar la guardia","Superar las piernas del rival para llegar a 100 kg o montada."],["Raspado (sweep)","Voltear al rival desde la guardia y quedar arriba."],["Montada","Sentado sobre el abdomen del rival."],["100 kg","Control lateral, pecho contra pecho, cruzado."],["Finalización","Luxación o estrangulamiento que obliga a golpear."],["Gi / No-Gi","Con kimono / sin kimono (polera y short)."],["Drill","Repetir una técnica con un compañero que no se resiste."],["Oss","Saludo y respuesta de \"entendido\" en muchas academias."]];
 $('#glos').innerHTML=GL.map(g=>`<details><summary>${g[0]}</summary><p>${g[1]}</p></details>`).join('');
-$('#belts').innerHTML=[["Blanco","Inicio, 4 grados"],["Azul","~2 años o más"],["Morado","~2–3 años más"],["Marrón","~1–2 años más"],["Negro","~8–12 años en total"]].map(b=>`<div><span>${b[0]}</span><span class="sm">${b[1]}</span></div>`).join('');
 
 /* ---------- progreso ---------- */
 const H_M=1.72,START={kg:78,date:'2026-11-18'},GOAL=73.9;
