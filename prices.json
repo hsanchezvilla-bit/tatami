@@ -1,33 +1,36 @@
 {
- "updated": "2026-11-24",
+ "updated": "2026-11-27",
  "note": "Precios de referencia en Santiago, revisados 2 veces por semana (martes y viernes). Las ofertas cambian seguido: anota lo que pagas con el botón $.",
  "items": {
   "huevos": {
    "u": "bandeja 30",
    "p": {
-    "Feria/almacén": 5600,
+    "Feria (ODEPA)": 5264,
     "Lider": 8390,
     "Jumbo": 8890
    },
-   "d": "24-nov"
+   "d": "27-nov"
   },
   "pollo": {
    "u": "kg",
    "p": {
     "Lider congelado 2 kg": 2495,
+    "Feria (ODEPA)": 3405,
     "Lider trutro": 3690,
+    "Jumbo trutro": 3790,
     "Tottus": 3790
    },
-   "d": "24-nov"
+   "d": "27-nov"
   },
   "lentejas": {
    "u": "kg",
    "p": {
     "Lider": 2590,
+    "Jumbo Iansa 4 mm (oferta)": 2865,
     "Unimarc": 2890,
-    "Iansa (oferta)": 3000
+    "Jumbo Cuisine&Co (oferta)": 2990
    },
-   "d": "24-nov"
+   "d": "27-nov"
   },
   "porotos": {
    "u": "kg",
@@ -216,6 +219,15 @@
     "Jumbo primavera Minuto Verde 500 g": 3380
    },
    "d": "24-nov"
+  },
+  "pimenton": {
+   "u": "unidad",
+   "p": {
+    "Feria rojo (ODEPA)": 1045,
+    "Supermercado rojo (ODEPA)": 1817,
+    "Jumbo rojo": 1890
+   },
+   "d": "27-nov"
   }
  },
  "promos": [
@@ -230,14 +242,19 @@
    "t": "Llega a la hora del cierre: verduras hasta 60% más baratas que el súper"
   },
   {
-   "s": "Todas",
-   "d": "Black Friday",
-   "t": "27 al 30 de noviembre: carga despensa (legumbres, arroz, atún, avena)"
-  },
-  {
    "s": "Jumbo",
    "d": "Toda la semana",
    "t": "Choclo Cuisine & Co 500 g 3x2; mote Oso 500 g en oferta ($1.430)"
+  },
+  {
+   "s": "Jumbo",
+   "d": "Vie 27 a lun 30 nov",
+   "t": "Black Friday: pechuga deshuesada Super Pollo 750 g, lleva 2 por $8.790 (~$5.860/kg)"
+  },
+  {
+   "s": "Todas",
+   "d": "Black Friday",
+   "t": "27 al 30 de noviembre: carga despensa (legumbres, arroz, atún, avena)"
   }
  ],
  "src": [
@@ -255,6 +272,12 @@
   "https://www.jumbo.cl/carne-de-soya-mi-tierra-bolsa-300-g/p",
   "https://www.jumbo.cl/trigo-mote-oso-1-kg/p",
   "https://www.jumbo.cl/trigo-mote-oso-500-g/p",
-  "https://www.jumbo.cl/congelados/verduras-congeladas/choclos-y-arvejas"
+  "https://www.jumbo.cl/congelados/verduras-congeladas/choclos-y-arvejas",
+  "https://www.jumbo.cl/pimiento-rojo-extra/p",
+  "https://www.jumbo.cl/trutro-pollo-enter-2072118-kg/p",
+  "https://www.jumbo.cl/jumbo-ofertas/carnes-y-pescados/pollo",
+  "https://www.jumbo.cl/lenteja-4mm-iansagro-1kg/p",
+  "https://www.jumbo.cl/lentejas-6-mm-1-kg-cuisine-and-co-1840316/p",
+  "https://jumbo.cl/black-friday"
  ]
 }
