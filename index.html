@@ -405,6 +405,9 @@ html body #hoy button.go,html body #hoy[data-d] button.go{background:var(--da)!i
 #tr .trmid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;padding:10px 0}
 #tr .ring{position:relative;width:200px;height:200px}#tr .ring svg{width:100%;height:100%;transform:rotate(-90deg)}#tr .ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 52px 'Space Grotesk',Inter,sans-serif;font-variant-numeric:tabular-nums}
 #tr .trlab{margin-top:8px;font-size:15px;color:var(--mut);text-align:center}#tr .dots{display:flex;gap:8px;margin-top:14px}#tr .dots i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.12)}#tr .dots i.ok{background:var(--red)}
+#patio .reto{margin:-2px 0 14px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,rgba(200,242,90,.16),rgba(200,242,90,.04));border:1px solid rgba(200,242,90,.18)}
+#patio .rtop{display:flex;align-items:baseline;gap:8px}#patio .rtop span{font:700 11px Inter,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--red);flex:1}#patio .rtop b{font:800 26px/1 'Space Grotesk',Inter,sans-serif}#patio .rtop em{font-style:normal;color:var(--mut);font-size:13px}
+#patio .rbar{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin:8px 0 6px}#patio .rbar i{display:block;height:100%;background:var(--red);border-radius:99px;transition:width .6s var(--ease2,ease)}#patio .rsub{font-size:12.5px;color:var(--mut)}
 #patio .pq{font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(127,127,127,.15)}#patio .pq-Fuerte{background:rgba(255,110,80,.18);color:#ff8a6a}#patio .pq-Liviano,#patio .pq-Descanso{background:rgba(120,200,255,.15);color:#8fd0ff}#patio .pq-Medio{background:rgba(255,200,80,.15);color:#ffd27a}
 #patio .pth h3{margin:2px 0 2px;font:700 22px/1.15 'Space Grotesk',Inter,sans-serif}
 #patio .ptd{display:flex;gap:6px;margin:12px 0 4px}#patio .ptd button{flex:1;min-height:40px;padding:0;border-radius:12px;border:1px solid rgba(127,127,127,.18);background:rgba(127,127,127,.06);color:var(--ink);font:600 13px Inter,sans-serif;position:relative}
@@ -5383,12 +5386,23 @@ Object.assign(HOW,{
 "Saltos de patinador":["De pie sobre una pierna, la otra levantada atrás.","Salta hacia el lado contrario|Aterriza en la otra pierna, suave|Aguanta 1 segundo quieto|Salta de vuelta","Bota aire en cada salto.","Aterrizar con la rodilla hacia adentro.","Glúteos y piernas.","Paso lateral sin saltar."],
 "Estiramiento final":["Sobre la colchoneta, tranquilo.","Mariposa: plantas juntas, rodillas abiertas, 1 min|Piernas estiradas, manos hacia los pies, 1 min|Postura del niño, brazos adelante, 1 min|Cadera: un pie adelante en zancada baja, 1 min por lado","Respira lento y profundo.","Rebotar o forzar el dolor.","Cadera, espalda y piernas.","Hazlo en la cama."],
 });
+Object.assign(EX,{
+p_lateral:{t:"Elevaciones en V",g:"Extra",d:"3 × 12",r:"60 s",load:"2 mancuernas livianas (3–5 kg)",why:"Hombros más anchos (estética) sin apretar la articulación: es la versión amable con el hombro de la elevación lateral.",a:X(S,{e:[91,58],w:[92,75],za:.07}),b:X(S,{e:[99,46],w:[108,44],za:.3}),c:["Brazos en V: entre el frente y el costado","Pulgares arriba, codos apenas doblados","Hasta la altura del hombro, baja en 3 s"]},
+p_martillo:{t:"Curl martillo",g:"Extra",d:"3 × 10",r:"60 s",load:"2 mancuernas (6–8 kg)",why:"Bíceps y antebrazo: brazos más grandes y agarre más fuerte para el gi.",a:X(S,{e:[91,58],w:[92,76]}),b:X(S,{e:[91,58],w:[99,44]}),c:["Palmas mirándose, como sosteniendo un martillo","Codos pegados al cuerpo","Baja lento, sin balancearte"]},
+p_triceps:{t:"Extensión de tríceps sobre la cabeza",g:"Extra",d:"3 × 10",r:"60 s",load:"1 mancuerna con las dos manos",why:"El tríceps es 2/3 del brazo (estética) y el motor de tus frames.",a:X(S,{e:[93,18],w:[84,33]}),b:X(S,{e:[93,18],w:[94,2]}),c:["Codos apuntando al techo","Baja la mancuerna detrás de la cabeza","Estira arriba sin arquear la espalda"]},
+});
+Object.assign(LVX,{p_lateral:[{d:'2 × 12',load:'2 mancuernas de 2–4 kg'},null,null,null],p_martillo:[{d:'2 × 10'},null,null,null],p_triceps:[{d:'2 × 10'},null,null,null]});
+Object.assign(HOW,{
+"Elevaciones en V":["De pie, pies al ancho de cadera, una mancuerna liviana en cada mano a los costados, codos apenas doblados, pulgares hacia arriba.","Sube los brazos en diagonal, entre el frente y el costado, formando una V|Para cuando las manos lleguen a la altura de los hombros|Pausa 1 segundo arriba|Baja en 3 segundos","Bota aire al subir.","Usar mucho peso y balancear el cuerpo, o subir los hombros hacia las orejas.","Parte de afuera del hombro.","Menos peso, o de a un brazo."],
+"Curl martillo":["De pie, una mancuerna en cada mano a los costados, palmas mirándose entre sí.","Codos pegados a las costillas|Sube las mancuernas doblando solo los codos|Arriba aprieta 1 segundo|Baja en 2–3 segundos hasta estirar","Bota aire al subir.","Balancear la espalda o adelantar los codos.","Bíceps y antebrazo.","Alterna brazos o usa menos peso."],
+"Extensión de tríceps sobre la cabeza":["De pie o sentado, espalda recta. Toma una mancuerna con las dos manos por el disco de arriba y súbela sobre la cabeza.","Codos apuntando al techo, cerca de la cabeza|Baja la mancuerna detrás de la cabeza doblando solo los codos|Estira los brazos hasta arriba|Repite sin mover los codos","Toma aire al bajar, bótalo al subir.","Abrir los codos o arquear la espalda baja.","Parte de atrás del brazo.","Sentado en una silla con respaldo, o con menos peso."],
+});
 const PAT=[
 {k:'P1',d:'Lunes',n:'Piernas y agarre',e:'🦵',q:'Fuerte',ids:['p_cuerda','c_inch','p_hip','goblet','zancada','p_granjero','p_manoamano','c_plank','p_bici']},
 {k:'P2',d:'Martes',n:'Suelo y movilidad',e:'🥋',q:'Liviano',ids:['p_escalera','c_inch','n_cam','n_upa','standup','c_crab','c_bear','cuello','p_bici']},
-{k:'P3',d:'Miércoles',n:'Empuje, tirón y agarre',e:'💪',q:'Fuerte',ids:['p_cuerda','flex','toalla','press','inclinado','r_towel','p_granjero','hollow','p_bici']},
+{k:'P3',d:'Miércoles',n:'Torso, brazos y agarre',e:'💪',q:'Fuerte',ids:['p_cuerda','flex','toalla','press','inclinado','p_lateral','p_martillo','r_towel','hollow','p_bici']},
 {k:'P4',d:'Jueves',n:'Cadera de jiu-jitsu',e:'🌀',q:'Medio',ids:['p_escalera','c_cossack','puente','sitout','c_burpee','p_maleta','c_sidepl','p_bici']},
-{k:'P5',d:'Viernes',n:'Circuito de familias',e:'🔥',q:'Medio',ids:['p_cuerda','c_inch','goblet','c_flex','c_slbridge','c_bear','c_burpee','c_vup','p_bici']},
+{k:'P5',d:'Viernes',n:'Circuito + brazos',e:'🔥',q:'Medio',ids:['p_cuerda','c_inch','goblet','c_flex','c_slbridge','c_bear','c_burpee','p_triceps','p_lateral','c_vup','p_bici']},
 {k:'P6',d:'Sábado',n:'Piernas y core',e:'⚡',q:'Fuerte',ids:['p_escalera','p_rodpie','rdl','bulgara','c_cossack','p_granjero','p_manoamano','hollow','p_bici']},
 {k:'P7',d:'Domingo',n:'Recuperación',e:'🧘',q:'Descanso activo',ids:['p_zona2','c_inch','c_cossack','c_bear','c_crab','camaron','p_estira']},
 ];
@@ -5406,12 +5420,20 @@ HOW["Camarones lentos"]=Object.assign([],HOW["Camarones"]);HOW["Camarones lentos
 HOW["Cuerda por intervalos"]=["De pie, cuerda detrás de los talones, codos pegados al cuerpo.","Salta 1 minuto, bajito y en la punta de los pies|Descansa 30 s caminando|Repite hasta completar las series|Si te enredas, sigue sin estresarte","Respira por la nariz.","Saltar alto o con los talones: carga el tendón de Aquiles.","Pantorrillas y pulso.","Salta alternando pies, como trotando, y acorta el minuto a 40 s."];
 PAT.forEach(p=>{SES[p.k]=p.ids;KEYOF[p.k]='pat'});
 const PLBL=k=>{const p=PAT.find(x=>x.k===k);return p?'Patio · '+p.d+' · '+p.n:SLBL(k)};
+
+const RETOK=['pat','fa','fb','fk','nogi','cal','bjj','ren','bici','mov'];
+function retoInfo(){let st0=st.get('bjj_reto','');const today=dk(new Date());if(!st0){st0=today;st.set('bjj_reto',st0)}
+const d0=new Date(st0+'T12:00:00'),dn=new Date(today+'T12:00:00');const dia=Math.max(1,Math.round((dn-d0)/864e5)+1);
+const done=k=>{const x=days[k];return !!x&&RETOK.some(q=>x[q])};let hechos=0;for(let i=0;i<dia;i++){const t=new Date(d0);t.setDate(t.getDate()+i);if(done(dk(t)))hechos++}
+let racha=0;const t=new Date();if(!done(dk(t)))t.setDate(t.getDate()-1);while(done(dk(t))&&racha<400){racha++;t.setDate(t.getDate()-1)}
+return{dia:Math.min(dia,365),hechos,racha,hoy:done(today)}}
+function retoHTML(){const r=retoInfo();return `<div class="reto"><div class="rtop"><span>Reto 365</span><b>Día ${r.dia}</b><em>de 365</em></div><div class="rbar"><i style="width:${r.dia/365*100}%"></i></div><div class="rsub">${r.hoy?'✓ Hoy cumplido · uno menos':'Hoy te falta entrenar'} · 🔥 racha ${r.racha} · ${r.hechos} de ${r.dia} días hechos</div></div>`}
 let patSel=null;
 function renderPatio(){try{let el=document.getElementById('patio');const hoy=document.getElementById('hoy');if(!hoy)return;if(!el){el=document.createElement('div');el.id='patio';el.className='card';hoy.parentNode.insertBefore(el,hoy.nextSibling);
 el.addEventListener('click',ev=>{const b=ev.target.closest('[data-pd]');if(!b)return;patSel=b.dataset.pd;renderPatio();try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}})}
 const wd=(new Date().getDay()+6)%7,tk=PAT[wd].k,k=patSel||tk,p=PAT.find(x=>x.k===k),x=(days[dk(new Date())]||{});
 const mins=Math.round(p.ids.reduce((a,id)=>{const e=LX(id),q=etParse(e);return a+(q.work?q.sets*q.work*(q.sides||1):q.sets*40*(q.sides||1))+q.sets*(q.rest||45)},0)/60);
-el.innerHTML=`<div class="pth"><div><span class="sm mut">Entrenamiento de hoy</span><h3>${p.e} ${p.d}: ${p.n}</h3><span class="sm mut"><b class="pq pq-${(p.q||'').split(' ')[0]}">${p.q}</b> · ${p.ids.length} ejercicios · ~${mins} min${k===tk&&x.pat?' · <b style="color:var(--red)">hecho hoy ✓</b>':''}</span></div></div>
+el.innerHTML=retoHTML()+`<div class="pth"><div><span class="sm mut">Entrenamiento de hoy</span><h3>${p.e} ${p.d}: ${p.n}</h3><span class="sm mut"><b class="pq pq-${(p.q||'').split(' ')[0]}">${p.q}</b> · ${p.ids.length} ejercicios · ~${mins} min${k===tk&&x.pat?' · <b style="color:var(--red)">hecho hoy ✓</b>':''}</span></div></div>
 <div class="ptd">${PAT.map((q,i)=>`<button data-pd="${q.k}" class="${q.k===k?'on':''} ${q.k===tk?'t':''}">${q.d.slice(0,2)}</button>`).join('')}</div>
 <button class="go" data-ses="${k}" style="width:100%;margin-top:12px">▶ Empezar ${k===tk?'el de hoy':p.d}</button>
 <details class="ptx"><summary>Ver los ${p.ids.length} ejercicios</summary><ol class="ptl">${p.ids.map(id=>{const e=LX(id);return `<li><b>${e.t}</b><span>${e.d}</span></li>`}).join('')}</ol></details>
@@ -5479,7 +5501,7 @@ function trNext(){try{trEl.scrollTop=0}catch(_){}TR.i++;TR.set=0;TR.side=0;TR.ph
 function trPaint(){if(!TR.on)return;const _f=document.getElementById('fig');if(_f&&trEl.contains(_f)){_f.style.display='none';document.body.appendChild(_f)}const n=TR.ids.length,pct=TR.i<0?0:Math.min(1,(TR.i+(TR.ph==='next'?1:0))/n);
 const top=`<div class="trtop"><div class="trbar"><i style="width:${pct*100}%"></i></div><button class="trx" data-tr="x">Salir</button></div>`;
 if(TR.i<0){const rv=TR.view==='rev';trEl.innerHTML=top+`<div class="trk">${PLBL(TR.k)} · ${n} ejercicios</div><h1>${rv?'Repasa cómo se hace':'Calentamiento · 5 min'}</h1><div class="trseg"><button data-tr="vwu" class="${rv?'':'on'}">Calentar</button><button data-tr="vrev" class="${rv?'on':''}">Repasar ejercicios</button></div>${rv?`<div class="rev">${TR.ids.map((id,j)=>{const x=LX(id);return `<details${j===0?' open':''}><summary>${j+1}. ${x.t}<span>${x.d}</span></summary>${howHTML(id)}</details>`}).join('')}</div>`:`<ol class="wu">${WU.map(x=>`<li>${x}</li>`).join('')}</ol><p class="trlab" style="text-align:left;margin-top:14px">¿Primera vez con esta rutina? Toca <b style="color:var(--ink)">Repasar ejercicios</b> y lee cada uno antes de partir.</p>`}<div class="trmid" style="min-height:20px"></div><button class="trgo" data-tr="go">Listo, empezar</button>`;return}
-if(TR.ph==='end'){trEl.innerHTML=top+`<div class="trmid"><div class="end">🥋</div><h1 style="text-align:center;margin-top:10px">¡Sesión terminada!</h1><p class="trlab">Estira 5 min y toma agua.</p><p class="trlab" style="margin-top:14px;color:var(--ink)">💡 ${FTIPS[Math.floor(Math.random()*FTIPS.length)][1]}</p></div><button class="trgo" data-tr="done">Guardar como hecho</button><div class="trsub"><button data-tr="x">Cerrar sin guardar</button></div>`;return}
+if(TR.ph==='end'){trEl.innerHTML=top+`<div class="trmid"><div class="end">🥋</div><h1 style="text-align:center;margin-top:10px">¡Sesión terminada!</h1>${(()=>{try{const r=retoInfo();return `<p class="trlab" style="color:var(--ink);font-size:17px">Día <b>${r.dia}</b> de 365 · <b style="color:var(--red)">uno menos</b>.<br>Nos vemos mañana → Día ${Math.min(365,r.dia+1)}</p>`}catch(_){return''}})()}<p class="trlab">Estira 5 min y toma agua.</p><p class="trlab" style="margin-top:14px;color:var(--ink)">💡 ${FTIPS[Math.floor(Math.random()*FTIPS.length)][1]}</p></div><button class="trgo" data-tr="done">Guardar como hecho</button><div class="trsub"><button data-tr="x">Cerrar sin guardar</button></div>`;return}
 const {id,e,p}=trCur(),vid=vidOf(id),url=vid?'https://www.youtube.com/watch?v='+vid:ytUrl((typeof YQ!=='undefined'&&YQ[id])||e.t);
 const cues=(e.c||[]).slice(0,3),R=88,C=2*Math.PI*R,timed=!!p.work,nx=TR.ids[TR.i+1];
 let mid,btn;
