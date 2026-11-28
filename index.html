@@ -411,6 +411,14 @@ html body #hoy button.go,html body #hoy[data-d] button.go{background:var(--da)!i
 #patio .ptd button.t:after{content:'';position:absolute;bottom:4px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--red)}#patio .ptd button.on{background:var(--red);color:var(--acc-ink,#111);border-color:transparent}#patio .ptd button.on.t:after{background:var(--acc-ink,#111)}
 #patio ol.ptl{margin:10px 0 0;padding:0;list-style:none;counter-reset:p}#patio ol.ptl li{counter-increment:p;display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(127,127,127,.12);font-size:15px}#patio ol.ptl li:last-child{border:0}
 #patio ol.ptl li:before{content:counter(p);flex:none;width:24px;height:24px;border-radius:50%;background:rgba(127,127,127,.14);display:grid;place-items:center;font:700 12px Inter,sans-serif}#patio ol.ptl li b{flex:1;font-weight:600}#patio ol.ptl li span{color:var(--mut);font-size:13px;white-space:nowrap}
+
+body.simple #detail .et,body.simple #detail a.yt,body.simple #v-ejercicios .stage>p.sm,body.simple #dials .drow,body.simple #fun .fun-q,body.simple #discHead,body.simple #exlist{display:none!important}
+body.simple #dials{padding-bottom:14px}body.simple #dials .dtop{margin:0}
+body[data-plan=patio] #hoy{display:none!important}body[data-plan=semana] #patio{display:none!important}
+#patio details.ptx{margin-top:8px}#patio details.ptx>summary{list-style:none;cursor:pointer;text-align:center;font:600 14px Inter,sans-serif;color:var(--mut);padding:8px}#patio details.ptx>summary::-webkit-details-marker{display:none}#patio details.ptx[open]>summary{color:var(--ink)}
+#more{margin-top:14px}#more>summary{list-style:none;cursor:pointer;display:flex;flex-direction:column;gap:2px;padding:16px 18px;border-radius:20px;background:rgba(127,127,127,.06);border:1px solid rgba(127,127,127,.14)}#more>summary::-webkit-details-marker{display:none}#more>summary b{font-size:16px}#more>summary span{font-size:13px;color:var(--mut)}#more[open]>summary{margin-bottom:12px}
+#more .morein>*{margin-bottom:12px}#more .mset b{display:block;margin-bottom:8px}#more .mrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;font-size:14px}#more .mrow .seg{flex:none}#more .mrow .seg button{padding:8px 10px;font-size:13px}
+details.nfold>summary{font:700 17px 'Space Grotesk',Inter,sans-serif;cursor:pointer}
 #exnav{margin:12px 0 10px}#exnav .exnh{font-size:13px;color:var(--mut);margin:0 2px 8px}#exnav .exns{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 4px;scroll-snap-type:x proximity}#exnav .exns::-webkit-scrollbar{display:none}
 #exnav button{flex:none;scroll-snap-align:start;display:flex;align-items:center;gap:8px;border:1px solid rgba(127,127,127,.18);background:rgba(127,127,127,.06);color:var(--ink);border-radius:99px;padding:8px 14px 8px 8px;font:600 14px Inter,sans-serif;white-space:nowrap}
 #exnav button i{font-style:normal;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:rgba(127,127,127,.15);font-size:12px}#exnav button.on{background:var(--red);color:var(--acc-ink,#111);border-color:transparent}#exnav button.on i{background:rgba(0,0,0,.15)}
@@ -5377,13 +5385,30 @@ function renderPatio(){try{let el=document.getElementById('patio');const hoy=doc
 el.addEventListener('click',ev=>{const b=ev.target.closest('[data-pd]');if(!b)return;patSel=b.dataset.pd;renderPatio();try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}})}
 const wd=(new Date().getDay()+6)%7,tk=PAT[wd].k,k=patSel||tk,p=PAT.find(x=>x.k===k),x=(days[dk(new Date())]||{});
 const mins=Math.round(p.ids.reduce((a,id)=>{const e=LX(id),q=etParse(e);return a+(q.work?q.sets*q.work*(q.sides||1):q.sets*40*(q.sides||1))+q.sets*(q.rest||45)},0)/60);
-el.innerHTML=`<div class="pth"><div><span class="sm mut">Rutina del patio · todos los días</span><h3>${p.e} ${p.d}: ${p.n}</h3><span class="sm mut"><b class="pq pq-${(p.q||'').split(' ')[0]}">${p.q}</b> · ${p.ids.length} ejercicios · ~${mins} min${k===tk&&x.pat?' · <b style="color:var(--red)">hecho hoy ✓</b>':''}</span></div></div>
+el.innerHTML=`<div class="pth"><div><span class="sm mut">Entrenamiento de hoy</span><h3>${p.e} ${p.d}: ${p.n}</h3><span class="sm mut"><b class="pq pq-${(p.q||'').split(' ')[0]}">${p.q}</b> · ${p.ids.length} ejercicios · ~${mins} min${k===tk&&x.pat?' · <b style="color:var(--red)">hecho hoy ✓</b>':''}</span></div></div>
 <div class="ptd">${PAT.map((q,i)=>`<button data-pd="${q.k}" class="${q.k===k?'on':''} ${q.k===tk?'t':''}">${q.d.slice(0,2)}</button>`).join('')}</div>
-<ol class="ptl">${p.ids.map(id=>{const e=LX(id);return `<li><b>${e.t}</b><span>${e.d}</span></li>`}).join('')}</ol>
-<button class="go" data-ses="${k}" style="width:100%;margin-top:10px">▶ Empezar ${k===tk?'el de hoy':p.d}</button>
-<p class="sm mut" style="margin:8px 2px 0">Solo 3 días son fuertes. ¿Turno de noche, dormiste mal o tienes clase de BJJ? Cambia por el <b>Martes</b> o el <b>Domingo</b>. Deja siempre 2–3 repeticiones en reserva.</p>`}catch(err){console.log(err)}}
+<button class="go" data-ses="${k}" style="width:100%;margin-top:12px">▶ Empezar ${k===tk?'el de hoy':p.d}</button>
+<details class="ptx"><summary>Ver los ${p.ids.length} ejercicios</summary><ol class="ptl">${p.ids.map(id=>{const e=LX(id);return `<li><b>${e.t}</b><span>${e.d}</span></li>`}).join('')}</ol></details>
+<p class="sm mut" style="margin:8px 2px 0">¿Turno de noche o dormiste mal? Haz el <b>Ma</b> o el <b>Do</b>.</p>`}catch(err){console.log(err)}}
 (function(){const _rh=renderHoy;renderHoy=function(){_rh.apply(this,arguments);renderPatio()}})();setTimeout(renderPatio,0);
 
+
+/* ===== Vista simple ===== */
+(function(){try{
+const W=document.querySelector('#v-semana .wrap');if(!W)return;
+const more=document.createElement('details');more.id='more';
+more.innerHTML='<summary><b>Más</b><span>Semana, check-in, coach, timer y agua</span></summary><div class="morein"><div class="card mset"><b>Ajustes de pantalla</b><div class="mrow"><span>Plan del día</span><div class="seg"><button data-pl="patio">Patio diario</button><button data-pl="semana">Plan por bloques</button></div></div><div class="mrow"><span>Mostrar todo</span><div class="seg"><button data-fv="0">Simple</button><button data-fv="1">Completa</button></div></div></div></div>';
+W.appendChild(more);const mi=more.querySelector('.morein');
+['wstrip','week','ready','coach','quick'].forEach(id=>{const e=document.getElementById(id);if(e)mi.appendChild(e)});
+function apply(){const full=st.get('bjj_full',0)===1,plan=st.get('bjj_plan','patio');document.body.classList.toggle('simple',!full);document.body.dataset.plan=plan;
+more.querySelectorAll('[data-pl]').forEach(b=>b.classList.toggle('on',b.dataset.pl===plan));more.querySelectorAll('[data-fv]').forEach(b=>b.classList.toggle('on',+b.dataset.fv===(full?1:0)));
+try{if(typeof ES!=='undefined'&&ES)requestAnimationFrame(()=>ES.resize())}catch(_){}}
+more.addEventListener('click',e=>{const a=e.target.closest('[data-pl]'),f=e.target.closest('[data-fv]');if(a){st.set('bjj_plan',a.dataset.pl);apply();toast(a.dataset.pl==='patio'?'Inicio muestra el patio diario':'Inicio muestra el plan por bloques')}if(f){st.set('bjj_full',+f.dataset.fv);apply()}});
+apply();
+/* Nutrición: menú de hoy arriba, lo demás plegado */
+const sp=document.getElementById('s-plan');if(sp){const cs=[...sp.children];const menu=cs.find(c=>/Tu menú de hoy/.test(c.textContent));const meta=cs.find(c=>/Tu meta/.test(c.textContent));if(menu&&meta)meta.after(menu);
+cs.filter(c=>/Arma tu táper|Día de turno/.test(c.textContent)).forEach(c=>{const h=c.querySelector('h2,h3,b,strong');const t=/Arma tu táper/.test(c.textContent)?'Arma tu táper':'Día de turno';const d=document.createElement('details');d.className='card nfold';d.innerHTML='<summary>'+t+'</summary>';c.classList.remove('card');c.style.padding='0';c.style.background='none';c.style.border='0';c.style.boxShadow='none';c.before(d);d.appendChild(c)})}
+}catch(err){console.log('simple',err)}})();
 /* ===== Selector numerado de ejercicios ===== */
 (function(){const _rl=renderList;renderList=function(){_rl.apply(this,arguments);try{let nv=document.getElementById('exnav');const stg=document.querySelector('#v-ejercicios .stage');if(!stg)return;if(!nv){nv=document.createElement('div');nv.id='exnav';nv.addEventListener('click',ev=>{const b=ev.target.closest('[data-nid]');if(!b)return;sel(b.dataset.nid);try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}})}stg.parentNode.insertBefore(nv,stg);
 let ids=Object.keys(EX).filter(id=>EX[id].g!=='R'&&discOf(EX[id].g)===filt&&(filt!=='cal'||SES.C.includes(id)));if(filt==='ren'&&typeof RSES!=='undefined')ids=RSES.flatMap(x=>x.ids);
