@@ -405,6 +405,7 @@ html body #hoy button.go,html body #hoy[data-d] button.go{background:var(--da)!i
 #tr .trmid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:220px;padding:10px 0}
 #tr .ring{position:relative;width:200px;height:200px}#tr .ring svg{width:100%;height:100%;transform:rotate(-90deg)}#tr .ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 52px 'Space Grotesk',Inter,sans-serif;font-variant-numeric:tabular-nums}
 #tr .trlab{margin-top:8px;font-size:15px;color:var(--mut);text-align:center}#tr .dots{display:flex;gap:8px;margin-top:14px}#tr .dots i{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.12)}#tr .dots i.ok{background:var(--red)}
+#patio .pq{font-weight:700;padding:2px 8px;border-radius:99px;background:rgba(127,127,127,.15)}#patio .pq-Fuerte{background:rgba(255,110,80,.18);color:#ff8a6a}#patio .pq-Liviano,#patio .pq-Descanso{background:rgba(120,200,255,.15);color:#8fd0ff}#patio .pq-Medio{background:rgba(255,200,80,.15);color:#ffd27a}
 #patio .pth h3{margin:2px 0 2px;font:700 22px/1.15 'Space Grotesk',Inter,sans-serif}
 #patio .ptd{display:flex;gap:6px;margin:12px 0 4px}#patio .ptd button{flex:1;min-height:40px;padding:0;border-radius:12px;border:1px solid rgba(127,127,127,.18);background:rgba(127,127,127,.06);color:var(--ink);font:600 13px Inter,sans-serif;position:relative}
 #patio .ptd button.t:after{content:'';position:absolute;bottom:4px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:var(--red)}#patio .ptd button.on{background:var(--red);color:var(--acc-ink,#111);border-color:transparent}#patio .ptd button.on.t:after{background:var(--acc-ink,#111)}
@@ -4899,7 +4900,7 @@ sprawl:{t:'Sprawl',g:'N',d:'3 × 40 s',r:'20 s',load:'Peso corporal, explosivo',
 sitout:{t:'Sit-out',g:'N',d:'3 × 40 s',r:'20 s',load:'Peso corporal',why:'Salir de abajo cuando te tienen en tortuga o te giran: movimiento base del grappling.',a:{h:[136,92],n:[124,96],hp:[84,92],k:[84,121],f:[56,123],e:[124,110],w:[124,122]},b:{h:[132,86],n:[120,92],hp:[100,112],k:[128,116],f:[156,120],k2:[84,121],f2:[58,123],e:[122,108],w:[122,122],e2:[110,94],w2:[118,90]},c:['En cuatro apoyos, pasa una pierna por debajo hacia el otro lado','Mira hacia afuera y quédate apoyado en una mano','Vuelve a cuatro apoyos y repite al otro lado']},
 n_hol:Object.assign({},EX.hollow,{t:'Hollow hold',g:'N',d:'3 × 40 s',r:'20 s',load:'Peso corporal',why:'Core para la guardia y para no dejarte aplastar.'})});
 SES.N=['n_cam','n_upa','standup','sprawl','sitout','n_hol'];
-const NV=[{d:'2 × 30 s',r:'30 s'},null,{d:'4 × 45 s',r:'15 s'},{d:'5 × 60 s',r:'15 s'}];SES.N.forEach(id=>LVX[id]=NV);
+const NV=[{d:'2 × 30 s',r:'30 s'},null,{d:'4 × 45 s',r:'15 s'},{d:'5 × 60 s',r:'15 s'}];SES.N.forEach(id=>{const pv=LVX[id]||[];LVX[id]=NV.map((v,i)=>(v||pv[i])?Object.assign({},pv[i]||{},v||{}):null)});
 const NFIN=['Final: 5 min de bicicleta suave.','Final: 3 rondas de 3 min en bicicleta a ritmo de roleo.','Final: 4 rondas de 4 min en bicicleta a ritmo de roleo.','Final: 5 rondas de 5 min a ritmo de roleo + timer de rounds.'];
 Object.assign(VID,{c_bear:'-9L3rTrYo4Q',c_cossack:'JaCbmoDqUc4',c_hindu:'kRbV0JVSUiA',c_crab:'L-CCJZp6aMI',c_pike:'pHR5yG6xBps',c_vup:'DfVArP2V6kg',n_cam:VID.camaron,n_upa:VID.upa,standup:'Ggnz7_9uQkY',sprawl:'YyA0JAnK5l8',sitout:'y8-pImQ2_-w',n_hol:VID.hollow});
 Object.assign(YQ,{c_inch:'inchworm ejercicio',c_bear:'bear crawl bjj',c_crab:'crab walk ejercicio',c_hindu:'hindu push up',c_pike:'pike push up',c_cossack:'cossack squat',c_slbridge:'single leg glute bridge',c_vup:'v up abdominal',c_sidepl:'side plank reach through',n_cam:'camarón escape de cadera bjj',n_upa:'puente upa bjj',standup:'levantada técnica bjj',sprawl:'sprawl drill',sitout:'sit out drill bjj',n_hol:'hollow hold'});
@@ -5349,14 +5350,26 @@ Object.assign(HOW,{
 "Estiramiento final":["Sobre la colchoneta, tranquilo.","Mariposa: plantas juntas, rodillas abiertas, 1 min|Piernas estiradas, manos hacia los pies, 1 min|Postura del niño, brazos adelante, 1 min|Cadera: un pie adelante en zancada baja, 1 min por lado","Respira lento y profundo.","Rebotar o forzar el dolor.","Cadera, espalda y piernas.","Hazlo en la cama."],
 });
 const PAT=[
-{k:'P1',d:'Lunes',n:'Tren inferior',e:'🦵',ids:['p_cuerda','p_salto','p_hip','p_rodpie','goblet','p_granjero','p_manoamano','c_plank','p_bici']},
-{k:'P2',d:'Martes',n:'Empuje y suelo',e:'💪',ids:['p_escalera','r_plyo','press','flex','c_pike','n_cam','n_upa','hollow','p_bici']},
-{k:'P3',d:'Miércoles',n:'Tirón y agarre',e:'🤝',ids:['p_cuerda','sprawl','toalla','inclinado','rdl','r_towel','p_granjero','hollow','p_bici']},
-{k:'P4',d:'Jueves',n:'Cadera de jiu-jitsu',e:'🥋',ids:['p_escalera','p_skater','puente','bulgara','standup','p_maleta','c_sidepl','p_bici']},
-{k:'P5',d:'Viernes',n:'Circuito total',e:'🔥',ids:['p_cuerda','r_thr','r_swing','r_reneg','c_burpee','c_bear','p_bici']},
-{k:'P6',d:'Sábado',n:'Piernas y core',e:'⚡',ids:['p_escalera','p_salto','r_rdl1','zancada','c_cossack','p_granjero','p_manoamano','c_vup','p_bici']},
-{k:'P7',d:'Domingo',n:'Recuperación',e:'🧘',ids:['p_zona2','c_inch','c_cossack','c_bear','c_crab','camaron','p_estira']},
+{k:'P1',d:'Lunes',n:'Piernas y agarre',e:'🦵',q:'Fuerte',ids:['p_cuerda','c_inch','p_hip','goblet','zancada','p_granjero','p_manoamano','c_plank','p_bici']},
+{k:'P2',d:'Martes',n:'Suelo y movilidad',e:'🥋',q:'Liviano',ids:['p_escalera','c_inch','n_cam','n_upa','standup','c_crab','c_bear','cuello','p_bici']},
+{k:'P3',d:'Miércoles',n:'Empuje, tirón y agarre',e:'💪',q:'Fuerte',ids:['p_cuerda','flex','toalla','press','inclinado','r_towel','p_granjero','hollow','p_bici']},
+{k:'P4',d:'Jueves',n:'Cadera de jiu-jitsu',e:'🌀',q:'Medio',ids:['p_escalera','c_cossack','puente','sitout','c_burpee','p_maleta','c_sidepl','p_bici']},
+{k:'P5',d:'Viernes',n:'Circuito de familias',e:'🔥',q:'Medio',ids:['p_cuerda','c_inch','goblet','c_flex','c_slbridge','c_bear','c_burpee','c_vup','p_bici']},
+{k:'P6',d:'Sábado',n:'Piernas y core',e:'⚡',q:'Fuerte',ids:['p_escalera','p_rodpie','rdl','bulgara','c_cossack','p_granjero','p_manoamano','hollow','p_bici']},
+{k:'P7',d:'Domingo',n:'Recuperación',e:'🧘',q:'Descanso activo',ids:['p_zona2','c_inch','c_cossack','c_bear','c_crab','camaron','p_estira']},
 ];
+Object.assign(LVX,{
+p_cuerda:[{t:'Cuerda por intervalos',d:'4 × 1 min',r:'30 s'},null,null,null],
+p_escalera:[{d:'1 × 6 min'},null,null,null],
+p_hip:[{d:'2 × 10',r:'60 s'},null,null,null],
+p_rodpie:[{d:'2 × 5 por pierna',r:'60 s',load:'Sin peso'},null,null,null],
+p_granjero:[{d:'2 × 2 idas y vueltas'},null,null,null],
+p_maleta:[{d:'2 × 2 idas y vueltas por lado'},null,null,null],
+p_manoamano:[{d:'2 × 20 s'},null,null,null],
+});
+HOW["Puente y giro lento"]=["Boca arriba, talones cerca del trasero, brazos al pecho. Es el escape de montada en cámara lenta.","Sube la cadera en 2 segundos, alto|Arriba, gira mirando el hombro contrario|Baja lento al centro|Repite al otro lado","Bota aire al subir.","Girar sin subir la cadera.","Glúteos y espalda.","Solo puente, sin giro."];
+HOW["Camarones lentos"]=Object.assign([],HOW["Camarones"]);HOW["Camarones lentos"][1]="Ponte de lado y apoya el pie de arriba|Empuja y saca la cadera hacia atrás; quédate 2 s ahí|Las manos empujan adelante, como enmarcando|Vuelve de espalda y repite al otro lado";
+HOW["Cuerda por intervalos"]=["De pie, cuerda detrás de los talones, codos pegados al cuerpo.","Salta 1 minuto, bajito y en la punta de los pies|Descansa 30 s caminando|Repite hasta completar las series|Si te enredas, sigue sin estresarte","Respira por la nariz.","Saltar alto o con los talones: carga el tendón de Aquiles.","Pantorrillas y pulso.","Sin cuerda: el mismo salto chico, o trote en el lugar."];
 PAT.forEach(p=>{SES[p.k]=p.ids;KEYOF[p.k]='pat'});
 const PLBL=k=>{const p=PAT.find(x=>x.k===k);return p?'Patio · '+p.d+' · '+p.n:SLBL(k)};
 let patSel=null;
@@ -5364,11 +5377,11 @@ function renderPatio(){try{let el=document.getElementById('patio');const hoy=doc
 el.addEventListener('click',ev=>{const b=ev.target.closest('[data-pd]');if(!b)return;patSel=b.dataset.pd;renderPatio();try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}})}
 const wd=(new Date().getDay()+6)%7,tk=PAT[wd].k,k=patSel||tk,p=PAT.find(x=>x.k===k),x=(days[dk(new Date())]||{});
 const mins=Math.round(p.ids.reduce((a,id)=>{const e=LX(id),q=etParse(e);return a+(q.work?q.sets*q.work*(q.sides||1):q.sets*40*(q.sides||1))+q.sets*(q.rest||45)},0)/60);
-el.innerHTML=`<div class="pth"><div><span class="sm mut">Rutina del patio · todos los días</span><h3>${p.e} ${p.d}: ${p.n}</h3><span class="sm mut">${p.ids.length} ejercicios · ~${mins} min${k===tk&&x.pat?' · <b style="color:var(--red)">hecho hoy ✓</b>':''}</span></div></div>
+el.innerHTML=`<div class="pth"><div><span class="sm mut">Rutina del patio · todos los días</span><h3>${p.e} ${p.d}: ${p.n}</h3><span class="sm mut"><b class="pq pq-${(p.q||'').split(' ')[0]}">${p.q}</b> · ${p.ids.length} ejercicios · ~${mins} min${k===tk&&x.pat?' · <b style="color:var(--red)">hecho hoy ✓</b>':''}</span></div></div>
 <div class="ptd">${PAT.map((q,i)=>`<button data-pd="${q.k}" class="${q.k===k?'on':''} ${q.k===tk?'t':''}">${q.d.slice(0,2)}</button>`).join('')}</div>
 <ol class="ptl">${p.ids.map(id=>{const e=LX(id);return `<li><b>${e.t}</b><span>${e.d}</span></li>`}).join('')}</ol>
 <button class="go" data-ses="${k}" style="width:100%;margin-top:10px">▶ Empezar ${k===tk?'el de hoy':p.d}</button>
-<p class="sm mut" style="margin:8px 2px 0">¿Turno de noche, dormiste mal o tienes clase de BJJ hoy? Haz el <b>Domingo</b> (recuperación).</p>`}catch(err){console.log(err)}}
+<p class="sm mut" style="margin:8px 2px 0">Solo 3 días son fuertes. ¿Turno de noche, dormiste mal o tienes clase de BJJ? Cambia por el <b>Martes</b> o el <b>Domingo</b>. Deja siempre 2–3 repeticiones en reserva.</p>`}catch(err){console.log(err)}}
 (function(){const _rh=renderHoy;renderHoy=function(){_rh.apply(this,arguments);renderPatio()}})();setTimeout(renderPatio,0);
 
 /* ===== Selector numerado de ejercicios ===== */
